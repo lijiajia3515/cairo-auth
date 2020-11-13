@@ -1,0 +1,51 @@
+dependencies {
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  // actuator
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+  // data
+  implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+  implementation "org.springframework.boot:spring-boot-starter-data-redis"
+  implementation "org.apache.commons:commons-pool2"
+
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter-hateoas"
+  implementation "org.springframework.boot:spring-boot-starter-validation"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+
+  // security
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.cloud:spring-cloud-starter-security'
+  implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
+  // rpc
+  implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+  implementation 'io.github.openfeign:feign-okhttp'
+
+  // discovery
+  implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+  // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+
+  // cairo
+  implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
+  implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
+  // implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
+
+  implementation project(':domain')
+
+  // test
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
+  // testImplementation 'io.projectreactor:reactor-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+}
+
+// disable publish
+generateMetadataFileForMavenJavaPublication.enabled = false
+generatePomFileForMavenJavaPublication.enabled = false
+publishMavenJavaPublicationToMavenRepository.enabled = false
+publish.enabled = false

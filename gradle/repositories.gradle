@@ -1,0 +1,24 @@
+repositories {
+  maven {
+    url 'https://maven.aliyun.com/repository/public/'
+  }
+  maven {
+    url 'https://maven.aliyun.com/repository/spring/'
+  }
+  maven {
+    credentials {
+      username '5ee4807f97528f50b9776b26'
+      password 'y2s3z0PFKR00'
+    }
+    url 'https://packages.aliyun.com/maven/repository/2013218-release-Pelnyx/'
+  }
+  maven {
+    credentials {
+      username '5ee4807f97528f50b9776b26'
+      password 'y2s3z0PFKR00'
+    }
+    url 'https://packages.aliyun.com/maven/repository/2013218-snapshot-IQw4lU/'
+  }
+  mavenLocal()
+  mavenCentral()
+}

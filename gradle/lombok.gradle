@@ -1,0 +1,17 @@
+// lombok config
+configurations {
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+dependencies {
+  compile 'org.slf4j:slf4j-api'
+  annotationProcessor "org.projectlombok:lombok"
+
+  compileOnly "org.projectlombok:lombok"
+}

@@ -1,0 +1,81 @@
+// maven publish config
+apply plugin: "maven-publish"
+//apply plugin: "signing"
+
+publishing {
+  repositories {
+    maven {
+      // change to point to your repo, e.g. http://my.org/repo
+      def releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2013218-release-Pelnyx/"
+      def snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2013218-snapshot-IQw4lU/"
+
+      credentials {
+        username '5ee4807f97528f50b9776b26'
+        password 'y2s3z0PFKR00'
+      }
+
+      url = versionRelease ? releasesRepoUrl : snapshotsRepoUrl
+
+    }
+  }
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+
+      pom {
+        name = "Cairo"
+        packaging = "jar"
+        url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
+
+        scm {
+          url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
+          connection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
+          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
+        }
+
+        issueManagement {
+          system = "CodeUp"
+          url = "https://codeup.aliyun.com/harpoon/cairo/cairo/issues"
+        }
+
+        licenses {
+          license {
+            name = "Apache License, Version 2.0"
+            url = "https://www.apache.org/licenses/LICENSE-2.0"
+            distribution = "repo"
+          }
+        }
+
+        organization {
+          name = "浩方恒科"
+          url = "http://www.hfhksoft.com"
+        }
+
+        developers {
+          developer {
+            id = "lijiajia"
+            name = "李佳佳"
+            email = "lijiajia@haofangsoft.com"
+          }
+        }
+      }
+      versionMapping {
+        usage('java-api') {
+          fromResolutionOf('runtimeClasspath')
+        }
+        usage('java-runtime') {
+          fromResolutionResult()
+        }
+      }
+    }
+  }
+}
+
+//signing {
+//  sign publishing.publications.mavenJava
+//}
+javadoc {
+  if (JavaVersion.current().isJava9Compatible()) {
+    options.addBooleanOption('html5', true)
+  }
+}

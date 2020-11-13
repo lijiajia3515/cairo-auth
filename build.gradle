@@ -1,0 +1,44 @@
+buildscript {
+  ext {
+    javaVersion = 11
+
+    springVersion = "5.2.9.RELEASE"
+    springBootVersion = "2.2.10.RELEASE"
+    springCloudVersion = "Hoxton.SR6"
+    springCloudAlibabaVersion = "2.2.1.RELEASE"
+
+    cairoVersion = "0.1.0-SNAPSHOT"
+    hutoolVersion = "5.3.10"
+    mybatisVersion = "3.4.0"
+    easyexcelVersion = "2.2.5"
+
+    // tool veriable
+    versionRelease = !version.endsWith('SNAPSHOT')
+  }
+
+  apply from: "${rootDir}/gradle/repositories.gradle"
+}
+
+plugins {
+  id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
+  id 'org.springframework.boot' version '2.2.10.RELEASE' apply false
+}
+
+allprojects {
+  apply from: "${rootDir}/gradle/repositories.gradle"
+
+  group = 'com.hfhk.cairo.auth'
+
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+}
+
+subprojects {
+  apply from: "${rootDir}/gradle/java.gradle"
+  apply from: "${rootDir}/gradle/dependency-management.gradle"
+  apply from: "${rootDir}/gradle/publish.gradle"
+  apply from: "${rootDir}/gradle/lombok.gradle"
+}
+
+
