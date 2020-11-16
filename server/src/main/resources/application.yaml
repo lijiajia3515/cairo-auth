@@ -2,7 +2,7 @@ spring:
   profiles:
     active: local
   application:
-    name: auth_server_v1
+    name: auth-server-v1
   http:
     encoding:
       force: true

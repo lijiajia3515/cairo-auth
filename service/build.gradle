@@ -1,3 +1,7 @@
+plugins {
+  id 'org.springframework.boot'
+}
+
 dependencies {
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -42,6 +46,10 @@ dependencies {
   }
   // testImplementation 'io.projectreactor:reactor-test'
   testImplementation 'org.springframework.security:spring-security-test'
+}
+
+bootJar {
+  archiveFileName = "app.${archiveExtension.get()}"
 }
 
 // disable publish

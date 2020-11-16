@@ -15,11 +15,11 @@ ENV LC_ALL C.UTF-8
 
 ENV SPRING_PROFILES_ACTIVE docker
 
-WORKDIR /hfhk/harpoon/auth
+WORKDIR /hfhk/cairo/auth/server
 
-ADD build/libs/*.jar /hfhk/harpoon/auth/app.jar
+ADD build/libs/app.jar /hfhk/cairo/auth/server/app.jar
 
-VOLUME /hfhk/harpoon/auth/logs
+VOLUME /hfhk/cairo/auth/server/logs
 
 EXPOSE 80
 

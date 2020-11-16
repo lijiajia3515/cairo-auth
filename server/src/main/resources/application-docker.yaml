@@ -50,4 +50,4 @@ logging:
     root: info
     com.hfhk.harpoon: debug
   file:
-    name: /hfhk/harpoon/auth/logs/hfhk.log
+    name: /hfhk/cairo/auth/server/logs/app.log

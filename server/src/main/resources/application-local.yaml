@@ -44,4 +44,4 @@ logging:
   level:
     com.hf.harpoon: debug
   file:
-    name: /hfhk/cairo/auth/hfhk.log
+    name: /hfhk/cairo/auth/server/app.log

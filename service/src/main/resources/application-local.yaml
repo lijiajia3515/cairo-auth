@@ -42,8 +42,6 @@ spring:
         max-idle: 8
         min-idle: 0
 
-
-
 server:
   port: 10010
   http2:
