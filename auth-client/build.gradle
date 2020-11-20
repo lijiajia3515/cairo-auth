@@ -2,7 +2,7 @@
 dependencies {
   compile "com.hfhk.cairo:client:${cairoVersion}"
 
-  compile project(":domain")
+  compile project(":auth-domain")
 
 }
 

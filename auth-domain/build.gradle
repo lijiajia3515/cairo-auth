@@ -1,3 +1,4 @@
+
 dependencies {
   compile "com.hfhk.cairo:domain:${cairoVersion}"
   compile "org.springframework.data:spring-data-commons"

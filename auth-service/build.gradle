@@ -38,7 +38,7 @@ dependencies {
   implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
   // implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
 
-  implementation project(':domain')
+  implementation project(':auth-domain')
 
   // test
   testImplementation('org.springframework.boot:spring-boot-starter-test') {
