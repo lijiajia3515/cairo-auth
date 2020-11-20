@@ -17,7 +17,7 @@ ENV SPRING_PROFILES_ACTIVE docker
 
 WORKDIR /hfhk/cairo/auth/service
 
-ADD build/libs/app.jar /hfhk/cairo/service/auth/app.jar
+ADD build/libs/app.jar /hfhk/cairo/auth/service/app.jar
 
 VOLUME /hfhk/cairo/auth/service/logs
 
