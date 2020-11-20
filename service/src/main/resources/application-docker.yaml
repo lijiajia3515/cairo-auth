@@ -44,4 +44,4 @@ logging:
   level:
     com.hfhk.cairo: debug
   file:
-    name: /hfhk/cairo/service/auth/logs/hfhk.log
+    name: /hfhk/cairo/auth/service/logs/hfhk.log
