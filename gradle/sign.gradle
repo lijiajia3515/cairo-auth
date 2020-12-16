@@ -1,0 +1,4 @@
+apply plugin: "signing"
+//signing {
+//  sign publishing.publications.mavenJava
+//}

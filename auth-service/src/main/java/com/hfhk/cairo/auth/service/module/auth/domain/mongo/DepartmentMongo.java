@@ -1,7 +1,7 @@
 package com.hfhk.cairo.auth.service.module.auth.domain.mongo;
 
-import com.hfhk.cairo.data.mongo.Metadata;
 import com.hfhk.cairo.auth.service.module.auth.constants.Mongo;
+import com.hfhk.cairo.mongo.data.Metadata;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

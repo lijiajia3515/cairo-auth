@@ -2,9 +2,9 @@ package com.hfhk.cairo.auth.service.module.auth.converter;
 
 import com.hfhk.cairo.auth.domain.ResourceTreeNode;
 import com.hfhk.cairo.auth.domain.response.ResourceV1;
-import com.hfhk.cairo.core.tree.TreeConverter;
-import com.hfhk.cairo.data.mongo.Metadata;
 import com.hfhk.cairo.auth.service.module.auth.domain.mongo.ResourceMongo;
+import com.hfhk.cairo.core.tree.TreeConverter;
+import com.hfhk.cairo.mongo.data.Metadata;
 
 import java.util.Comparator;
 import java.util.List;

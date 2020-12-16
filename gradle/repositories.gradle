@@ -5,20 +5,30 @@ repositories {
   maven {
     url 'https://maven.aliyun.com/repository/spring/'
   }
-  maven {
-    credentials {
-      username '5ee4807f97528f50b9776b26'
-      password 'y2s3z0PFKR00'
+
+  if (project.hasProperty('repository.release.url')) {
+    maven {
+      url project.property('repository.release.url')
+      if (project.hasProperty('repository.release.username')) {
+        credentials {
+          username project.property('repository.release.username')
+          password project.property('repository.release.password')
+        }
+      }
     }
-    url 'https://packages.aliyun.com/maven/repository/2013218-release-Pelnyx/'
   }
-  maven {
-    credentials {
-      username '5ee4807f97528f50b9776b26'
-      password 'y2s3z0PFKR00'
+  if (project.hasProperty('repository.snapshot.url')) {
+    maven {
+      url project.property('repository.snapshot.url')
+      if (project.hasProperty('repository.snapshot.username')) {
+        credentials {
+          username project.property('repository.snapshot.username')
+          password project.property('repository.snapshot.password')
+        }
+      }
     }
-    url 'https://packages.aliyun.com/maven/repository/2013218-snapshot-IQw4lU/'
   }
+
   mavenLocal()
   mavenCentral()
 }

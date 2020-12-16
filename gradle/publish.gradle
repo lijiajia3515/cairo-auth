@@ -1,41 +1,53 @@
 // maven publish config
 apply plugin: "maven-publish"
-//apply plugin: "signing"
 
 publishing {
   repositories {
-    maven {
-      // change to point to your repo, e.g. http://my.org/repo
-      def releasesRepoUrl = "https://packages.aliyun.com/maven/repository/2013218-release-Pelnyx/"
-      def snapshotsRepoUrl = "https://packages.aliyun.com/maven/repository/2013218-snapshot-IQw4lU/"
-
-      credentials {
-        username '5ee4807f97528f50b9776b26'
-        password 'y2s3z0PFKR00'
+    if (versionRelease) {
+      if (project.hasProperty('repository.release.url')) {
+        maven {
+          url project.property('repository.release.url')
+          if (project.hasProperty('repository.release.username')) {
+            credentials {
+              username project.property('repository.release.username')
+              password project.property('repository.release.password')
+            }
+          }
+        }
       }
-
-      url = versionRelease ? releasesRepoUrl : snapshotsRepoUrl
-
+    } else {
+      if (project.hasProperty('repository.snapshot.url')) {
+        maven {
+          url project.property('repository.snapshot.url')
+          if (project.hasProperty('repository.snapshot.username')) {
+            credentials {
+              username project.property('repository.snapshot.username')
+              password project.property('repository.snapshot.password')
+            }
+          }
+        }
+      }
     }
   }
+
   publications {
     mavenJava(MavenPublication) {
       from components.java
 
       pom {
-        name = "Cairo"
+        name = project.name
         packaging = "jar"
-        url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
+        url = "https://codeup.aliyun.com/harpoon/common/check-java"
 
         scm {
-          url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
-          connection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
-          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
+          url = "https://codeup.aliyun.com/harpoon/common/check-java"
+          connection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
+          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
         }
 
         issueManagement {
           system = "CodeUp"
-          url = "https://codeup.aliyun.com/harpoon/cairo/cairo/issues"
+          url = "https://codeup.aliyun.com/harpoon/common/check-java/issues"
         }
 
         licenses {
@@ -68,14 +80,5 @@ publishing {
         }
       }
     }
-  }
-}
-
-//signing {
-//  sign publishing.publications.mavenJava
-//}
-javadoc {
-  if (JavaVersion.current().isJava9Compatible()) {
-    options.addBooleanOption('html5', true)
   }
 }

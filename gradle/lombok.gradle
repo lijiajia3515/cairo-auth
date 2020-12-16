@@ -1,9 +1,5 @@
 // lombok config
 configurations {
-  developmentOnly
-  runtimeClasspath {
-    extendsFrom developmentOnly
-  }
   compileOnly {
     extendsFrom annotationProcessor
   }
