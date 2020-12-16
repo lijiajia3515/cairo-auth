@@ -37,17 +37,17 @@ publishing {
       pom {
         name = project.name
         packaging = "jar"
-        url = "https://codeup.aliyun.com/harpoon/common/check-java"
+        url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
 
         scm {
-          url = "https://codeup.aliyun.com/harpoon/common/check-java"
-          connection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
-          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
+          url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
+          connection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
+          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
         }
 
         issueManagement {
           system = "CodeUp"
-          url = "https://codeup.aliyun.com/harpoon/common/check-java/issues"
+          url = "https://codeup.aliyun.com/harpoon/cairo/cairo/issues"
         }
 
         licenses {
