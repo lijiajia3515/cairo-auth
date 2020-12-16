@@ -5,7 +5,8 @@ plugins {
 dependencies {
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-  // actuator
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter"
   implementation "org.springframework.boot:spring-boot-starter-actuator"
 
   // data
@@ -51,9 +52,3 @@ dependencies {
 bootJar {
   archiveFileName = "app.${archiveExtension.get()}"
 }
-
-// disable publish
-generateMetadataFileForMavenJavaPublication.enabled = false
-generatePomFileForMavenJavaPublication.enabled = false
-publishMavenJavaPublicationToMavenRepository.enabled = false
-publish.enabled = false

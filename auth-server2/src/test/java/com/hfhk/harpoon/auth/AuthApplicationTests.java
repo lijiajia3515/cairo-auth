@@ -1,7 +1,7 @@
 //package com.hfhk.harpoon.auth;
 //
-////import com.hfhk.auth.server.domain.mongo.ClientMongo;
-////import com.hfhk.auth.server.domain.mongo.UserMongo;
+////import com.hfhk.auth.server.mongo.ClientMongo;
+////import com.hfhk.auth.server.mongo.UserMongo;
 ////import org.junit.jupiter.api.Test;
 ////import org.springframework.beans.factory.annotation.Autowired;
 ////import org.springframework.boot.test.context.SpringBootTest;

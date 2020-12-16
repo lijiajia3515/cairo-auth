@@ -36,8 +36,8 @@ allprojects {
 
 subprojects {
   apply from: "${rootDir}/gradle/java.gradle"
+
   apply from: "${rootDir}/gradle/dependency-management.gradle"
-  apply from: "${rootDir}/gradle/publish.gradle"
   apply from: "${rootDir}/gradle/lombok.gradle"
 }
 
