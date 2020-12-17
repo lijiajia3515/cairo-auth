@@ -1,6 +1,8 @@
 // maven publish config
 apply plugin: "maven-publish"
-
+ext {
+  versionRelease = !version.endsWith('SNAPSHOT')
+}
 publishing {
   repositories {
     if (versionRelease) {
@@ -37,17 +39,17 @@ publishing {
       pom {
         name = project.name
         packaging = "jar"
-        url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
+        url = "https://codeup.aliyun.com/harpoon/common/check-java"
 
         scm {
-          url = "https://codeup.aliyun.com/harpoon/cairo/cairo"
-          connection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
-          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/cairo/cairo"
+          url = "https://codeup.aliyun.com/harpoon/common/check-java"
+          connection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
+          developerConnection = "scm:git:git://codeup.aliyun.com/harpoon/common/check-java"
         }
 
         issueManagement {
           system = "CodeUp"
-          url = "https://codeup.aliyun.com/harpoon/cairo/cairo/issues"
+          url = "https://codeup.aliyun.com/harpoon/common/check-java/issues"
         }
 
         licenses {

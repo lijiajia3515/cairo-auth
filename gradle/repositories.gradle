@@ -1,9 +1,15 @@
 repositories {
+
   maven {
-    url 'https://maven.aliyun.com/repository/public/'
+    url 'https://maven.aliyun.com/repository/public'
   }
+
   maven {
-    url 'https://maven.aliyun.com/repository/spring/'
+    url 'https://maven.aliyun.com/repository/grails-core'
+  }
+
+  maven {
+    url 'https://maven.aliyun.com/repository/grails-spring'
   }
 
   if (project.hasProperty('repository.release.url')) {
@@ -28,7 +34,6 @@ repositories {
       }
     }
   }
-
-  mavenLocal()
   mavenCentral()
+  mavenLocal()
 }
