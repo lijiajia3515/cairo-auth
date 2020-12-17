@@ -1,27 +1,10 @@
 buildscript {
   apply from: "${rootDir}/gradle/repositories.gradle"
-  ext {
-    javaVersion = 11
-
-
-    springVersion = "5.2.9.RELEASE"
-    springBootVersion = "2.3.4.RELEASE"
-    springCloudVersion = "Hoxton.SR8"
-    springCloudAlibabaVersion = "2.2.2.RELEASE"
-
-    cairoVersion = "0.1.0-SNAPSHOT"
-    hutoolVersion = "5.3.10"
-    mybatisVersion = "3.4.0"
-    easyexcelVersion = "2.2.5"
-
-    // tool variable
-    versionRelease = !version.endsWith('SNAPSHOT')
-  }
 }
 
 plugins {
   id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
-  id 'org.springframework.boot' version '2.3.4.RELEASE' apply false
+  id 'org.springframework.boot' version '2.4.1' apply false
 }
 
 allprojects {
