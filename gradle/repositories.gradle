@@ -5,11 +5,7 @@ repositories {
   }
 
   maven {
-    url 'https://maven.aliyun.com/repository/grails-core'
-  }
-
-  maven {
-    url 'https://maven.aliyun.com/repository/grails-spring'
+    url 'https://repo.spring.io/libs-milestone'
   }
 
   if (project.hasProperty('repository.release.url')) {
