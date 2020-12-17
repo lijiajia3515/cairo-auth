@@ -5,6 +5,9 @@ repositories {
   }
 
   maven {
+    url 'https://maven.aliyun.com/repository/spring'
+  }
+  maven {
     url 'https://repo.spring.io/libs-milestone'
   }
 
