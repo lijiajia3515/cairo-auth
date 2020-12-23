@@ -1,28 +1,30 @@
 package com.hfhk.auth.service.authentication;
 
-import cn.hutool.core.util.IdUtil;
-import com.hfhk.cairo.security.authentication.*;
+import com.hfhk.auth.domain.mongo.Mongo;
+import com.hfhk.auth.domain.mongo.ResourceMongo;
+import com.hfhk.auth.domain.mongo.RoleMongo;
+import com.hfhk.auth.domain.mongo.UserMongo;
+import com.hfhk.auth.service.constants.Redis;
 import com.hfhk.cairo.core.auth.RoleConstant;
+import com.hfhk.cairo.security.authentication.Department;
+import com.hfhk.cairo.security.authentication.RemoteUser;
+import com.hfhk.cairo.security.authentication.Role;
+import com.hfhk.cairo.security.authentication.User;
 import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthenticationToken;
-import com.hfhk.cairo.security.oauth2.spec.ClientSpec;
-import com.hfhk.cairo.security.oauth2.spec.UserSpec;
-import com.hfhk.auth.service.auth.constants.Redis;
-import com.hfhk.auth.service.auth.domain.mongo.DepartmentMongo;
-import com.hfhk.auth.service.auth.domain.mongo.ResourceMongo;
-import com.hfhk.auth.service.auth.domain.mongo.RoleMongo;
-import com.hfhk.auth.service.auth.domain.mongo.UserMongo;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,78 +41,60 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 
 	@Override
 	public AbstractAuthenticationToken convert(Jwt source) {
-		Client client = convertClient(source);
-		String uid = convertUid(source);
-		if (Optional.ofNullable(uid).filter(x -> !x.isBlank()).isPresent()) {
-			final String redisKey = Redis.Token.key(client.getId(), uid);
-			final RemoteUser data = Optional.ofNullable(redisTemplate.opsForValue().get(redisKey))
-				.orElseGet(() ->
-					dataFindUser(client.getId(), uid)
-						.map(user -> {
-							final Collection<GrantedAuthority> authorities = dataFindUserAuthority(client.getId(), uid);
-							final RemoteUser newAuthentication = new RemoteUser(user, Optional.ofNullable(authorities)
-								.stream()
-								.flatMap(Collection::stream)
-								.map(GrantedAuthority::getAuthority)
-								.collect(Collectors.toList()));
+		String client = Optional.ofNullable(source.getClaimAsString(IdTokenClaimNames.AZP)).orElse("default");
+		String uid = Optional.ofNullable(source.getSubject()).orElse("default");
+		String key = Redis.Token.key(client, uid);
+		RemoteUser remoteUser = Optional.ofNullable(redisTemplate.opsForValue().get(key))
+			.orElseGet(() -> {
+				Collection<String> authorities = dataFindUserAuthority(uid, Collections.singleton(client));
+				User user = dataFindUser(uid, Collections.singleton(client)).orElse(null);
+				RemoteUser newRemoteUser = new RemoteUser(user, authorities);
 
-							redisTemplate.opsForValue().set(redisKey, newAuthentication, Duration.ofHours(1L));
-							return newAuthentication;
-						}).orElse(new RemoteUser())
-				);
-			return new CairoAuthenticationToken(source, client, data.getUser(), Optional.ofNullable(data.getAuthorities())
-				.stream()
-				.flatMap(Collection::stream)
+				Duration expire = Optional.ofNullable(source.getExpiresAt())
+					.filter(x -> Instant.now().isAfter(x))
+					.map(x -> Duration.of(Instant.now().until(x, ChronoUnit.MILLIS), ChronoUnit.MILLIS))
+					.orElse(Duration.ofHours(2));
+
+				redisTemplate.opsForValue().set(key, newRemoteUser, expire);
+				return newRemoteUser;
+			});
+		return new CairoAuthenticationToken(
+			source,
+			remoteUser.getAuthorities().stream()
 				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList()));
-		} else {
-			return new CairoAuthenticationToken(source, client, null, Collections.emptyList());
-		}
-	}
-
-	private Client convertClient(Jwt jwt) {
-		Map<String, Object> claims = Optional.ofNullable(jwt.getClaims()).orElse(Collections.emptyMap());
-		return Client.builder()
-			.id(claims.getOrDefault(ClientSpec.ID, "default").toString())
-			.scopes((Collection<String>) claims.getOrDefault(ClientSpec.SCOPE, Collections.emptyList()))
-			.build();
-	}
-
-	private String convertUid(Jwt jwt) {
-		return Optional.ofNullable(jwt.getClaims())
-			.map(claims -> claims.get(UserSpec.UID))
-			.map(x -> (String) x)
-			.orElse(IdUtil.objectId());
+				.collect(Collectors.toSet()),
+			remoteUser.getUser()
+		);
 	}
 
 	/**
-	 * 查询用户
-	 *
-	 * @param client client
-	 * @param uid    uid
-	 * @return i
+	 * @param uid     uid
+	 * @param clients clients
+	 * @return user
 	 */
-	private Optional<User> dataFindUser(String client, String uid) {
+	private Optional<User> dataFindUser(String uid, Collection<String> clients) {
 		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where("uid").is(uid)), UserMongo.class))
 			.map(x -> {
-				List<Role> roles = Optional.ofNullable(x.getClientRoles()).filter(y -> y.containsKey(client))
-					.map(y -> y.get(client))
-					.map(codes ->
-						mongoTemplate.find(Query.query(Criteria.where("code").in(codes)), RoleMongo.class)
-							.stream()
-							.map(role -> Role.builder().code(role.getCode()).name(role.getName()).build())
-							.collect(Collectors.toList())
-					)
-					.orElse(Collections.emptyList());
-				List<Department> departments = Optional.ofNullable(x.getClientDepartments()).filter(y -> y.containsKey(client))
-					.map(y -> y.get(client))
-					.map(ids ->
-						mongoTemplate.find(Query.query(Criteria.where("_id").in(ids)), DepartmentMongo.class)
-							.stream()
-							.map(role -> Department.builder().id(role.getId()).name(role.getName()).build())
-							.collect(Collectors.toList())
-					)
-					.orElse(Collections.emptyList());
+				Map<String, Set<String>> clientRolesMap = Optional.ofNullable(x.getClientRoles()).orElse(Collections.emptyMap());
+				Map<String, Set<String>> clientDepartmentMap = Optional.ofNullable(x.getClientDepartments()).orElse(Collections.emptyMap());
+				Map<String, Collection<Role>> roleMap = clients.stream()
+					.collect(Collectors.toMap(y -> y, y -> clientRolesMap.getOrDefault(y, Collections.emptySet())
+						.stream()
+						.map(z -> Role.builder()
+							.code(z)
+							.name(z)
+							.build())
+						.collect(Collectors.toList())));
+
+				Map<String, Collection<Department>> departmentMap = clients.stream()
+					.collect(Collectors.toMap(y -> y, y -> clientDepartmentMap.getOrDefault(y, Collections.emptySet())
+						.stream()
+						.map(z -> Department.builder()
+							.id(z)
+							.name(z)
+							.build())
+						.collect(Collectors.toList())));
+
 				return User.builder()
 					.uid(x.getUid())
 					.username(x.getUsername())
@@ -118,8 +102,8 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 					.email(x.getEmail())
 					.name(x.getName())
 					.avatarUrl(x.getAvatarUrl())
-					.roles(roles)
-					.departments(departments)
+					.roles(roleMap)
+					.departments(departmentMap)
 					.build();
 			});
 	}
@@ -127,38 +111,56 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 	/**
 	 * 查询权限
 	 *
-	 * @param client client
-	 * @param user   user
-	 * @return 权限 列表
+	 * @param uid     uid
+	 * @param clients clients
+	 * @return 权限
 	 */
-	private Collection<GrantedAuthority> dataFindUserAuthority(String client, String user) {
-		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where("uid").is(user)), UserMongo.class))
+	private Collection<String> dataFindUserAuthority(String uid, Collection<String> clients) {
+		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where("Uid").is(uid)), UserMongo.class, Mongo.Collection.User))
 			.stream()
-			.flatMap(x -> {
+			.flatMap(user -> {
+				Map<String, Set<String>> clientRolesMap = Optional.ofNullable(user.getClientRoles())
+					.orElse(Collections.emptyMap());
 
-				Set<String> roleCodes = Optional.ofNullable(x.getClientRoles())
-					.filter(y -> y.containsKey(client))
-					.flatMap(y -> Optional.ofNullable(y.get(client)))
-					.stream().flatMap(Collection::stream)
-					.collect(Collectors.toSet());
+				Map<String, Set<String>> clientResourceMap = Optional.ofNullable(user.getClientResources())
+					.orElse(Collections.emptyMap());
+
+				List<String> roleCodes = clients.stream()
+					.flatMap(x -> clientRolesMap.getOrDefault(x, Collections.emptySet()).parallelStream())
+					.collect(Collectors.toList());
+				List<String> userResources = clients.stream()
+					.flatMap(x -> clientResourceMap.getOrDefault(x, Collections.emptySet()).parallelStream())
+					.collect(Collectors.toList());
 
 				boolean isAdmin = roleCodes.contains(RoleConstant.ADMIN);
-				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where("code").in(roleCodes)), RoleMongo.class);
-				Stream<String> userAuthorityStream = isAdmin
-					?
-					mongoTemplate.find(Query.query(Criteria.where("client").is(client)), ResourceMongo.class)
-						.stream().flatMap(y -> Optional.ofNullable(y.getPermissions()).stream().flatMap(Collection::stream))
-					:
-					roles.stream()
-						.flatMap(y -> Optional.ofNullable(y.getResources()).stream().flatMap(Collection::stream));
-				Stream<String> roleAuthorityStream = roleCodes.stream().map("ROLE_"::concat);
-				Stream<String> roleResourceAuthorityStream = roles.stream().flatMap(z -> Optional.ofNullable(z.getResources()).orElse(Collections.emptyList()).stream());
+				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.Field.Code).in(roleCodes)), RoleMongo.class);
+				Stream<String> roleStream = roles.stream().map(RoleMongo::getCode)
+					.map("ROLE_"::concat);
+				Criteria resourceCriteria = new Criteria();
+				if (isAdmin) {
+					resourceCriteria.and(ResourceMongo.Field.Client).in(clients);
+				} else {
+					Set<String> resourceIds = roles.stream()
+						.flatMap(x -> Optional.ofNullable(x.getResources()).stream())
+						.flatMap(Collection::parallelStream)
+						.collect(Collectors.toSet());
+					if (!resourceIds.isEmpty()) {
+						resourceCriteria.and(ResourceMongo.Field._ID).in(resourceIds);
+					}
+				}
+				if (!userResources.isEmpty()) {
+					resourceCriteria.orOperator(Criteria.where(ResourceMongo.Field._ID).in(userResources));
+				}
 
-				return Stream.concat(
-					userAuthorityStream,
-					Stream.concat(roleAuthorityStream, roleResourceAuthorityStream));
+				Query resourceQuery = Query.query(resourceCriteria);
+
+				Stream<String> resourceStream = mongoTemplate.find(resourceQuery, ResourceMongo.class, Mongo.Collection.Resource)
+					.stream()
+					.flatMap(x -> Optional.ofNullable(x.getPermissions()).stream())
+					.flatMap(Collection::parallelStream);
+
+				return Stream.concat(roleStream, resourceStream);
 			})
-			.map(SimpleGrantedAuthority::new)
 			.collect(Collectors.toSet());
 	}
 }

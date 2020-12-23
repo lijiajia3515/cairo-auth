@@ -1,0 +1,15 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${hfhk.auth.server}/oauth2/jwks
+
+security:
+  oauth2:
+    client:
+      id: ${random.value}
+      client-id: ${hfhk.auth.client.id:hfhk_auth}
+      client-secret: ${hfhk.auth.client.id:hfhk_auth}
+      grant-type: client_credentials
+      access-token-uri: http://${hfhk.auth.server:auth}/oauth2/token

@@ -18,6 +18,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter-hateoas"
   implementation "org.springframework.boot:spring-boot-starter-validation"
   implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation 'org.springframework.session:spring-session-core'
 
   // security
   implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -38,6 +39,10 @@ dependencies {
   implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
   implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
   // implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
+
+  implementation "com.hfhk.cairo:security:${cairoVersion}"
+
+  implementation project(":auth-common")
 
   implementation project(':auth-domain')
 

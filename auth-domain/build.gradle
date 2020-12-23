@@ -1,6 +1,5 @@
 apply from: "${rootDir}/gradle/publish.gradle"
 dependencies {
-  compile "com.hfhk.cairo:domain:${cairoVersion}"
-  compile "org.springframework.data:spring-data-commons"
-  compile "org.springframework.security:spring-security-core"
+  implementation "com.hfhk.cairo:domain:${cairoVersion}"
+  implementation 'org.springframework.data:spring-data-commons'
 }

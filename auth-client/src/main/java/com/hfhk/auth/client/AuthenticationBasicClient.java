@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface AuthenticationBasicClient {
 
 	@GetMapping
-    RemoteUser authentication(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String authentication);
+	RemoteUser authentication(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String authentication);
 }

@@ -1,0 +1,23 @@
+server:
+  port: 80
+
+hfhk:
+  auth:
+    server: auth.hfhksoft.com
+    client:
+      id: hfhk_auth
+      secret: hfhk_auth
+
+spring:
+  data:
+    mongodb:
+      field-naming-strategy: com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
+      auto-index-creation: true
+      database: hfhk-auth
+      host: 192.168.30.21
+      port: 27017
+      authentication-database: hfhk
+      username: hfhk
+      password: Hfhk.1320.
+
+

@@ -1,37 +1,57 @@
 package com.hfhk.auth.server2.config;
 
+import com.hfhk.auth.server2.modules.user.HfhkUserService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
 public class DefaultSecurityConfig {
 
 	@Bean
-	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests(authorizeRequests ->
-				authorizeRequests.anyRequest().authenticated()
+			.csrf().disable()
+			.authorizeRequests(authorizeRequests -> authorizeRequests
+				.mvcMatchers("/test/**").permitAll()
+				.mvcMatchers("/**").authenticated()
 			)
-			.formLogin(withDefaults());
+			.formLogin()
+			.and()
+			//.oauth2Login()
+			//.and()
+			//.oauth2Client()
+			//.and()
+			.sessionManagement()
+			.enableSessionUrlRewriting(true)
+			.and()
+			.exceptionHandling()
+			.and();
 		return http.build();
 	}
 
+	//@Bean
+	//UserDetailsService users() {
+	//	UserDetails user = User.withDefaultPasswordEncoder()
+	//		.username("root")
+	//		.password("root")
+	//		.roles("USER")
+	//		.build();
+	//	return new InMemoryUserDetailsManager(user);
+	//}
+
 	@Bean
-	UserDetailsService users() {
-		UserDetails user = User.withDefaultPasswordEncoder()
-			.username("root")
-			.password("root")
-			.roles("USER")
-			.build();
-		return new InMemoryUserDetailsManager(user);
+	PasswordEncoder hfhkPasswordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
+	@Bean
+	HfhkUserService users(MongoTemplate mongoTemplate) {
+		return new HfhkUserService(mongoTemplate);
 	}
 
 }

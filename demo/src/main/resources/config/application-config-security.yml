@@ -1,0 +1,56 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          spring:
+            issuer-uri: http://${hfhk.auth.server}
+        registration:
+          hfhk_test:
+            provider: spring
+            client-id: hfhk_test
+            client-secret: hfhk_test
+            client-name: 测试
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+          hfhk_test2:
+            provider: spring
+            client-id: hfhk_test2
+            client-secret: hfhk_test2
+            client-name: 测试2
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+          hfhk_dhgxjsj:
+            provider: spring
+            client-id: hfhk_dhgxjsj
+            client-secret: hfhk_dhgxjsj
+            client-name: 东湖高新建设局
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+          hfhk-common-check-client-credentials:
+            provider: spring
+            client-id: hfhk_common_check
+            client-secret: hfhk_client_common_check
+            client-name: 浩方恒科-客户端-检查服务
+            authorization-grant-type: client_credentials
+            scope:
+              - message.read
+              - message.write
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${hfhk.auth.server}/oauth2/jwks
+
+security:
+  oauth2:
+    client:
+      id: ${random.value}
+      client-id: ${hfhk.auth.client.id:hfhk_auth}
+      client-secret: ${hfhk.auth.client.id:hfhk_auth}
+      grant-type: client_credentials
+      access-token-uri: http://${hfhk.auth.server:auth}/oauth2/token

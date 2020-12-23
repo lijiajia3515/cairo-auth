@@ -1,0 +1,15 @@
+hfhk:
+  auth:
+    server: auth.hfhksoft.com
+    client:
+      id: hfhk_auth
+      secret: hfhk_auth
+  nacos:
+    server-addr: 192.168.30.21:8848
+    discovery:
+      server_addr: 192.168.30.21:8848
+      namespace: local
+      group: local
+
+server:
+  port: 10000

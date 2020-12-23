@@ -11,13 +11,13 @@ spring:
 
   cloud:
     nacos:
-      server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+      server-addr: ${hfhk.nacos.server.addr:localhost:8848}
       discovery:
-        server-addr: ${NACOS_DISCOVERY_SERVER_ADDR:${NACOS_SERVER_ADDR:localhost:8848}}
-        namespace: ${NACOS_DISCOVERY_NAMESPACE:${NACOS_NAMESPACE:harpoon}}
-        group: ${NACOS_DISCOVERY_GROUP:${NACOS_GROUP:harpoon}}
+        server-addr: ${NACOS_DISCOVERY_SERVER_ADDR:${hfhk.nacos.server.addr:localhost:8848}}
+        namespace: ${hfhk.nacos.discovery.namespace:${NACOS_NAMESPACE:harpoon}}
+        group: ${hfhk.nacos.discovery.group:${NACOS_GROUP:harpoon}}
       # config:
-      #   server-addr: ${NACOS_CONFIG_SERVER_ADDR:${NACOS_SERVER_ADDR:localhost:8848}}
+      #   server-addr: ${NACOS_CONFIG_SERVER_ADDR:${hfhk.nacos.server.addr:localhost:8848}}
       #   namespace: ${NACOS_CONFIG_NAMESPACE:${NACOS_NAMESPACE:harpoon}}
       #   group: ${NACOS_CONFIG_GROUP:${NACOS_GROUP:harpoon}}
       #   file-extension: yaml

@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: ${hfhk.nacos.server.addr:localhost:8848}
+      discovery:
+        server-addr: ${hfhk.nacos.discovery.server-addr:${hfhk.nacos.server-addr:localhost:8848}}
+        namespace: ${hfhk.nacos.discovery.namespace:${hfhk.nacos.namespace:cairo}}
+        group: ${hfhk.nacos.discovery.group:${hfhk.nacos.group:cairo}}
+        metadata:
+          version: v1

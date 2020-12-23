@@ -1,6 +1,6 @@
 package com.hfhk.auth.server.oauth2;
 
-import com.hfhk.auth.server.domain.mongo.ClientMongo;
+import com.hfhk.auth.domain.mongo.ClientV2Mongo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,9 +18,9 @@ public class MyClientDetailsService extends AbstractClientDetailsService impleme
 
 	@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-		ClientMongo clientMongo = mongoTemplate.findOne(
+		ClientV2Mongo clientMongo = mongoTemplate.findOne(
 			Query.query(Criteria.where("clientId").is(clientId)),
-			ClientMongo.class
+			ClientV2Mongo.class
 		);
 
 		return Optional.ofNullable(clientMongo)

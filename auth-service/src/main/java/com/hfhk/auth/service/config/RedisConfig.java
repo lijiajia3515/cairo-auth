@@ -1,6 +1,5 @@
 package com.hfhk.auth.service.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfhk.cairo.security.authentication.RemoteUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,6 @@ public class RedisConfig {
 
 	@Bean("objectValueRedisSerializer")
 	public RedisSerializer<?> objectValueRedisSerializer() {
-		final ObjectMapper objectMapper = new ObjectMapper();
 		return new GenericJackson2JsonRedisSerializer();
 	}
 

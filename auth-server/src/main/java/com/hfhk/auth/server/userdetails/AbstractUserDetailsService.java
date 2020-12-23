@@ -1,6 +1,6 @@
 package com.hfhk.auth.server.userdetails;
 
-import com.hfhk.auth.server.domain.mongo.UserMongo;
+import com.hfhk.auth.domain.mongo.UserMongo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Optional;

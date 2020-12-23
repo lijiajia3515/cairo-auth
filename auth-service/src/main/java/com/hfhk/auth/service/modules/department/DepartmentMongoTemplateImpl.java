@@ -1,0 +1,80 @@
+package com.hfhk.auth.service.modules.department;
+
+import com.hfhk.auth.domain.mongo.DepartmentMongo;
+import com.hfhk.auth.domain.request.DepartmentFindRequest;
+import com.hfhk.cairo.core.page.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
+@Component
+public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
+
+	private final MongoTemplate mongoTemplate;
+
+	public DepartmentMongoTemplateImpl(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+
+
+	@Override
+	public List<DepartmentMongo> findByIds(String client, Collection<String> ids) {
+		Query query = Query
+			.query(
+				Criteria.where(DepartmentMongo.Field.Client).is(client)
+					.and(DepartmentMongo.Field._ID).in(ids))
+			.with(
+				Sort.by(
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
+					Sort.Order.asc(DepartmentMongo.Field._ID)
+				)
+			);
+		return mongoTemplate.find(query, DepartmentMongo.class);
+	}
+
+	@Override
+	public List<DepartmentMongo> find(String client) {
+		Query query = Query
+			.query(Criteria.where(DepartmentMongo.Field.Client).is(client))
+			.with(
+				Sort.by(
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
+					Sort.Order.asc(DepartmentMongo.Field._ID)
+				)
+			);
+
+		return mongoTemplate.find(query, DepartmentMongo.class);
+	}
+
+	@Override
+	public Page<DepartmentMongo> pageFind(String clientId, DepartmentFindRequest request, Pageable pageable) {
+		Query query = Query
+			.query(Criteria.where(DepartmentMongo.Field.Client).is(clientId))
+			.with(
+				Sort.by(
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
+					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
+					Sort.Order.asc(DepartmentMongo.Field._ID)
+				)
+			);
+		Optional.ofNullable(request.getParentId())
+			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.Field.Parent).is(request.getParentId())));
+
+		long total = mongoTemplate.count(query, DepartmentMongo.class);
+
+		query.with(pageable);
+		List<DepartmentMongo> content = mongoTemplate.find(query, DepartmentMongo.class);
+		return new Page<>(pageable, content, total);
+	}
+}

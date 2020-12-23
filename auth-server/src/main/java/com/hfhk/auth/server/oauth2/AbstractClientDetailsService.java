@@ -1,6 +1,6 @@
 package com.hfhk.auth.server.oauth2;
 
-import com.hfhk.auth.server.domain.mongo.ClientMongo;
+import com.hfhk.auth.domain.mongo.ClientV2Mongo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
@@ -15,11 +15,11 @@ public abstract class AbstractClientDetailsService {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	protected BaseClientDetails buildClient(ClientMongo client) {
+	protected BaseClientDetails buildClient(ClientV2Mongo client) {
 		BaseClientDetails baseClientDetails = new BaseClientDetails(
 			client.getClientId(),
 			String.join(",", Optional.ofNullable(client.getResourceIds()).orElse(Collections.emptyList())),
-			Optional.ofNullable(client.getScopes()).orElse(Collections.emptyList()).stream().map(ClientMongo.Scope::getName).collect(Collectors.joining(",")),
+			Optional.ofNullable(client.getScopes()).orElse(Collections.emptyList()).stream().map(ClientV2Mongo.Scope::getName).collect(Collectors.joining(",")),
 			String.join(",", Optional.ofNullable(client.getGrantTypes()).orElse(Collections.emptyList())),
 			String.join(",", Optional.ofNullable(client.getAuthorities()).orElse(Collections.emptyList())),
 			String.join(",", Optional.ofNullable(client.getRedirectUris()).orElse(Collections.emptyList()))
@@ -29,8 +29,8 @@ public abstract class AbstractClientDetailsService {
 			Optional.ofNullable(client.getScopes())
 				.orElse(Collections.emptyList())
 				.stream()
-				.filter(ClientMongo.Scope::isAutoApprove)
-				.map(ClientMongo.Scope::getName).collect(Collectors.toList())
+				.filter(ClientV2Mongo.Scope::isAutoApprove)
+				.map(ClientV2Mongo.Scope::getName).collect(Collectors.toList())
 		);
 		return baseClientDetails;
 	}

@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: service-auth-v1
+  profiles:
+    group:
+      config:
+        - config-server
+        - config-store
+        - config-cloud
+        - config-security
+        - config-feign
+    active:
+      - config
+      - env-local

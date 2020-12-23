@@ -1,8 +1,10 @@
 rootProject.name = 'auth'
 
+include 'auth-common'
 include 'auth-domain'
 include 'auth-client'
 include 'auth-service'
 include 'auth-server'
 include 'auth-server2'
+include 'demo'
 

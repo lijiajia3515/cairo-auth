@@ -1,6 +1,7 @@
 package com.hfhk.auth.server.userdetails;
 
-import com.hfhk.auth.server.domain.mongo.UserMongo;
+import com.hfhk.auth.domain.mongo.Mongo;
+import com.hfhk.auth.domain.mongo.UserMongo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicUpdate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,9 +18,10 @@ public class AuthPasswordService extends AbstractUserDetailsService implements U
 	@Override
 	public UserDetails updatePassword(UserDetails user, String newPassword) {
 		mongoTemplate.findAndModify(
-			Query.query(Criteria.where("uid").is(user.getUsername())),
-			BasicUpdate.update("password", newPassword),
-			UserMongo.class
+			Query.query(Criteria.where(UserMongo.Field.Uid).is(user.getUsername())),
+			BasicUpdate.update(UserMongo.Field.Password, newPassword),
+			UserMongo.class,
+			Mongo.Collection.User
 		);
 		return user;
 	}

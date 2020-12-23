@@ -1,0 +1,38 @@
+plugins {
+  id 'org.springframework.boot'
+}
+
+dependencies {
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter"
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation 'org.springframework.session:spring-session-core'
+
+  // security
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.cloud:spring-cloud-starter-security'
+  implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
+  implementation project(':auth-domain')
+
+  implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
+  implementation "com.hfhk.cairo:core:${cairoVersion}"
+
+  // test
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
+  // testImplementation 'io.projectreactor:reactor-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+}
+
+bootJar {
+  archiveFileName = "app.${archiveExtension.get()}"
+}

@@ -66,6 +66,7 @@ public class AuthUser implements UserDetails {
 	 */
 	private Collection<GrantedAuthority> authorities;
 
+	@Override
 	public String getUsername() {
 		return uid;
 	}

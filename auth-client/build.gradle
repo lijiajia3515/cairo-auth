@@ -1,6 +1,6 @@
 apply from: "${rootDir}/gradle/publish.gradle"
 dependencies {
-  implementation "com.hfhk.cairo:client:${cairoVersion}"
+  compile "com.hfhk.cairo:client:${cairoVersion}"
 
   implementation project(":auth-domain")
 

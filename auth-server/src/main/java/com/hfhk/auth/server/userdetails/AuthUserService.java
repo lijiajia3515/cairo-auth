@@ -1,6 +1,7 @@
 package com.hfhk.auth.server.userdetails;
 
-import com.hfhk.auth.server.domain.mongo.UserMongo;
+import com.hfhk.auth.domain.mongo.Mongo;
+import com.hfhk.auth.domain.mongo.UserMongo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,14 +18,15 @@ public class AuthUserService extends AbstractUserDetailsService implements UserD
 
 	@Override
 	public AuthUser loadUserByUsername(String username) throws UsernameNotFoundException {
-		Criteria cUid = Criteria.where("uid").is(username);
-		Criteria cUsername = Criteria.where("username").is(username);
-		Criteria cPhoneNumber = Criteria.where("phoneNumber").is(username);
-		Criteria cEmail = Criteria.where("email").is(username);
+		Criteria cUid = Criteria.where(UserMongo.Field.Uid).is(username);
+		Criteria cUsername = Criteria.where(UserMongo.Field.Username).is(username);
+		Criteria cPhoneNumber = Criteria.where(UserMongo.Field.PhoneNumber).is(username);
+		Criteria cEmail = Criteria.where(UserMongo.Field.Email).is(username);
 
 		UserMongo userMongo = mongoTemplate.findOne(
 			Query.query(new Criteria().orOperator(cUid, cUsername, cPhoneNumber, cEmail)),
-			UserMongo.class
+			UserMongo.class,
+			Mongo.Collection.User
 		);
 		return Optional.ofNullable(userMongo)
 			.map(this::buildAuthUser)
