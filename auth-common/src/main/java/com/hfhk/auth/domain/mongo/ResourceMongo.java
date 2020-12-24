@@ -1,6 +1,5 @@
 package com.hfhk.auth.domain.mongo;
 
-import com.hfhk.auth.domain.ResourceType;
 import com.hfhk.cairo.mongo.data.Metadata;
 import com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNames;
 import lombok.AllArgsConstructor;
@@ -40,7 +39,7 @@ public class ResourceMongo implements Serializable {
 	/**
 	 * 类型
 	 */
-	private ResourceType type;
+	private Type type;
 
 	/**
 	 * 名称
@@ -69,8 +68,24 @@ public class ResourceMongo implements Serializable {
 	private Metadata metadata = new Metadata();
 
 
+	/**
+	 * 资源类型
+	 */
+	public enum Type {
+		/**
+		 * 菜单
+		 */
+		MENU,
+
+		/**
+		 * 元素
+		 */
+		ELEMENT;
+
+		public String value = name();
+	}
+
 	public static final class Field extends UpperCamelCaseFieldNames {
-		public static final Metadata Metadata = new UpperCamelCaseFieldNames.Metadata();
 		public static final String Client = "Client";
 		public static final String Parent ="Parent";
 		public static final String Type = "Type";

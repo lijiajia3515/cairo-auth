@@ -1,8 +1,9 @@
 package com.hfhk.auth.service.modules.resource;
 
 import com.hfhk.auth.domain.mongo.ResourceMongo;
-import com.hfhk.auth.domain.ResourceTreeNode;
-import com.hfhk.auth.domain.response.ResourceV1;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.resource.ResourceType;
+import com.hfhk.auth.domain.resource.ResourceV1;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import com.hfhk.cairo.mongo.data.Metadata;
 
@@ -21,7 +22,7 @@ public class ResourceConverter {
 		ResourceV1 node = new ResourceV1();
 		node.setId(data.getId())
 			.setParentId(data.getParent())
-			.setType(data.getType())
+			.setType(Optional.ofNullable(data.getType()).map(x -> ResourceType.valueOf(x.name())).orElse(null))
 			.setName(data.getName())
 			.setPermissions(data.getPermissions())
 			.setPath(data.getPath())
@@ -35,7 +36,7 @@ public class ResourceConverter {
 			.map(data -> new ResourceTreeNode()
 				.setId(data.getId())
 				.setParentId(data.getParent())
-				.setType(data.getType())
+				.setType(Optional.ofNullable(data.getType()).map(x -> ResourceType.valueOf(x.name())).orElse(null))
 				.setName(data.getName())
 				.setPermissions(data.getPermissions())
 				.setPath(data.getPath())

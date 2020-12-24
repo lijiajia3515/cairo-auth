@@ -1,11 +1,7 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.Department;
-import com.hfhk.auth.domain.DepartmentTreeNode;
-import com.hfhk.auth.domain.request.DepartmentFindRequest;
-import com.hfhk.auth.domain.request.DepartmentModifyRequest;
-import com.hfhk.auth.domain.request.DepartmentSaveRequest;
-import org.springframework.data.domain.Pageable;
+import com.hfhk.auth.domain.department.*;
+import com.hfhk.cairo.core.page.Page;
 
 import java.util.List;
 
@@ -20,7 +16,7 @@ public interface DepartmentService {
 	 * @param client client
 	 * @return 部门查询
 	 */
-	List<Department> find(String client, DepartmentFindRequest request, Pageable pageable);
+	Page<Department> pageFind(String client, DepartmentPageFindRequest request);
 
 	/**
 	 * 属性 查询

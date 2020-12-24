@@ -1,5 +1,6 @@
 package com.hfhk.auth.service.modules.resource;
 
+import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -31,7 +32,7 @@ public class ResourceMongoTemplateImpl implements ResourceMongoTemplate {
 			Criteria.where(ResourceMongo.Field.Client).is(client)
 				.and(ResourceMongo.Field._ID).in(ids)
 		);
-		List<ResourceMongo> firstList = mongoTemplate.find(query, ResourceMongo.class);
+		List<ResourceMongo> firstList = mongoTemplate.find(query, ResourceMongo.class, Mongo.Collection.Resource);
 		List<ResourceMongo> allList = new ArrayList<>(firstList);
 		findSubs(allList, firstList);
 
@@ -51,7 +52,8 @@ public class ResourceMongoTemplateImpl implements ResourceMongoTemplate {
 					Query.query(
 						Criteria.where(ResourceMongo.Field._ID).in(parentIds)
 					),
-					ResourceMongo.class
+					ResourceMongo.class,
+					Mongo.Collection.Resource
 				);
 				data.addAll(subList);
 				findSubs(data, subList);

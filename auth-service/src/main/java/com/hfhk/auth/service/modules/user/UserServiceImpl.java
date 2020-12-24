@@ -4,15 +4,11 @@ import cn.hutool.core.util.IdUtil;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
+import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.department.DepartmentMongoTemplate;
 import com.hfhk.auth.service.modules.role.RoleMongoTemplate;
-import com.hfhk.auth.domain.Department;
-import com.hfhk.auth.domain.Role;
-import com.hfhk.auth.domain.User;
-import com.hfhk.auth.domain.request.UserFindRequest;
-import com.hfhk.auth.domain.request.UserModifyRequest;
-import com.hfhk.auth.domain.request.UserRegRequest;
-import com.hfhk.auth.domain.request.UserResetPasswordRequest;
+import com.hfhk.auth.domain.department.Department;
+import com.hfhk.auth.domain.role.Role;
 import com.hfhk.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -163,9 +159,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<User> find(String client,
-						   UserFindRequest request,
-						   Pageable pageable) {
-		Page<UserMongo> page = userMongoTemplate.pageFind(request, pageable);
+						   UserPageFindRequest request) {
+		Page<UserMongo> page = userMongoTemplate.pageFind(request);
 
 		Set<String> roleCodes = page.stream().flatMap(x -> Optional.ofNullable(x.getClientRoles()).stream())
 			.filter(clientRole -> clientRole.containsKey(client))
@@ -222,7 +217,7 @@ public class UserServiceImpl implements UserService {
 					.accountLocked(u.getAccountLocked())
 					.build()).collect(Collectors.toList());
 
-		return new Page<>(pageable, users, page.getTotal());
+		return new Page<>(request.getPage(), users, page.getTotal());
 	}
 
 	@Override

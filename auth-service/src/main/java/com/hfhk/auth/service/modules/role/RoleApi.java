@@ -1,14 +1,12 @@
 package com.hfhk.auth.service.modules.role;
 
-import com.hfhk.auth.domain.Role;
-import com.hfhk.auth.domain.request.RoleFindRequest;
-import com.hfhk.auth.domain.request.RoleModifyRequest;
-import com.hfhk.auth.domain.request.RoleSaveRequest;
+import com.hfhk.auth.domain.role.Role;
+import com.hfhk.auth.domain.role.RoleModifyRequest;
+import com.hfhk.auth.domain.role.RolePageFindRequest;
+import com.hfhk.auth.domain.role.RoleSaveRequest;
 import com.hfhk.cairo.core.page.Page;
-import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthenticationToken;
+import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import com.hfhk.cairo.starter.web.handler.BusinessResult;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * restful - role
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/Role")
 public class RoleApi {
 	private final RoleService roleService;
 
@@ -25,47 +23,38 @@ public class RoleApi {
 		this.roleService = roleService;
 	}
 
-	@PostMapping
+	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	// @PreAuthorize("hasAuthority(@ROLE.MODIFY) || hasAnyRole(@ROLE.ROLE, @ROLE_ADMIN)")
 	@BusinessResult
-	public void save(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody RoleSaveRequest request) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
+	public void save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleSaveRequest request) {
+		String client = principal.getClient();
 		roleService.save(client, request);
 	}
 
-	@PutMapping
+	@PutMapping("/Modify")
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	// @PreAuthorize("hasAuthority(@ROLE.MODIFY) || hasAnyRole(@ROLE.ROLE, @ROLE_ADMIN)")
 	@BusinessResult
-	public void modify(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody RoleModifyRequest request) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
+	public void modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleModifyRequest request) {
+		String client = principal.getClient();
 
 		roleService.modify(client, request);
 	}
 
-	@DeleteMapping("/{id}")
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	// @PreAuthorize("hasAuthority(@ROLE.DELETE) || hasAnyRole(@ROLE.ROLE, @ROLE_ADMIN)")
+	@DeleteMapping("/Delete/{id}")
+	@PreAuthorize("isAuthenticated()")
 	@BusinessResult
-	public void delete(@AuthenticationPrincipal CairoAuthenticationToken token, @PathVariable String id) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
+	public void delete(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+		String client = principal.getClient();
 
 		roleService.delete(client, id);
 	}
 
-	@GetMapping
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	// @PreAuthorize("#oauth2.isClient() && #oauth2.hasScope('resource')")
-	// @PreAuthorize("hasAuthority(@ROLE.SAVE) || hasAnyRole(@ROLE.ROLE, @ROLE_ADMIN)")
+	@PostMapping("/Find")
+	@PreAuthorize("isAuthenticated()")
 	@BusinessResult
-	public Page<Role> pageFind(@AuthenticationPrincipal CairoAuthenticationToken token, @PageableDefault Pageable pageable, RoleFindRequest request) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
+	public Page<Role> pageFind(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RolePageFindRequest request) {
+		String client = principal.getClient();
 
-		return roleService.pageFind(client, pageable, request);
+		return roleService.pageFind(client, request);
 	}
 }

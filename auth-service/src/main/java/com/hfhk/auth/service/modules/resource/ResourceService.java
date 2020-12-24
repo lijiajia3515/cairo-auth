@@ -1,9 +1,9 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.ResourceTreeNode;
-import com.hfhk.auth.domain.request.ResourceModifyRequest;
-import com.hfhk.auth.domain.request.ResourceMoveRequest;
-import com.hfhk.auth.domain.request.ResourceSaveRequest;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.resource.ResourceModifyRequest;
+import com.hfhk.auth.domain.resource.ResourceMoveRequest;
+import com.hfhk.auth.domain.resource.ResourceSaveRequest;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.hfhk.auth.domain;
 
+import com.hfhk.auth.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package com.hfhk.auth.service.modules.role;
 
+import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -33,6 +34,6 @@ public class RoleMongoTemplateImpl implements RoleMongoTemplate {
 					Sort.Order.asc(RoleMongo.Field._ID)
 				)
 			);
-		return mongoTemplate.find(query, RoleMongo.class);
+		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.Role);
 	}
 }

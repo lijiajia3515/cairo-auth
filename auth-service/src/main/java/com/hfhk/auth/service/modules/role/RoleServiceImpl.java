@@ -3,18 +3,13 @@ package com.hfhk.auth.service.modules.role;
 import cn.hutool.core.util.IdUtil;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.role.*;
 import com.hfhk.auth.service.modules.resource.ResourceConverter;
-import com.hfhk.auth.domain.ResourceTreeNode;
-import com.hfhk.auth.domain.Role;
-import com.hfhk.auth.domain.RoleV2;
-import com.hfhk.auth.domain.request.RoleFindRequest;
-import com.hfhk.auth.domain.request.RoleModifyRequest;
-import com.hfhk.auth.domain.request.RoleSaveRequest;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,16 +36,16 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public Page<Role> pageFind(String client, Pageable pageable, RoleFindRequest request) {
+	public Page<Role> pageFind(String client, RolePageFindRequest request) {
 		Query query = Query.query(Criteria.where(RoleMongo.Field.Client).is(client));
 		long total = mongoTemplate.count(query, RoleMongo.class);
-		query.with(pageable);
+		query.with(request.getPage().pageable());
 		List<Role> content = mongoTemplate.find(query, RoleMongo.class)
 			.stream()
 			.flatMap(x -> RoleConverter.data2V1(x).stream())
 			.collect(Collectors.toList());
 
-		return new Page<>(pageable, content, total);
+		return new Page<>(request.getPage(), content, total);
 	}
 
 	@Override

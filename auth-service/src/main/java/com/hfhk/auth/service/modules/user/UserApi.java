@@ -1,30 +1,23 @@
 package com.hfhk.auth.service.modules.user;
 
-import com.hfhk.auth.domain.ResourceTreeNode;
-import com.hfhk.auth.domain.User;
-import com.hfhk.auth.domain.request.UserFindRequest;
-import com.hfhk.auth.domain.request.UserModifyRequest;
-import com.hfhk.auth.domain.request.UserRegRequest;
-import com.hfhk.auth.domain.request.UserResetPasswordRequest;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.resource.ResourceService;
 import com.hfhk.cairo.core.page.Page;
-import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthenticationToken;
+import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import com.hfhk.cairo.starter.web.handler.BusinessResult;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * restful - user
+ * User
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/User")
 public class UserApi {
 
 	private final UserService userService;
@@ -36,7 +29,7 @@ public class UserApi {
 		this.resourceService = resourceService;
 	}
 
-	@PostMapping("/reg")
+	@PostMapping("/Reg")
 	@BusinessResult
 	@PermitAll
 	public void reg(@RequestBody UserRegRequest request) {
@@ -46,45 +39,44 @@ public class UserApi {
 	@PatchMapping
 	@BusinessResult
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	public Optional<User> modify(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody UserModifyRequest request) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
-		return userService.modify(client, request);
+	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyRequest request) {
+		// auth.getClient().getId();
+		String client = principal.getClient();
+		return userService.modify(client, request).orElseThrow();
 	}
 
-	@PatchMapping("/password_reset")
+	@PatchMapping("/PasswordReset")
 	@BusinessResult
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	public String passwordReset(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody UserResetPasswordRequest request) {
+	@PreAuthorize("isAuthenticated()")
+	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordRequest request) {
+		String client = principal.getClient();
 		return userService.passwordReset(request);
 	}
 
-	@GetMapping
+	@PostMapping("/Find")
 	@BusinessResult
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	public Page<User> find(@AuthenticationPrincipal CairoAuthenticationToken token,
-						   @PageableDefault Pageable pageable,
-						   UserFindRequest request) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
-
-		return userService.find(client, request, pageable);
+	@PreAuthorize("isAuthenticated()")
+	public Page<User> find(@AuthenticationPrincipal AuthPrincipal principal,
+						   @RequestBody UserPageFindRequest request) {
+		String client = principal.getClient();
+		return userService.find(client, request);
 	}
 
-	@GetMapping("/current")
+	@PostMapping("/Current")
 	@PreAuthorize("isAuthenticated()")
 	@BusinessResult
-	public com.hfhk.cairo.security.authentication.User currentUser(@AuthenticationPrincipal CairoAuthenticationToken token) {
-		return token.getUser();
+	public com.hfhk.cairo.domain.auth.User currentUser(@AuthenticationPrincipal AuthPrincipal principal) {
+
+		return principal.getUser();
 	}
 
-	@GetMapping("/current/resource_tree")
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
+	@GetMapping("/Current/ResourceTree")
+	@PreAuthorize("isAuthenticated()")
 	@BusinessResult
-	public List<ResourceTreeNode> userResources(@AuthenticationPrincipal CairoAuthenticationToken token) {
-		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
-		return resourceService.treeFindByUid(client, token.getUser().getUid());
+	public List<ResourceTreeNode> userResources(@AuthenticationPrincipal AuthPrincipal principal) {
+		String client = principal.getClient();
+
+		return resourceService.treeFindByUid(client, principal.getUser().getUid());
 	}
 
 }

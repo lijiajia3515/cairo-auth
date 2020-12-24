@@ -1,12 +1,7 @@
 package com.hfhk.auth.service.modules.user;
 
-import com.hfhk.auth.domain.User;
-import com.hfhk.auth.domain.request.UserFindRequest;
-import com.hfhk.auth.domain.request.UserModifyRequest;
-import com.hfhk.auth.domain.request.UserRegRequest;
-import com.hfhk.auth.domain.request.UserResetPasswordRequest;
+import com.hfhk.auth.domain.user.*;
 import com.hfhk.cairo.core.page.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -43,7 +38,7 @@ public interface UserService {
 	 *
 	 * @return user page
 	 */
-	Page<User> find(String client, UserFindRequest request, Pageable pageable);
+	Page<User> find(String client, UserPageFindRequest request);
 
 	/**
 	 * find by id

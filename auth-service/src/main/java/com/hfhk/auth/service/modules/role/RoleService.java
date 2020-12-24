@@ -1,19 +1,14 @@
 package com.hfhk.auth.service.modules.role;
 
-import com.hfhk.auth.domain.Role;
-import com.hfhk.auth.domain.RoleV2;
-import com.hfhk.auth.domain.request.RoleFindRequest;
-import com.hfhk.auth.domain.request.RoleModifyRequest;
-import com.hfhk.auth.domain.request.RoleSaveRequest;
+import com.hfhk.auth.domain.role.*;
 import com.hfhk.cairo.core.page.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * 服务 - 角色
  */
 public interface RoleService {
 
-	Page<Role> pageFind(String client, Pageable pageable, RoleFindRequest request);
+	Page<Role> pageFind(String client, RolePageFindRequest request);
 
 	RoleV2 find(String client, String id);
 

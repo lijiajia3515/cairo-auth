@@ -2,13 +2,118 @@ spring:
   application:
     name: service-auth-v1
   profiles:
-    group:
-      config:
-        - config-server
-        - config-store
-        - config-cloud
-        - config-security
-        - config-feign
     active:
-      - config
-      - env-local
+      - local
+
+  web:
+    locale: zh_CN
+  webflux:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
+  session:
+    timeout: 7D
+    store-type: none
+    mongodb:
+      collection-name: sessions
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    locale: zh_CN
+    default-property-inclusion: non_empty
+    property-naming-strategy: UPPER_CAMEL_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+      WRITE_DATES_WITH_ZONE_ID: false
+    deserialization:
+      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${hfhk.auth.server}/oauth2/jwks
+  data:
+    mongodb:
+      auto-index-creation: true
+      field-naming-strategy: com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
+      database: hfhk-auth
+      gridfs:
+        database: hfhk-auth
+      host: 192.168.30.21
+      port: 27017
+      username: hfhk
+      password: Hfhk.1320.
+      authentication-database: hfhk
+  redis:
+    database: 10
+    host: 192.168.30.21
+    port: 6379
+    password: Hfhk-!@#-1230.
+    timeout: 10s
+    lettuce:
+      shutdown-timeout: 5000ms
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+  cloud:
+    nacos:
+      server-addr: ${hfhk.nacos.server.addr:localhost:8848}
+      discovery:
+        server-addr: ${hfhk.nacos.discovery.server-addr:${hfhk.nacos.server-addr:localhost:8848}}
+        namespace: ${hfhk.nacos.discovery.namespace:${hfhk.nacos.namespace:cairo}}
+        group: ${hfhk.nacos.discovery.group:${hfhk.nacos.group:cairo}}
+        metadata:
+          version: v1
+
+logging:
+  level:
+    root: info
+    com.hfhk: debug
+  file:
+    name: /hfhk/auth/service/logs/hfhk.log
+
+server:
+  port: 80
+  http2:
+    enabled: true
+  servlet:
+    encoding:
+      force: true
+
+security:
+  oauth2:
+    client:
+      id: ${random.value}
+      client-id: ${hfhk.auth.client.id:hfhk_auth}
+      client-secret: ${hfhk.auth.client.id:hfhk_auth}
+      grant-type: client_credentials
+      access-token-uri: http://${hfhk.auth.server:auth}/oauth2/token
+
+feign:
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+  httpclient:
+    connection-timeout: 60000
+  compression:
+    request:
+      min-request-size: 204000
+  client:
+    default-to-properties: true
+    config:
+      default:
+        logger-level: FULL
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

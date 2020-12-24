@@ -1,6 +1,6 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.DepartmentTreeNode;
+import com.hfhk.auth.domain.department.DepartmentTreeNode;
 
 import java.util.Comparator;
 

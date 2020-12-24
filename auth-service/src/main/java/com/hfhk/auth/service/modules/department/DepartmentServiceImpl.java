@@ -1,14 +1,14 @@
 package com.hfhk.auth.service.modules.department;
 
+import com.hfhk.auth.domain.department.Department;
+import com.hfhk.auth.domain.department.DepartmentTreeNode;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
-import com.hfhk.auth.domain.Department;
-import com.hfhk.auth.domain.DepartmentTreeNode;
-import com.hfhk.auth.domain.request.DepartmentFindRequest;
-import com.hfhk.auth.domain.request.DepartmentModifyRequest;
-import com.hfhk.auth.domain.request.DepartmentSaveRequest;
+import com.hfhk.auth.domain.department.DepartmentModifyRequest;
+import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
+import com.hfhk.auth.domain.department.DepartmentSaveRequest;
+import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -36,9 +36,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public List<Department> find(String client, DepartmentFindRequest request, Pageable pageable) {
-		return departmentMongoTemplate.pageFind(client, request, pageable)
-			.stream()
+	public Page<Department> pageFind(String client, DepartmentPageFindRequest request) {
+		Page<DepartmentMongo> page = departmentMongoTemplate.pageFind(client, request);
+		return new Page<>(request.getPage(), page.stream()
 			.map(x ->
 				Department.builder()
 					.id(x.getId())
@@ -46,7 +46,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 					.name(x.getName())
 					.build()
 			)
-			.collect(Collectors.toList());
+			.collect(Collectors.toList()),
+			page.getTotal());
 	}
 
 	@Override

@@ -1,24 +1,23 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.Department;
-import com.hfhk.auth.domain.DepartmentTreeNode;
-import com.hfhk.auth.domain.request.DepartmentFindRequest;
-import com.hfhk.auth.domain.request.DepartmentModifyRequest;
-import com.hfhk.auth.domain.request.DepartmentSaveRequest;
-import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthenticationToken;
+import com.hfhk.auth.domain.department.Department;
+import com.hfhk.auth.domain.department.DepartmentTreeNode;
+import com.hfhk.auth.domain.department.DepartmentModifyRequest;
+import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
+import com.hfhk.auth.domain.department.DepartmentSaveRequest;
+import com.hfhk.cairo.core.page.Page;
+import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import com.hfhk.cairo.starter.web.handler.BusinessResult;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * restful - department
+ * Department
  */
 @RestController
-@RequestMapping("/department")
+@RequestMapping("/Department")
 public class DepartmentApi {
 
 	private final DepartmentService departmentService;
@@ -29,42 +28,42 @@ public class DepartmentApi {
 
 	@GetMapping
 	@BusinessResult
-	public List<Department> find(@AuthenticationPrincipal CairoAuthenticationToken token,
-								 DepartmentFindRequest request,
-								 @PageableDefault Pageable pageable) {
-		String client = token.getClient();
+	public Page<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
+								 @RequestBody DepartmentPageFindRequest request) {
+		String client = principal.getClient();
 
-		return departmentService.find(client, request, pageable);
+		return departmentService.pageFind(client, request);
 	}
 
-	@GetMapping("/tree")
+	@GetMapping("/Tree")
 	@BusinessResult
-	public List<DepartmentTreeNode> treeFind(@AuthenticationPrincipal CairoAuthenticationToken token) {
-		String client = token.getClient();
+	public List<DepartmentTreeNode> treeFind(@AuthenticationPrincipal AuthPrincipal principal) {
+		String client = principal.getClient();
 
 		return departmentService.treeFind(client);
 	}
 
-	@PostMapping
+	@PostMapping("/Save")
 	@BusinessResult
-	public Department save(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody DepartmentSaveRequest request) {
-		String client = token.getClient();
+	public Department save(@AuthenticationPrincipal AuthPrincipal principal,
+						   @RequestBody DepartmentSaveRequest request) {
+		String client = principal.getClient();
 
 		return departmentService.save(client, request);
 	}
 
-	@PutMapping
+	@PutMapping("/Put")
 	@BusinessResult
-	public Department put(@AuthenticationPrincipal CairoAuthenticationToken token, @RequestBody DepartmentModifyRequest request) {
-		String client = token.getClient();
+	public Department put(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentModifyRequest request) {
+		String client = principal.getClient();
 
 		return departmentService.modify(client, request);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/Delete/{id}")
 	@BusinessResult
-	public Department delete(@AuthenticationPrincipal CairoAuthenticationToken token, @PathVariable String id) {
-		String client = token.getClient();
+	public Department delete(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+		String client = principal.getClient();
 
 		return departmentService.delete(client, id);
 	}

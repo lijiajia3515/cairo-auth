@@ -1,13 +1,14 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.service.constants.AuthConstant;
+import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.domain.ResourceTreeNode;
-import com.hfhk.auth.domain.request.ResourceModifyRequest;
-import com.hfhk.auth.domain.request.ResourceMoveRequest;
-import com.hfhk.auth.domain.request.ResourceSaveRequest;
+import com.hfhk.auth.domain.resource.ResourceModifyRequest;
+import com.hfhk.auth.domain.resource.ResourceMoveRequest;
+import com.hfhk.auth.domain.resource.ResourceSaveRequest;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.service.constants.AuthConstant;
 import com.hfhk.cairo.core.auth.RoleConstant;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import com.mongodb.client.result.UpdateResult;
@@ -97,7 +98,7 @@ public class ResourceServiceImpl implements ResourceService {
 		ResourceMongo data = ResourceMongo.builder()
 			.client(client)
 			.parent(Optional.ofNullable(request.getParentId()).orElse(AuthConstant.RESOURCE_TREE_ROOT))
-			.type(request.getType())
+			.type(Optional.ofNullable(request.getType()).map(x -> ResourceMongo.Type.valueOf(x.name())).orElse(null))
 			.name(request.getName())
 			.permissions(request.getPermissions())
 			.path(request.getPath())
@@ -113,13 +114,13 @@ public class ResourceServiceImpl implements ResourceService {
 			.client(client)
 			.id(request.getId())
 			.parent(request.getParentId())
-			.type(request.getType())
+			.type(Optional.ofNullable(request.getType()).map(x -> ResourceMongo.Type.valueOf(x.name())).orElse(null))
 			.name(request.getName())
 			.permissions(request.getPermissions())
 			.path(request.getPath())
 			.icon(request.getIcon())
 			.build();
-		data = mongoTemplate.save(data);
+		data = mongoTemplate.save(data, Mongo.Collection.Resource);
 		return findById(client, data.getId());
 	}
 
@@ -132,7 +133,7 @@ public class ResourceServiceImpl implements ResourceService {
 		);
 
 		Update update = Update.update(ResourceMongo.Field.Parent, request.getMovedParentId());
-		UpdateResult result = mongoTemplate.upsert(query, update, ResourceMongo.class);
+		UpdateResult result = mongoTemplate.upsert(query, update, ResourceMongo.class, Mongo.Collection.Resource);
 
 		log.debug("resource move update result: {}", result);
 	}
@@ -145,7 +146,7 @@ public class ResourceServiceImpl implements ResourceService {
 				.and(ResourceMongo.Field._ID).in(id)
 		);
 
-		ResourceMongo resource = mongoTemplate.findAndRemove(query, ResourceMongo.class);
+		ResourceMongo resource = mongoTemplate.findAndRemove(query, ResourceMongo.class, Mongo.Collection.Resource);
 
 		log.debug("[resource][delete] result: {}", resource);
 		return ResourceConverter.data2tree(resource).orElse(null);

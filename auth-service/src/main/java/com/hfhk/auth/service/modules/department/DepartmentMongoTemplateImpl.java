@@ -1,10 +1,10 @@
 package com.hfhk.auth.service.modules.department;
 
+import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
-import com.hfhk.auth.domain.request.DepartmentFindRequest;
+import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.cairo.core.page.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -39,7 +39,7 @@ public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
 					Sort.Order.asc(DepartmentMongo.Field._ID)
 				)
 			);
-		return mongoTemplate.find(query, DepartmentMongo.class);
+		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
 				)
 			);
 
-		return mongoTemplate.find(query, DepartmentMongo.class);
+		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
 	}
 
 	@Override
-	public Page<DepartmentMongo> pageFind(String clientId, DepartmentFindRequest request, Pageable pageable) {
+	public Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindRequest request) {
 		Query query = Query
 			.query(Criteria.where(DepartmentMongo.Field.Client).is(clientId))
 			.with(
@@ -68,13 +68,13 @@ public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
 					Sort.Order.asc(DepartmentMongo.Field._ID)
 				)
 			);
-		Optional.ofNullable(request.getParentId())
-			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.Field.Parent).is(request.getParentId())));
+		Optional.ofNullable(request.getParent())
+			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.Field.Parent).is(request.getParent())));
 
-		long total = mongoTemplate.count(query, DepartmentMongo.class);
+		long total = mongoTemplate.count(query, DepartmentMongo.class, Mongo.Collection.Department);
 
-		query.with(pageable);
-		List<DepartmentMongo> content = mongoTemplate.find(query, DepartmentMongo.class);
-		return new Page<>(pageable, content, total);
+		query.with(request.getPage().pageable());
+		List<DepartmentMongo> content = mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
+		return new Page<>(request.getPage(), content, total);
 	}
 }

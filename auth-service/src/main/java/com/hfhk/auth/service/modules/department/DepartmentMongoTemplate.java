@@ -1,9 +1,8 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.request.DepartmentFindRequest;
+import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +35,6 @@ public interface DepartmentMongoTemplate {
 	 * @param clientId clientId
 	 * @return 部门 mongo
 	 */
-	Page<DepartmentMongo> pageFind(String clientId, DepartmentFindRequest request, Pageable pageable);
+	Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindRequest request);
 
 }

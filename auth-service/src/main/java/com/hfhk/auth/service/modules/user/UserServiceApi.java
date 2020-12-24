@@ -1,7 +1,7 @@
 package com.hfhk.auth.service.modules.user;
 
-import com.hfhk.auth.domain.User;
-import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthenticationToken;
+import com.hfhk.auth.domain.user.User;
+import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +18,9 @@ public class UserServiceApi {
 	}
 
 	@GetMapping("/{uid}")
-	public User findById(@AuthenticationPrincipal CairoAuthenticationToken token, @PathVariable String uid) {
+	public User findById(@AuthenticationPrincipal CairoAuthentication auth, @PathVariable String uid) {
 		// token.getClient().getId();
-		String client = token.getToken().getAudience().stream().findFirst().orElse(null);
+		String client = auth.getToken().getAudience().stream().findFirst().orElse(null);
 		return userService.findById(client, uid);
 	}
 }
