@@ -1,4 +1,4 @@
-package com.hfhk.auth.service.authentication;
+package com.hfhk.auth.service.security.oauth2.server.resource.authentication;
 
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
@@ -20,7 +20,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -29,7 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Component
 public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 	private final MongoTemplate mongoTemplate;
 	private final RedisTemplate<String, RemoteUser> redisTemplate;
@@ -70,7 +68,7 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 	 * @return user
 	 */
 	private Optional<User> findDbUser(String uid, String client) {
-		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.Field.Uid).is(uid)), UserMongo.class,Mongo.Collection.User))
+		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.Field.Uid).is(uid)), UserMongo.class, Mongo.Collection.User))
 			.map(x -> {
 				Set<String> roleCodes = Optional.ofNullable(x.getClientRoles())
 					.map(y -> y.getOrDefault(client, Collections.emptySet()))

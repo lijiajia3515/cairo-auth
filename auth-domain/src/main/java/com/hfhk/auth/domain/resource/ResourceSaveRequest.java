@@ -1,4 +1,5 @@
 package com.hfhk.auth.domain.resource;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

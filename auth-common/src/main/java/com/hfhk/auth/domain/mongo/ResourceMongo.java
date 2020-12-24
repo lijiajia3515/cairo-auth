@@ -87,7 +87,7 @@ public class ResourceMongo implements Serializable {
 
 	public static final class Field extends UpperCamelCaseFieldNames {
 		public static final String Client = "Client";
-		public static final String Parent ="Parent";
+		public static final String Parent = "Parent";
 		public static final String Type = "Type";
 		public static final String Name = "Name";
 		public static final String Permissions = "Permissions";

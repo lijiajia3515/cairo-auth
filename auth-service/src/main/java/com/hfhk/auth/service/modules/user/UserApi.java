@@ -5,7 +5,7 @@ import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.resource.ResourceService;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
-import com.hfhk.cairo.starter.web.handler.BusinessResult;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +30,15 @@ public class UserApi {
 	}
 
 	@PostMapping("/Reg")
-	@BusinessResult
 	@PermitAll
+	@BusinessResult
 	public void reg(@RequestBody UserRegRequest request) {
 		userService.reg(request);
 	}
 
 	@PatchMapping
-	@BusinessResult
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
+	@BusinessResult
 	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyRequest request) {
 		// auth.getClient().getId();
 		String client = principal.getClient();
@@ -46,8 +46,8 @@ public class UserApi {
 	}
 
 	@PatchMapping("/PasswordReset")
-	@BusinessResult
 	@PreAuthorize("isAuthenticated()")
+	@BusinessResult
 	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordRequest request) {
 		String client = principal.getClient();
 		return userService.passwordReset(request);

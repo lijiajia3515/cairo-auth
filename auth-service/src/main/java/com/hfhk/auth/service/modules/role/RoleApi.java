@@ -6,7 +6,7 @@ import com.hfhk.auth.domain.role.RolePageFindRequest;
 import com.hfhk.auth.domain.role.RoleSaveRequest;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
-import com.hfhk.cairo.starter.web.handler.BusinessResult;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

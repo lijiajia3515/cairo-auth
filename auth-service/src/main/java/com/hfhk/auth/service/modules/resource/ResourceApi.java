@@ -1,11 +1,11 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.auth.domain.resource.ResourceModifyRequest;
 import com.hfhk.auth.domain.resource.ResourceMoveRequest;
 import com.hfhk.auth.domain.resource.ResourceSaveRequest;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
-import com.hfhk.cairo.starter.web.handler.BusinessResult;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

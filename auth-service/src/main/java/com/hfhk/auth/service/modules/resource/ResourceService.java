@@ -1,9 +1,9 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.auth.domain.resource.ResourceModifyRequest;
 import com.hfhk.auth.domain.resource.ResourceMoveRequest;
 import com.hfhk.auth.domain.resource.ResourceSaveRequest;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
 
 import java.util.List;
 
@@ -64,8 +64,9 @@ public interface ResourceService {
 
 	/**
 	 * 删除
+	 *
 	 * @param client client
-	 * @param id id
+	 * @param id     id
 	 * @return 删除
 	 */
 	ResourceTreeNode delete(String client, String id);

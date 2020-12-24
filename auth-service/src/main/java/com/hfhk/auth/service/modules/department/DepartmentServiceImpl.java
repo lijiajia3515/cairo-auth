@@ -1,11 +1,7 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.department.Department;
-import com.hfhk.auth.domain.department.DepartmentTreeNode;
+import com.hfhk.auth.domain.department.*;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
-import com.hfhk.auth.domain.department.DepartmentModifyRequest;
-import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
-import com.hfhk.auth.domain.department.DepartmentSaveRequest;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import lombok.extern.slf4j.Slf4j;

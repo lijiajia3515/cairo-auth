@@ -1,19 +1,18 @@
 package com.hfhk.auth.service.modules.user;
 
 import cn.hutool.core.util.IdUtil;
+import com.hfhk.auth.domain.department.Department;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
+import com.hfhk.auth.domain.role.Role;
 import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.department.DepartmentMongoTemplate;
 import com.hfhk.auth.service.modules.role.RoleMongoTemplate;
-import com.hfhk.auth.domain.department.Department;
-import com.hfhk.auth.domain.role.Role;
 import com.hfhk.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

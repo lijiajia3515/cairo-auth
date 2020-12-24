@@ -22,14 +22,11 @@ dependencies {
 
   implementation project(':auth-domain')
 
-  implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
-  implementation "com.hfhk.cairo:core:${cairoVersion}"
+  implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
 
   // test
-  testImplementation('org.springframework.boot:spring-boot-starter-test') {
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-  }
-  // testImplementation 'io.projectreactor:reactor-test'
+  testImplementation('org.springframework.boot:spring-boot-starter-test')
+  testImplementation 'io.projectreactor:reactor-test'
   testImplementation 'org.springframework.security:spring-security-test'
 }
 

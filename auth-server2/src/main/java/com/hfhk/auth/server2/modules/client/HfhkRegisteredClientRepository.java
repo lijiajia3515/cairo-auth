@@ -8,9 +8,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class HfhkRegisteredClientRepository implements RegisteredClientRepository {

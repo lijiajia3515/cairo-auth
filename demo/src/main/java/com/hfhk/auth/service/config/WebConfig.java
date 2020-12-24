@@ -1,6 +1,6 @@
 package com.hfhk.auth.service.config;
 
-import com.hfhk.cairo.starter.web.handler.BusinessResultReturnValueHandler;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResultReturnValueHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;

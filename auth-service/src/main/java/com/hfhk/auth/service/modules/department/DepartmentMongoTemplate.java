@@ -1,8 +1,8 @@
 package com.hfhk.auth.service.modules.department;
 
 import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
-import com.hfhk.cairo.core.page.Page;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
+import com.hfhk.cairo.core.page.Page;
 
 import java.util.Collection;
 import java.util.List;

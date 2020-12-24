@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
-@RestControllerAdvice
-@Configuration
+//@RestControllerAdvice
+//@Configuration
 public class HfhkExceptionHandler {
 
 	@ExceptionHandler(BusinessException.class)

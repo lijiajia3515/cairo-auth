@@ -32,6 +32,23 @@ public final class HfhkBearerTokenAccessDeniedHandler implements AccessDeniedHan
 	@Accessors(fluent = true)
 	private String realmName;
 
+	private static String computeWWWAuthenticateHeaderValue(Map<String, String> parameters) {
+		StringBuilder wwwAuthenticate = new StringBuilder();
+		wwwAuthenticate.append("Bearer");
+		if (!parameters.isEmpty()) {
+			wwwAuthenticate.append(" ");
+			int i = 0;
+			for (Map.Entry<String, String> entry : parameters.entrySet()) {
+				wwwAuthenticate.append(entry.getKey()).append("=\"").append(entry.getValue()).append("\"");
+				if (i != parameters.size() - 1) {
+					wwwAuthenticate.append(", ");
+				}
+				i++;
+			}
+		}
+		return wwwAuthenticate.toString();
+	}
+
 	/**
 	 * Collect error details from the provided parameters and format according to RFC
 	 * 6750, specifically {@code error}, {@code error_description}, {@code error_uri}, and
@@ -59,29 +76,12 @@ public final class HfhkBearerTokenAccessDeniedHandler implements AccessDeniedHan
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		Result<String> returnValue = BusinessResult.build(AuthBusiness.AccessDenied,accessDeniedException.getMessage());
+		Result<String> returnValue = BusinessResult.build(AuthBusiness.AccessDenied, accessDeniedException.getMessage());
 		try {
 			response.getWriter().write(objectMapper.writeValueAsString(returnValue));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static String computeWWWAuthenticateHeaderValue(Map<String, String> parameters) {
-		StringBuilder wwwAuthenticate = new StringBuilder();
-		wwwAuthenticate.append("Bearer");
-		if (!parameters.isEmpty()) {
-			wwwAuthenticate.append(" ");
-			int i = 0;
-			for (Map.Entry<String, String> entry : parameters.entrySet()) {
-				wwwAuthenticate.append(entry.getKey()).append("=\"").append(entry.getValue()).append("\"");
-				if (i != parameters.size() - 1) {
-					wwwAuthenticate.append(", ");
-				}
-				i++;
-			}
-		}
-		return wwwAuthenticate.toString();
 	}
 
 }

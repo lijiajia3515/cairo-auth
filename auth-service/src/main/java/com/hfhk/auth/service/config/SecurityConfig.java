@@ -1,19 +1,19 @@
 package com.hfhk.auth.service.config;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hfhk.auth.service.authentication.HfhkJwtAuthenticationConverter;
-import com.hfhk.auth.service.security.oauth2.server.resource.web.HfhkBearerTokenAccessDeniedHandler;
-import com.hfhk.auth.service.security.oauth2.server.resource.web.HfhkBearerTokenAuthenticationEntryPoint;
+import com.hfhk.auth.service.security.oauth2.server.resource.authentication.HfhkJwtAuthenticationConverter;
+import com.hfhk.cairo.security.authentication.RemoteUser;
+import com.hfhk.cairo.security.oauth2.server.resource.web.CairoBearerTokenAccessDeniedHandler;
+import com.hfhk.cairo.security.oauth2.server.resource.web.CairoBearerTokenAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 
@@ -22,26 +22,16 @@ import org.springframework.security.web.authentication.session.SessionFixationPr
 public class SecurityConfig {
 
 	@Bean
-	public HfhkBearerTokenAuthenticationEntryPoint hfhkBearerTokenAuthenticationEntryPoint(ObjectMapper objectMapper) {
-		return new HfhkBearerTokenAuthenticationEntryPoint()
-			.realmName("hfhk")
-			.objectMapper(objectMapper);
+	public HfhkJwtAuthenticationConverter jwtAuthenticationConverter(MongoTemplate mongoTemplate,
+																	 RedisTemplate<String, RemoteUser> redisTemplate) {
+		return new HfhkJwtAuthenticationConverter(mongoTemplate, redisTemplate);
 	}
-
-	@Bean
-	public HfhkBearerTokenAccessDeniedHandler hfhkBearerTokenAccessDeniedHandler(ObjectMapper objectMapper) {
-		return new HfhkBearerTokenAccessDeniedHandler()
-			.realmName("hfhk")
-			.objectMapper(objectMapper);
-	}
-
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
-											HfhkBearerTokenAuthenticationEntryPoint entryPoint,
-											HfhkBearerTokenAccessDeniedHandler accessDeniedHandler,
-											HfhkJwtAuthenticationConverter jwtAuthenticationConverter
-											) throws Exception {
+											CairoBearerTokenAuthenticationEntryPoint entryPoint,
+											CairoBearerTokenAccessDeniedHandler accessDeniedHandler,
+											HfhkJwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
 		http
 			.csrf().disable()
 			.authorizeRequests(authorizeRequests -> authorizeRequests
@@ -65,32 +55,27 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	// @Bean
+	// public SecurityExpressionHandler<FilterInvocation> HfhkWebSecurityExpressionHandler() {
+	// 	return new CairoWebSecurityExpressionHandler();
+	// }
+	//
+	// @Bean
+	// public MethodSecurityExpressionHandler HfhkMethodSecurityExpressionHandler() {
+	// 	return new CairoMethodSecurityExpressionHandler();
+	// }
+
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().antMatchers("/webjars/**");
+		return (web) -> {
+			web.ignoring().antMatchers("/webjars/**");
+		};
 	}
 
-
-	//@Bean
-	//public SecurityExpressionHandler<FilterInvocation> HfhkWebSecurityExpressionHandler() {
-	//	return new CairoWebSecurityExpressionHandler();
-	//}
-	//
-	//@Bean
-	//public MethodSecurityExpressionHandler HfhkMethodSecurityExpressionHandler() {
-	//	return new CairoMethodSecurityExpressionHandler();
-	//}
 
 	@Bean
 	public PasswordEncoder hfhkPasswordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-	@Bean
-	public BearerTokenResolver hfhkBearerTokenResolver() {
-		DefaultBearerTokenResolver resolver = new DefaultBearerTokenResolver();
-		resolver.setAllowFormEncodedBodyParameter(true);
-		resolver.setAllowUriQueryParameter(true);
-		return resolver;
-	}
 }

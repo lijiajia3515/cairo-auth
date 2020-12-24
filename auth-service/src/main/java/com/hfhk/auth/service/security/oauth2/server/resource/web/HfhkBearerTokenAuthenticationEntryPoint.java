@@ -37,6 +37,23 @@ public class HfhkBearerTokenAuthenticationEntryPoint implements AuthenticationEn
 	@Accessors(fluent = true)
 	private String realmName;
 
+	private static String computeWWWAuthenticateHeaderValue(Map<String, String> parameters) {
+		StringBuilder wwwAuthenticate = new StringBuilder();
+		wwwAuthenticate.append("Bearer");
+		if (!parameters.isEmpty()) {
+			wwwAuthenticate.append(" ");
+			int i = 0;
+			for (Map.Entry<String, String> entry : parameters.entrySet()) {
+				wwwAuthenticate.append(entry.getKey()).append("=\"").append(entry.getValue()).append("\"");
+				if (i != parameters.size() - 1) {
+					wwwAuthenticate.append(", ");
+				}
+				i++;
+			}
+		}
+		return wwwAuthenticate.toString();
+	}
+
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 		HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
@@ -77,22 +94,5 @@ public class HfhkBearerTokenAuthenticationEntryPoint implements AuthenticationEn
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static String computeWWWAuthenticateHeaderValue(Map<String, String> parameters) {
-		StringBuilder wwwAuthenticate = new StringBuilder();
-		wwwAuthenticate.append("Bearer");
-		if (!parameters.isEmpty()) {
-			wwwAuthenticate.append(" ");
-			int i = 0;
-			for (Map.Entry<String, String> entry : parameters.entrySet()) {
-				wwwAuthenticate.append(entry.getKey()).append("=\"").append(entry.getValue()).append("\"");
-				if (i != parameters.size() - 1) {
-					wwwAuthenticate.append(", ");
-				}
-				i++;
-			}
-		}
-		return wwwAuthenticate.toString();
 	}
 }

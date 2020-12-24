@@ -28,7 +28,7 @@ public class HfhkExceptionHandler {
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public void httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request){
+	public void httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
 		log.info("[HttpRequestMethodNotSupportedException] url-> [{}]", request.getRequestURI());
 	}
 

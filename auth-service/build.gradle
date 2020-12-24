@@ -37,8 +37,7 @@ dependencies {
 
   // cairo
   implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
-  implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
-  // implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
+  implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
 
   implementation "com.hfhk.cairo:security:${cairoVersion}"
 
@@ -52,6 +51,10 @@ dependencies {
   }
   // testImplementation 'io.projectreactor:reactor-test'
   testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+
 }
 
 bootJar {

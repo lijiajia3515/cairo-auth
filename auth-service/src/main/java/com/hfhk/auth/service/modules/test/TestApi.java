@@ -2,7 +2,7 @@ package com.hfhk.auth.service.modules.test;
 
 import cn.hutool.core.util.IdUtil;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
-import com.hfhk.cairo.starter.web.handler.BusinessResult;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;

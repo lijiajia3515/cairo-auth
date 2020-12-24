@@ -20,7 +20,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
   implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
-  implementation "com.hfhk.cairo.starter:web:${cairoVersion}"
+  implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
 
   implementation project(":auth-common")
 
