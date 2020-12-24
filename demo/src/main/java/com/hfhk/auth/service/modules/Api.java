@@ -1,6 +1,6 @@
 package com.hfhk.auth.service.modules;
 
-import com.hfhk.cairo.starter.web.handler.BusinessResult;
+import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
