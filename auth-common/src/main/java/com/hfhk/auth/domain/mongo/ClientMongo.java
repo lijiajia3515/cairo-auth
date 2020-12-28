@@ -1,7 +1,7 @@
 package com.hfhk.auth.domain.mongo;
 
 import com.hfhk.cairo.domain.Metadata;
-import com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNames;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -81,27 +81,31 @@ public class ClientMongo {
 		private Boolean reuseRefreshTokens;
 		private Duration refreshTokenTimeToLive;
 	}
+	public static final Field FIELD = new Field();
 
-	public static final class Field extends UpperCamelCaseFieldNames {
-		public static final String ClientId = "ClientId";
-		public static final String ClientSecret = "ClientSecret";
-		public static final String ClientAuthenticationMethods = "ClientAuthenticationMethods";
-		public static final String AuthorizationGrantTypes = "AuthorizationGrantTypes";
-		public static final String Scopes = "Scopes";
-		public static final String RedirectUris = "RedirectUris";
-		public static final String ClientSettings = "ClientSettings";
-		public static final String TokenSettings = "TokenSettings";
-		public static final String Enabled = "Enabled";
+	public static final class Field extends AbstractUpperCamelCaseField {
+		private Field(){
 
-		public static final class ClientSettings {
-			public static final String RequireProofKey = "RequireProofKey";
-			public static final String RequireUserConsent = "RequireUserConsent";
+		}
+		public final String CLIENT_ID = field("ClientId");
+		public final String CLIENT_SECRET = field("ClientSecret");
+		public final String CLIENT_AUTHENTICATION_METHODS = field("ClientAuthenticationMethods");
+		public final String AUTHORIZATION_GRANT_TYPES = field("AuthorizationGrantTypes");
+		public final String SCOPES = field("Scopes");
+		public final String REDIRECT_URIS = field("RedirectUris");
+		public final String CLIENT_SETTINGS = field("ClientSettings");
+		public final String TOKEN_SETTINGS = field("TokenSettings");
+		public final String ENABLED = field("Enabled");
+
+		public static final class ClientSettings extends AbstractUpperCamelCaseField {
+			public final String REQUIRE_PROOF_KEY = field("RequireProofKey");
+			public final String REQUIRE_USER_CONSENT = field("RequireUserConsent");
 		}
 
-		public static final class TokenSettings {
-			public static final String AccessTokenTimeToLive = "AccessTokenTimeToLive";
-			public static final String ReuseRefreshTokens = "ReuseRefreshTokens";
-			public static final String RefreshTokenTimeToLive = "RefreshTokenTimeToLive";
+		public static final class TokenSettings extends AbstractUpperCamelCaseField {
+			public final String ACCESS_TOKEN_TIME_TO_LIVE = field("AccessTokenTimeToLive");
+			public final String REUSE_REFRESH_TOKENS = field("ReuseRefreshTokens");
+			public final String REFRESH_TOKEN_TIME_TO_LIVE = field("RefreshTokenTimeToLive");
 		}
 	}
 }

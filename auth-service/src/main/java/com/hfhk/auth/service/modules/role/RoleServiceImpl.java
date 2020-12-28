@@ -37,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public Page<Role> pageFind(String client, RolePageFindRequest request) {
-		Query query = Query.query(Criteria.where(RoleMongo.Field.Client).is(client));
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
 		long total = mongoTemplate.count(query, RoleMongo.class);
 		query.with(request.getPage().pageable());
 		List<Role> content = mongoTemplate.find(query, RoleMongo.class)
@@ -68,10 +68,10 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleV2 modify(String client, RoleModifyRequest request) {
-		Query query = Query.query(Criteria.where(RoleMongo.Field.Client).is(client).and(RoleMongo.Field.Code).is(request.getCode()));
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(request.getCode()));
 		Update update = new Update();
-		Optional.ofNullable(request.getName()).ifPresent(name -> update.set(RoleMongo.Field.Name, name));
-		Optional.ofNullable(request.getResources()).ifPresent(resourceIds -> update.set(RoleMongo.Field.Resources, resourceIds));
+		Optional.ofNullable(request.getName()).ifPresent(name -> update.set(RoleMongo.FIELD.NAME, name));
+		Optional.ofNullable(request.getResources()).ifPresent(resourceIds -> update.set(RoleMongo.FIELD.RESOURCES, resourceIds));
 		UpdateResult result = mongoTemplate.updateFirst(query, update, RoleMongo.class);
 		log.debug("[role][update] -> {}", result);
 		return findByCode(client, request.getCode());
@@ -79,7 +79,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleV2 delete(String client, String code) {
-		Query query = Query.query(Criteria.where(RoleMongo.Field.Client).is(client).and(RoleMongo.Field.Code).is(code));
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(code));
 		RoleMongo role = mongoTemplate.findAndRemove(query, RoleMongo.class);
 		List<ResourceTreeNode> resources = findResources(role);
 		RoleV2 roleV2 = RoleConverter.data2V2(role, resources).orElseThrow(() -> new UnknownBusinessException("code not found"));
@@ -88,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	private RoleV2 findByCode(String client, String code) {
-		Query query = Query.query(Criteria.where(RoleMongo.Field.Client).is(client).and(RoleMongo.Field.Code).is(code));
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(code));
 		RoleMongo role = mongoTemplate.findOne(query, RoleMongo.class);
 		List<ResourceTreeNode> resources = findResources(role);
 		return RoleConverter.data2V2(role, resources).orElseThrow(() -> new UnknownBusinessException("code not found"));
@@ -98,8 +98,8 @@ public class RoleServiceImpl implements RoleService {
 		return Optional.ofNullable(role)
 			.map(RoleMongo::getResources)
 			.filter(x -> !x.isEmpty())
-			.map(x -> mongoTemplate.find(Query.query(Criteria.where(RoleMongo.Field.Code).is(role.getClient())
-				.and(RoleMongo.Field._ID).in(x)), ResourceMongo.class)
+			.map(x -> mongoTemplate.find(Query.query(Criteria.where(RoleMongo.FIELD.CODE).is(role.getClient())
+				.and(RoleMongo.FIELD._ID).in(x)), ResourceMongo.class)
 			)
 			.map(ResourceConverter::data2tree)
 			.orElse(Collections.emptyList());

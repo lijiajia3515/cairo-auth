@@ -1,13 +1,13 @@
 package com.hfhk.auth.service.security.oauth2.server.resource.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.HttpHeaders;
 import com.hfhk.cairo.core.result.BusinessResult;
 import com.hfhk.cairo.core.result.Result;
 import com.hfhk.cairo.security.status.AuthBusiness;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;

@@ -27,17 +27,22 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 
-  // rpc
+  // routing
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+  implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
   implementation 'io.github.openfeign:feign-okhttp'
 
   // discovery
-  implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+
+  implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+  // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
   // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 
   // cairo
   implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
-  implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
+  implementation("com.hfhk.cairo.starter:service:${cairoVersion}") {
+    exclude group: "com.hfhk.auth", module: "auth-client"
+  }
 
   implementation "com.hfhk.cairo:security:${cairoVersion}"
 

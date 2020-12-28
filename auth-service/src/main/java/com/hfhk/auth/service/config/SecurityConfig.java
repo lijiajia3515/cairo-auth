@@ -35,7 +35,13 @@ public class SecurityConfig {
 		http
 			.csrf().disable()
 			.authorizeRequests(authorizeRequests -> authorizeRequests
+				// root
+				.mvcMatchers("/").permitAll()
+				// health
+				.mvcMatchers("/actuator/**").permitAll()
+				// test
 				.mvcMatchers("/test/**").permitAll()
+				// default
 				.mvcMatchers("/**").authenticated()
 			)
 			.oauth2ResourceServer()

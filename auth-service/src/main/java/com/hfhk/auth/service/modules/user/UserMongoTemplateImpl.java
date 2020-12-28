@@ -27,29 +27,29 @@ public class UserMongoTemplateImpl implements UserMongoTemplate {
 		Query query = new Query();
 		Optional.ofNullable(request.getKeyword())
 			.map(x ->
-				Criteria.where(UserMongo.Field.Uid)
+				Criteria.where(UserMongo.FIELD.UID)
 					.regex(".*?\\" + request.getKeyword() + ".*")
 					.orOperator(
-						Criteria.where(UserMongo.Field.Username)
+						Criteria.where(UserMongo.FIELD.USERNAME)
 							.regex(".*?\\" + request.getKeyword() + ".*")
 					)
 					.orOperator(
-						Criteria.where(UserMongo.Field.PhoneNumber)
+						Criteria.where(UserMongo.FIELD.PHONE_NUMBER)
 							.regex(".*?\\" + request.getKeyword() + ".*")
 					)
 					.orOperator(
-						Criteria.where(UserMongo.Field.Email)
+						Criteria.where(UserMongo.FIELD.EMAIL)
 							.regex(".*?\\" + request.getKeyword() + ".*")
 					)
 					.orOperator(
-						Criteria.where(UserMongo.Field.Name)
+						Criteria.where(UserMongo.FIELD.NAME)
 							.regex(".*?\\" + request.getKeyword() + ".*")
 					)
 			);
-		long total = mongoTemplate.count(query, UserMongo.class, Mongo.Collection.User);
+		long total = mongoTemplate.count(query, UserMongo.class, Mongo.Collection.USER);
 
 		query.with(request.getPage().pageable());
-		List<UserMongo> content = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.User);
+		List<UserMongo> content = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
 		log.debug("[user][pageFind][query]: {}", query);
 		return new Page<>(request.getPage(), content, total);
 	}

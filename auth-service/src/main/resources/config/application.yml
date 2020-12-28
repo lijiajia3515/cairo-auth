@@ -70,6 +70,16 @@ spring:
         group: ${hfhk.nacos.discovery.group:${hfhk.nacos.group:cairo}}
         metadata:
           version: v1
+    consul:
+      host: ${hfhk.consul.host:localhost}
+      port: ${hfhk.consul.port:8500}
+      discovery:
+        prefer-ip-address: true
+        health-check-interval: 5s
+        instance-zone: hfhk
+        instance-group: hfhk
+        tags:
+          - v1
 
 logging:
   level:
@@ -85,6 +95,7 @@ server:
   servlet:
     encoding:
       force: true
+
 
 security:
   oauth2:
@@ -116,4 +127,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include:
+          - '*'
+
+

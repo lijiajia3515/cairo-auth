@@ -68,7 +68,7 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 	 * @return user
 	 */
 	private Optional<User> findDbUser(String uid, String client) {
-		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.Field.Uid).is(uid)), UserMongo.class, Mongo.Collection.User))
+		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid)), UserMongo.class, Mongo.Collection.USER))
 			.map(x -> {
 				Set<String> roleCodes = Optional.ofNullable(x.getClientRoles())
 					.map(y -> y.getOrDefault(client, Collections.emptySet()))
@@ -105,7 +105,7 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 	 * @return 权限
 	 */
 	private Collection<String> findDbUserAuthority(String uid, String client) {
-		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.Field.Uid).is(uid)), UserMongo.class, Mongo.Collection.User))
+		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid)), UserMongo.class, Mongo.Collection.USER))
 			.stream()
 			.flatMap(user -> {
 				Set<String> roleCodes = Optional.ofNullable(user.getClientRoles())
@@ -119,28 +119,28 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 
 
 				boolean isAdmin = roleCodes.contains(RoleConstant.ADMIN);
-				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.Field.Code).in(roleCodes)), RoleMongo.class);
+				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(roleCodes)), RoleMongo.class);
 				Stream<String> roleStream = Stream.concat(Stream.of("USER"), roles.parallelStream().map(RoleMongo::getCode))
 					.map("ROLE_"::concat);
 				Criteria resourceCriteria = new Criteria();
 				if (isAdmin) {
-					resourceCriteria.and(ResourceMongo.Field.Client).is(client);
+					resourceCriteria.and(ResourceMongo.FIELD.CLIENT).is(client);
 				} else {
 					Set<String> resourceIds = roles.stream()
 						.flatMap(x -> Optional.ofNullable(x.getResources()).stream())
 						.flatMap(Collection::parallelStream)
 						.collect(Collectors.toSet());
 					if (!resourceIds.isEmpty()) {
-						resourceCriteria.and(ResourceMongo.Field._ID).in(resourceIds);
+						resourceCriteria.and(ResourceMongo.FIELD._ID).in(resourceIds);
 					}
 				}
 				if (!userResourceIds.isEmpty()) {
-					resourceCriteria.orOperator(Criteria.where(ResourceMongo.Field._ID).in(userResourceIds));
+					resourceCriteria.orOperator(Criteria.where(ResourceMongo.FIELD._ID).in(userResourceIds));
 				}
 
 				Query resourceQuery = Query.query(resourceCriteria);
 
-				Stream<String> resourceStream = mongoTemplate.find(resourceQuery, ResourceMongo.class, Mongo.Collection.Resource)
+				Stream<String> resourceStream = mongoTemplate.find(resourceQuery, ResourceMongo.class, Mongo.Collection.RESOURCE)
 					.stream()
 					.flatMap(x -> Optional.ofNullable(x.getPermissions()).stream())
 					.flatMap(Collection::parallelStream);

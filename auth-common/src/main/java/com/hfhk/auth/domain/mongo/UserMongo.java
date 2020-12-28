@@ -1,7 +1,8 @@
 package com.hfhk.auth.domain.mongo;
 
 import com.hfhk.cairo.mongo.data.Metadata;
-import com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNames;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractMongoField;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -101,21 +102,26 @@ public class UserMongo implements Serializable {
 	@Builder.Default
 	private Metadata metadata = new Metadata();
 
-	public static class Field extends UpperCamelCaseFieldNames {
-		public static final String Uid = "Uid";
-		public static final String Name = "Name";
-		public static final String Username = "Username";
-		public static final String Password = "Password";
-		public static final String Email = "Email";
-		public static final String PhoneNumber = "PhoneNumber";
+	public static final Field FIELD = new Field();
 
-		public static final String AvatarUrl = "AvatarUrl";
+	public static class Field extends AbstractUpperCamelCaseField {
+		private Field(){
 
-		public static final String AccountEnabled = "AccountEnabled";
-		public static final String AccountLocked = "AccountLocked";
+		}
+		public final String UID = field("Uid");
+		public final String NAME = field("Name");
+		public final String USERNAME = field("Username");
+		public final String PASSWORD = field("Password");
+		public final String EMAIL = field("Email");
+		public final String PHONE_NUMBER = field("PhoneNumber");
 
-		public static final String ClientRoles = "ClientRoles";
-		public static final String ClientDepartments = "ClientDepartments";
-		public static final String ClientResources = "ClientResources";
+		public final String AVATAR_URL = field("AvatarUrl");
+
+		public final String ACCOUNT_ENABLED = field("AccountEnabled");
+		public final String ACCOUNT_LOCKED = field("AccountLocked");
+
+		public final String CLIENT_ROLES = field("ClientRoles");
+		public final String CLIENT_DEPARTMENTS = field("ClientDepartments");
+		public final String CLIENT_RESOURCES = field("ClientResources");
 	}
 }

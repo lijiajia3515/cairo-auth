@@ -19,18 +19,24 @@ public class HfhkRegisteredClientRepository implements RegisteredClientRepositor
 
 	@Override
 	public RegisteredClient findById(String id) {
-		Query query = Query.query(Criteria.where(ClientMongo.Field.Enabled).is(true).and(ClientMongo.Field._ID).is(id));
+		Query query = Query.query(Criteria
+			.where(ClientMongo.FIELD.ENABLED).is(true)
+			.and(ClientMongo.FIELD._ID).is(id)
+		);
 
-		ClientMongo client = mongoTemplate.findOne(query, ClientMongo.class, Mongo.Collection.Client);
+		ClientMongo client = mongoTemplate.findOne(query, ClientMongo.class, Mongo.Collection.CLIENT);
 
 		return Optional.ofNullable(client).map(Converter::convert).orElse(null);
 	}
 
 	@Override
 	public RegisteredClient findByClientId(String clientId) {
-		Query query = Query.query(Criteria.where(ClientMongo.Field.Enabled).is(true).and(ClientMongo.Field.ClientId).is(clientId));
+		Query query = Query.query(Criteria
+			.where(ClientMongo.FIELD.ENABLED).is(true)
+			.and(ClientMongo.FIELD.CLIENT_ID).is(clientId)
+		);
 
-		ClientMongo client = mongoTemplate.findOne(query, ClientMongo.class, Mongo.Collection.Client);
+		ClientMongo client = mongoTemplate.findOne(query, ClientMongo.class, Mongo.Collection.CLIENT);
 
 		return Optional.ofNullable(client).map(Converter::convert).orElse(null);
 	}

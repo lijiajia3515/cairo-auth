@@ -84,11 +84,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public Department modify(String client, DepartmentModifyRequest request) {
 		mongoTemplate.updateFirst(
 			Query.query(
-				Criteria.where(DepartmentMongo.Field._ID).is(request.getId())
-					.and(DepartmentMongo.Field.Client).is(client)
+				Criteria.where(DepartmentMongo.FIELD._ID).is(request.getId())
+					.and(DepartmentMongo.FIELD.CLIENT).is(client)
 			),
-			Update.update(DepartmentMongo.Field.Parent, request.getParentId())
-				.set(DepartmentMongo.Field.Name, request.getName()),
+			Update.update(DepartmentMongo.FIELD.PARENT, request.getParentId())
+				.set(DepartmentMongo.FIELD.NAME, request.getName()),
 			DepartmentMongo.class
 		);
 
@@ -105,8 +105,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public Department delete(String client, String id) {
 		DepartmentMongo mongo = mongoTemplate.findAndRemove(
 			Query.query(
-				Criteria.where(DepartmentMongo.Field._ID).is(id)
-					.and(DepartmentMongo.Field.Client).is(client)
+				Criteria.where(DepartmentMongo.FIELD._ID).is(id)
+					.and(DepartmentMongo.FIELD.CLIENT).is(client)
 			),
 			DepartmentMongo.class
 		);

@@ -18,15 +18,15 @@ public class AuthUserService extends AbstractUserDetailsService implements UserD
 
 	@Override
 	public AuthUser loadUserByUsername(String username) throws UsernameNotFoundException {
-		Criteria cUid = Criteria.where(UserMongo.Field.Uid).is(username);
-		Criteria cUsername = Criteria.where(UserMongo.Field.Username).is(username);
-		Criteria cPhoneNumber = Criteria.where(UserMongo.Field.PhoneNumber).is(username);
-		Criteria cEmail = Criteria.where(UserMongo.Field.Email).is(username);
+		Criteria cUid = Criteria.where(UserMongo.FIELD.UID).is(username);
+		Criteria cUsername = Criteria.where(UserMongo.FIELD.USERNAME).is(username);
+		Criteria cPhoneNumber = Criteria.where(UserMongo.FIELD.PHONE_NUMBER).is(username);
+		Criteria cEmail = Criteria.where(UserMongo.FIELD.EMAIL).is(username);
 
 		UserMongo userMongo = mongoTemplate.findOne(
 			Query.query(new Criteria().orOperator(cUid, cUsername, cPhoneNumber, cEmail)),
 			UserMongo.class,
-			Mongo.Collection.User
+			Mongo.Collection.USER
 		);
 		return Optional.ofNullable(userMongo)
 			.map(this::buildAuthUser)

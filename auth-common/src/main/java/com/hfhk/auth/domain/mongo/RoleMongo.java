@@ -1,7 +1,7 @@
 package com.hfhk.auth.domain.mongo;
 
 import com.hfhk.cairo.mongo.data.Metadata;
-import com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNames;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,10 +55,15 @@ public class RoleMongo implements Serializable {
 	@Builder.Default
 	private Metadata metadata = new Metadata();
 
-	public static class Field extends UpperCamelCaseFieldNames {
-		public static final String Client = "Client";
-		public static final String Code = "Code";
-		public static final String Name = "Name";
-		public static final String Resources = "Resources";
+	public static final Field FIELD = new Field();
+
+	public static class Field extends AbstractUpperCamelCaseField {
+		private Field(){
+
+		}
+		public final String CLIENT = field("Client");
+		public final String CODE = field("Code");
+		public final String NAME = field("Name");
+		public final String RESOURCES = field("Resources");
 	}
 }

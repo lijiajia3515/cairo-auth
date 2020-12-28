@@ -1,7 +1,8 @@
 package com.hfhk.auth.domain.mongo;
 
 import com.hfhk.cairo.mongo.data.Metadata;
-import com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNames;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractMongoField;
+import com.hfhk.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -85,13 +86,19 @@ public class ResourceMongo implements Serializable {
 		public String value = name();
 	}
 
-	public static final class Field extends UpperCamelCaseFieldNames {
-		public static final String Client = "Client";
-		public static final String Parent = "Parent";
-		public static final String Type = "Type";
-		public static final String Name = "Name";
-		public static final String Permissions = "Permissions";
-		public static final String Path = "Path";
-		public static final String Icon = "Icon";
+	public static final Field FIELD = new Field();
+
+	public static final class Field extends AbstractUpperCamelCaseField {
+		private Field() {
+
+		}
+
+		public final String CLIENT = field("Client");
+		public final String PARENT = field("Parent");
+		public final String TYPE = field("Type");
+		public final String NAME = field("Name");
+		public final String PERMISSIONS = field("Permissions");
+		public final String PATH = field("Path");
+		public final String ICON = field("Icon");
 	}
 }

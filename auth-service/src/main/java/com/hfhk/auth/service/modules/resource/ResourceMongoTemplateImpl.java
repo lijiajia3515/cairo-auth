@@ -29,10 +29,10 @@ public class ResourceMongoTemplateImpl implements ResourceMongoTemplate {
 	@Override
 	public List<ResourceMongo> findSubsByIds(String client, Collection<String> ids) {
 		Query query = Query.query(
-			Criteria.where(ResourceMongo.Field.Client).is(client)
-				.and(ResourceMongo.Field._ID).in(ids)
+			Criteria.where(ResourceMongo.FIELD.CLIENT).is(client)
+				.and(ResourceMongo.FIELD._ID).in(ids)
 		);
-		List<ResourceMongo> firstList = mongoTemplate.find(query, ResourceMongo.class, Mongo.Collection.Resource);
+		List<ResourceMongo> firstList = mongoTemplate.find(query, ResourceMongo.class, Mongo.Collection.RESOURCE);
 		List<ResourceMongo> allList = new ArrayList<>(firstList);
 		findSubs(allList, firstList);
 
@@ -50,10 +50,10 @@ public class ResourceMongoTemplateImpl implements ResourceMongoTemplate {
 			.ifPresent(parentIds -> {
 				List<ResourceMongo> subList = mongoTemplate.find(
 					Query.query(
-						Criteria.where(ResourceMongo.Field._ID).in(parentIds)
+						Criteria.where(ResourceMongo.FIELD._ID).in(parentIds)
 					),
 					ResourceMongo.class,
-					Mongo.Collection.Resource
+					Mongo.Collection.RESOURCE
 				);
 				data.addAll(subList);
 				findSubs(data, subList);

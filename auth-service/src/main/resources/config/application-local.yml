@@ -8,8 +8,11 @@ hfhk:
     server-addr: 192.168.30.21:8848
     discovery:
       server_addr: 192.168.30.21:8848
-      namespace: local
-      group: local
+      namespace: hfhk
+      group: hfhk
+  consul:
+    host: 192.168.30.21
+    port: 8500
 
 server:
-  port: 7822
+  port: 10000

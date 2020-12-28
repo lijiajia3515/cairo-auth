@@ -30,51 +30,51 @@ public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
 	public List<DepartmentMongo> findByIds(String client, Collection<String> ids) {
 		Query query = Query
 			.query(
-				Criteria.where(DepartmentMongo.Field.Client).is(client)
-					.and(DepartmentMongo.Field._ID).in(ids))
+				Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client)
+					.and(DepartmentMongo.FIELD.NAME).in(ids))
 			.with(
 				Sort.by(
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
-					Sort.Order.asc(DepartmentMongo.Field._ID)
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(DepartmentMongo.FIELD._ID)
 				)
 			);
-		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
+		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 	}
 
 	@Override
 	public List<DepartmentMongo> find(String client) {
 		Query query = Query
-			.query(Criteria.where(DepartmentMongo.Field.Client).is(client))
+			.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client))
 			.with(
 				Sort.by(
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
-					Sort.Order.asc(DepartmentMongo.Field._ID)
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(DepartmentMongo.FIELD._ID)
 				)
 			);
 
-		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
+		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 	}
 
 	@Override
 	public Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindRequest request) {
 		Query query = Query
-			.query(Criteria.where(DepartmentMongo.Field.Client).is(clientId))
+			.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(clientId))
 			.with(
 				Sort.by(
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Sort),
-					Sort.Order.asc(DepartmentMongo.Field.Metadata.Created.At),
-					Sort.Order.asc(DepartmentMongo.Field._ID)
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(DepartmentMongo.FIELD._ID)
 				)
 			);
 		Optional.ofNullable(request.getParent())
-			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.Field.Parent).is(request.getParent())));
+			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.FIELD.PARENT).is(request.getParent())));
 
-		long total = mongoTemplate.count(query, DepartmentMongo.class, Mongo.Collection.Department);
+		long total = mongoTemplate.count(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 
 		query.with(request.getPage().pageable());
-		List<DepartmentMongo> content = mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.Department);
+		List<DepartmentMongo> content = mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 		return new Page<>(request.getPage(), content, total);
 	}
 }

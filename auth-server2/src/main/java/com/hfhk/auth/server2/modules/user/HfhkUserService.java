@@ -31,33 +31,33 @@ public class HfhkUserService implements UserDetailsService {
 		Query query = Query.query(
 			new Criteria()
 				.orOperator(
-					Criteria.where(UserMongo.Field.Uid).is(username),
-					Criteria.where(UserMongo.Field.Username).is(username),
-					Criteria.where(UserMongo.Field.PhoneNumber).is(username),
-					Criteria.where(UserMongo.Field.Email).is(username)
+					Criteria.where(UserMongo.FIELD.UID).is(username),
+					Criteria.where(UserMongo.FIELD.USERNAME).is(username),
+					Criteria.where(UserMongo.FIELD.PHONE_NUMBER).is(username),
+					Criteria.where(UserMongo.FIELD.EMAIL).is(username)
 				)
 		);
-		UserMongo userMongo = mongoTemplate.findOne(query, UserMongo.class, Mongo.Collection.User);
+		UserMongo userMongo = mongoTemplate.findOne(query, UserMongo.class, Mongo.Collection.USER);
 		return Optional.ofNullable(userMongo)
 			.map(user -> {
-				Set<String> roleCodes = Optional.ofNullable(user.getClientRoles()).orElse(Collections.emptyMap()).getOrDefault(Constant.Client, Collections.emptySet());
-				Set<String> resourceCodes = Optional.ofNullable(user.getClientResources()).orElse(Collections.emptyMap()).getOrDefault(Constant.Client, Collections.emptySet());
-				Set<String> departmentCodes = Optional.ofNullable(user.getClientDepartments()).orElse(Collections.emptyMap()).getOrDefault(Constant.Client, Collections.emptySet());
+				Set<String> roleCodes = Optional.ofNullable(user.getClientRoles()).orElse(Collections.emptyMap()).getOrDefault(Constant.CLIENT, Collections.emptySet());
+				Set<String> resourceCodes = Optional.ofNullable(user.getClientResources()).orElse(Collections.emptyMap()).getOrDefault(Constant.CLIENT, Collections.emptySet());
+				Set<String> departmentCodes = Optional.ofNullable(user.getClientDepartments()).orElse(Collections.emptyMap()).getOrDefault(Constant.CLIENT, Collections.emptySet());
 
-				Criteria resourceCriteria = Criteria.where(ResourceMongo.Field.Metadata.Deleted).is(0L);
+				Criteria resourceCriteria = Criteria.where(ResourceMongo.FIELD.METADATA.DELETED).is(0L);
 				if (roleCodes.contains(Constant.ROLE_ADMIN)) {
-					resourceCriteria.and(ResourceMongo.Field.Client).is(Constant.Client);
+					resourceCriteria.and(ResourceMongo.FIELD.CLIENT).is(Constant.CLIENT);
 				} else {
-					resourceCriteria.and(ResourceMongo.Field._ID).is(resourceCodes);
+					resourceCriteria.and(ResourceMongo.FIELD._ID).is(resourceCodes);
 				}
 				if (!resourceCodes.isEmpty()) {
 					resourceCriteria.orOperator(
-						Criteria.where(ResourceMongo.Field.Metadata.Deleted).is(0L)
-							.and(ResourceMongo.Field._ID).in(resourceCodes)
+						Criteria.where(ResourceMongo.FIELD.METADATA.DELETED).is(0L)
+							.and(ResourceMongo.FIELD._ID).in(resourceCodes)
 					);
 				}
 
-				List<ResourceMongo> resources = mongoTemplate.find(Query.query(resourceCriteria), ResourceMongo.class, Mongo.Collection.Resource);
+				List<ResourceMongo> resources = mongoTemplate.find(Query.query(resourceCriteria), ResourceMongo.class, Mongo.Collection.RESOURCE);
 
 				Stream<String> resourceStream = resources.stream()
 					.flatMap(x -> Optional.ofNullable(x.getPermissions()).orElse(Collections.emptySet()).parallelStream());

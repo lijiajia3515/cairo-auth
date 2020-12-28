@@ -18,10 +18,10 @@ public class AuthPasswordService extends AbstractUserDetailsService implements U
 	@Override
 	public UserDetails updatePassword(UserDetails user, String newPassword) {
 		mongoTemplate.findAndModify(
-			Query.query(Criteria.where(UserMongo.Field.Uid).is(user.getUsername())),
-			BasicUpdate.update(UserMongo.Field.Password, newPassword),
+			Query.query(Criteria.where(UserMongo.FIELD.UID).is(user.getUsername())),
+			BasicUpdate.update(UserMongo.FIELD.PASSWORD, newPassword),
 			UserMongo.class,
-			Mongo.Collection.User
+			Mongo.Collection.USER
 		);
 		return user;
 	}

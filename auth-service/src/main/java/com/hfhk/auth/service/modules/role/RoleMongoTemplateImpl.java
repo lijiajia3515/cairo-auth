@@ -25,15 +25,15 @@ public class RoleMongoTemplateImpl implements RoleMongoTemplate {
 	public List<RoleMongo> findByCodes(String client, Collection<String> roleCodes) {
 		Query query = Query
 			.query(
-				Criteria.where(RoleMongo.Field.Client).is(client)
-					.and(RoleMongo.Field.Code).in(roleCodes)
+				Criteria.where(RoleMongo.FIELD.CLIENT).is(client)
+					.and(RoleMongo.FIELD.CODE).in(roleCodes)
 			).with(
 				Sort.by(
-					Sort.Order.asc(RoleMongo.Field.Metadata.Sort),
-					Sort.Order.asc(RoleMongo.Field.Metadata.Created.At),
-					Sort.Order.asc(RoleMongo.Field._ID)
+					Sort.Order.asc(RoleMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(RoleMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(RoleMongo.FIELD._ID)
 				)
 			);
-		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.Role);
+		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE);
 	}
 }

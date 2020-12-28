@@ -40,8 +40,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public List<ResourceTreeNode> treeFind(String client) {
-		Query query = Query.query(Criteria.where(ResourceMongo.Field.Client).is(client));
-		query.with(Sort.by(Sort.Order.asc(ResourceMongo.Field.Metadata.Sort)));
+		Query query = Query.query(Criteria.where(ResourceMongo.FIELD.CLIENT).is(client));
+		query.with(Sort.by(Sort.Order.asc(ResourceMongo.FIELD.METADATA.SORT)));
 		List<ResourceMongo> data = mongoTemplate.find(query, ResourceMongo.class);
 		return ResourceConverter.data2tree(data);
 	}
@@ -53,10 +53,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 	@Override
 	public List<ResourceTreeNode> treeFindByUid(String client, String uid) {
-		Query userQuery = Query.query(Criteria.where(UserMongo.Field.Uid).is(uid));
+		Query userQuery = Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid));
 		userQuery.fields()
-			.include(UserMongo.Field.ClientRoles)
-			.include(UserMongo.Field.ClientResources);
+			.include(UserMongo.FIELD.CLIENT_ROLES)
+			.include(UserMongo.FIELD.CLIENT_RESOURCES);
 
 		return Optional.ofNullable(mongoTemplate.findOne(userQuery, UserMongo.class))
 			.map(user -> {
@@ -70,7 +70,7 @@ public class ResourceServiceImpl implements ResourceService {
 					.flatMap(x -> Optional.ofNullable(x.get(client)).filter(y -> !y.isEmpty()))
 					.flatMap(x -> {
 						if (!x.contains(RoleConstant.ADMIN)) {
-							Query roleQuery = Query.query(Criteria.where(RoleMongo.Field.Code).in(x));
+							Query roleQuery = Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(x));
 							Stream<String> roleResources = mongoTemplate.find(roleQuery, RoleMongo.class)
 								.stream()
 								.flatMap(y -> Optional.ofNullable(y.getResources()).stream())
@@ -78,10 +78,10 @@ public class ResourceServiceImpl implements ResourceService {
 							return Optional.of(Stream.concat(userResources, roleResources)
 								.collect(Collectors.toList()))
 								.filter(y -> !y.isEmpty())
-								.map(y -> mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.Field._ID).in(y)), ResourceMongo.class));
+								.map(y -> mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.FIELD._ID).in(y)), ResourceMongo.class));
 
 						} else {
-							return Optional.of(mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.Field._ID).is(client)), ResourceMongo.class));
+							return Optional.of(mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.FIELD._ID).is(client)), ResourceMongo.class));
 						}
 					})
 					.stream()
@@ -120,7 +120,7 @@ public class ResourceServiceImpl implements ResourceService {
 			.path(request.getPath())
 			.icon(request.getIcon())
 			.build();
-		data = mongoTemplate.save(data, Mongo.Collection.Resource);
+		data = mongoTemplate.save(data, Mongo.Collection.RESOURCE);
 		return findById(client, data.getId());
 	}
 
@@ -128,12 +128,12 @@ public class ResourceServiceImpl implements ResourceService {
 	public void move(String client, ResourceMoveRequest request) {
 		Query query = Query.query(
 			Criteria
-				.where(ResourceMongo.Field.Client).is(client)
-				.and(ResourceMongo.Field._ID).in(request.getIds())
+				.where(ResourceMongo.FIELD.CLIENT).is(client)
+				.and(ResourceMongo.FIELD._ID).in(request.getIds())
 		);
 
-		Update update = Update.update(ResourceMongo.Field.Parent, request.getMovedParentId());
-		UpdateResult result = mongoTemplate.upsert(query, update, ResourceMongo.class, Mongo.Collection.Resource);
+		Update update = Update.update(ResourceMongo.FIELD.PARENT, request.getMovedParentId());
+		UpdateResult result = mongoTemplate.upsert(query, update, ResourceMongo.class, Mongo.Collection.RESOURCE);
 
 		log.debug("resource move update result: {}", result);
 	}
@@ -142,11 +142,11 @@ public class ResourceServiceImpl implements ResourceService {
 	public ResourceTreeNode delete(String client, String id) {
 		Query query = Query.query(
 			Criteria
-				.where(ResourceMongo.Field.Client).is(client)
-				.and(ResourceMongo.Field._ID).in(id)
+				.where(ResourceMongo.FIELD.CLIENT).is(client)
+				.and(ResourceMongo.FIELD._ID).in(id)
 		);
 
-		ResourceMongo resource = mongoTemplate.findAndRemove(query, ResourceMongo.class, Mongo.Collection.Resource);
+		ResourceMongo resource = mongoTemplate.findAndRemove(query, ResourceMongo.class, Mongo.Collection.RESOURCE);
 
 		log.debug("[resource][delete] result: {}", resource);
 		return ResourceConverter.data2tree(resource).orElse(null);

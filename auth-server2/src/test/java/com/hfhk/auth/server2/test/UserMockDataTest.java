@@ -32,25 +32,25 @@ class UserMockDataTest {
 			.email("root@haofangsoft.com")
 			.phoneNumber("root")
 			.clientRoles(new HashMap<>() {{
-				put(Constant.Client, new HashSet<>() {{
+				put(Constant.CLIENT, new HashSet<>() {{
 					add("ADMIN");
 				}});
 			}})
 			.clientDepartments(new HashMap<>() {{
-				put(Constant.Client, Collections.emptySet());
+				put(Constant.CLIENT, Collections.emptySet());
 			}})
 			.clientResources(new HashMap<>() {{
-				put(Constant.Client, Collections.emptySet());
+				put(Constant.CLIENT, Collections.emptySet());
 			}})
 			.clientAuthorities(new HashMap<>() {{
-				put(Constant.Client, Collections.emptySet());
+				put(Constant.CLIENT, Collections.emptySet());
 			}})
 			//.roleCodes(Collections.singletonList("admin"))
 			//.departmentCodes(Collections.singletonList("admin"))
 			.accountEnabled(true)
 			.accountLocked(false)
 			.build();
-		mongoTemplate.save(root, Mongo.Collection.User);
+		mongoTemplate.save(root, Mongo.Collection.USER);
 	}
 
 }
