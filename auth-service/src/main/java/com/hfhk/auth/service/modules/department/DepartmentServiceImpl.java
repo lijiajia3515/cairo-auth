@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 服务 - 部门
+ * department service impl
  */
 @Slf4j
 @Service
@@ -32,7 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Page<Department> pageFind(String client, DepartmentPageFindRequest request) {
+	public Page<Department> pageFind(String client, DepartmentPageFindParam request) {
 		Page<DepartmentMongo> page = departmentMongoTemplate.pageFind(client, request);
 		return new Page<>(request.getPage(), page.stream()
 			.map(x ->
@@ -63,11 +63,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Department save(String client, DepartmentSaveRequest request) {
+	public Department save(String client, DepartmentSaveParam param) {
 		DepartmentMongo mongo = DepartmentMongo.builder()
 			.client(client)
-			.parent(request.getParentId())
-			.name(request.getName())
+			.parent(param.getParentId())
+			.name(param.getName())
 			.build();
 		mongo.getMetadata().setSort(LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8)));
 
@@ -81,18 +81,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Department modify(String client, DepartmentModifyRequest request) {
+	public Department modify(String client, DepartmentModifyParam param) {
 		mongoTemplate.updateFirst(
 			Query.query(
-				Criteria.where(DepartmentMongo.FIELD._ID).is(request.getId())
+				Criteria.where(DepartmentMongo.FIELD._ID).is(param.getId())
 					.and(DepartmentMongo.FIELD.CLIENT).is(client)
 			),
-			Update.update(DepartmentMongo.FIELD.PARENT, request.getParentId())
-				.set(DepartmentMongo.FIELD.NAME, request.getName()),
+			Update.update(DepartmentMongo.FIELD.PARENT, param.getParentId())
+				.set(DepartmentMongo.FIELD.NAME, param.getName()),
 			DepartmentMongo.class
 		);
 
-		return Optional.ofNullable(mongoTemplate.findById(request.getId(), DepartmentMongo.class))
+		return Optional.ofNullable(mongoTemplate.findById(param.getId(), DepartmentMongo.class))
 			.map(mongo -> Department.builder()
 				.id(mongo.getId())
 				.parent(mongo.getParent())
@@ -102,10 +102,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Department delete(String client, String id) {
+	public Department delete(String client, DepartmentDeleteParam param) {
 		DepartmentMongo mongo = mongoTemplate.findAndRemove(
 			Query.query(
-				Criteria.where(DepartmentMongo.FIELD._ID).is(id)
+				Criteria.where(DepartmentMongo.FIELD._ID).is(param)
 					.and(DepartmentMongo.FIELD.CLIENT).is(client)
 			),
 			DepartmentMongo.class

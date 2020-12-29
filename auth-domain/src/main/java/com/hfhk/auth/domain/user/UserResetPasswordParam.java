@@ -1,5 +1,4 @@
-package com.hfhk.auth.domain.department;
-
+package com.hfhk.auth.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 部门 保存 请求
+ * 重置密码
  */
 @Data
 @Accessors(chain = true)
@@ -18,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DepartmentSaveRequest implements Serializable {
-	private String parentId;
-	private String name;
+public class UserResetPasswordParam implements Serializable {
+	private String uid;
+	private String password;
 }

@@ -1,6 +1,6 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
+import com.hfhk.auth.domain.department.DepartmentPageFindParam;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.cairo.core.page.Page;
@@ -58,7 +58,7 @@ public class DepartmentMongoTemplateImpl implements DepartmentMongoTemplate {
 	}
 
 	@Override
-	public Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindRequest request) {
+	public Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindParam request) {
 		Query query = Query
 			.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(clientId))
 			.with(

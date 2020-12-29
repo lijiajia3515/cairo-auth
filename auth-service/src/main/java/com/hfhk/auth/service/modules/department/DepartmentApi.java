@@ -3,14 +3,14 @@ package com.hfhk.auth.service.modules.department;
 import com.hfhk.auth.domain.department.*;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
-import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * Department
+ * Department Api
  */
 @RestController
 @RequestMapping("/Department")
@@ -22,15 +22,17 @@ public class DepartmentApi {
 		this.departmentService = departmentService;
 	}
 
-	@GetMapping
+	@PostMapping("/Find")
+	@PreAuthorize("isAuthenticated()")
 	public Page<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
-								 @RequestBody DepartmentPageFindRequest request) {
+								 @RequestBody DepartmentPageFindParam request) {
 		String client = principal.getClient();
 
 		return departmentService.pageFind(client, request);
 	}
 
-	@GetMapping("/Tree")
+	@PostMapping("/Tree")
+	@PreAuthorize("isAuthenticated()")
 	public List<DepartmentTreeNode> treeFind(@AuthenticationPrincipal AuthPrincipal principal) {
 		String client = principal.getClient();
 
@@ -38,25 +40,28 @@ public class DepartmentApi {
 	}
 
 	@PostMapping("/Save")
+	@PreAuthorize("isAuthenticated()")
 	public Department save(@AuthenticationPrincipal AuthPrincipal principal,
-						   @RequestBody DepartmentSaveRequest request) {
+						   @RequestBody DepartmentSaveParam request) {
 		String client = principal.getClient();
 
 		return departmentService.save(client, request);
 	}
 
 	@PutMapping("/Put")
-	public Department put(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentModifyRequest request) {
+	@PreAuthorize("isAuthenticated()")
+	public Department put(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentModifyParam request) {
 		String client = principal.getClient();
 
 		return departmentService.modify(client, request);
 	}
 
-	@DeleteMapping("/Delete/{id}")
-	public Department delete(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+	@DeleteMapping("/Delete")
+	@PreAuthorize("isAuthenticated()")
+	public Department delete(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentDeleteParam param) {
 		String client = principal.getClient();
 
-		return departmentService.delete(client, id);
+		return departmentService.delete(client, param);
 	}
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class RoleSaveRequest implements Serializable {
+public class RoleSaveParam implements Serializable {
 	private String code;
 
 	private String name;

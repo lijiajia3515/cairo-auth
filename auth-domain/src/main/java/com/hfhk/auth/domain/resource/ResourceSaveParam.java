@@ -1,6 +1,10 @@
 package com.hfhk.auth.domain.resource;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -9,11 +13,11 @@ import java.util.Set;
  * 资源-保存-请求参数
  */
 @Data
-public class ResourceModifyRequest implements Serializable {
-	/**
-	 * id
-	 */
-	private String id;
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ResourceSaveParam implements Serializable {
 
 	/**
 	 * 上级 id
@@ -44,5 +48,10 @@ public class ResourceModifyRequest implements Serializable {
 	 * 接口权限标识
 	 */
 	private String icon;
+
+	/**
+	 * 排序值
+	 */
+	private Long sort;
 
 }

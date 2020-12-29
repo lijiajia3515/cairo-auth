@@ -1,11 +1,8 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.resource.ResourceModifyRequest;
-import com.hfhk.auth.domain.resource.ResourceMoveRequest;
-import com.hfhk.auth.domain.resource.ResourceSaveRequest;
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.resource.*;
 import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
-import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
+import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 角色 - 资源
+ * Resource Api
  */
 @RequestMapping("/Resource")
 @RestController
@@ -25,49 +22,52 @@ public class ResourceApi {
 		this.resourceService = resourceService;
 	}
 
+	//Operate
 	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated()")
-	public ResourceTreeNode save(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceSaveRequest request) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public ResourceTreeNode save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceSaveParam param) {
+		String client = principal.getClient();
 
-		return resourceService.save(client, request);
+		return resourceService.save(client, param);
 	}
 
 	@PutMapping("/Modify")
-	public ResourceTreeNode modify(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceModifyRequest request) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public ResourceTreeNode modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceModifyParam param) {
+		String client = principal.getClient();
 
-		return resourceService.modify(client, request);
+		return resourceService.modify(client, param);
 	}
 
 	@PatchMapping("/Move")
 	@PreAuthorize("isAuthenticated()")
-	public void move(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceMoveRequest request) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public void move(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceMoveParam param) {
+		String client = principal.getClient();
 
-		resourceService.move(client, request);
+		resourceService.move(client, param);
 	}
 
-	@DeleteMapping("/Delete/{id}")
+	@DeleteMapping("/Delete")
 	@PreAuthorize("isAuthenticated()")
-	public ResourceTreeNode delete(@AuthenticationPrincipal CairoAuthentication auth, @PathVariable String id) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public List<ResourceTreeNode> delete(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceDeleteParam param) {
+		String client = principal.getClient();
 
-		return resourceService.delete(client, id);
+		return resourceService.delete(client, param);
 	}
 
-	@PostMapping("/Find/{id}")
+	//Find
+
+	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
-	public ResourceTreeNode find(@AuthenticationPrincipal CairoAuthentication auth, @PathVariable String id) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+		String client = principal.getClient();
 
 		return resourceService.find(client, id);
 	}
 
 	@GetMapping("/Tree")
 	@PreAuthorize("isAuthenticated()")
-	public List<ResourceTreeNode> tree(@AuthenticationPrincipal CairoAuthentication auth) {
-		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
+	public List<ResourceTreeNode> tree(@AuthenticationPrincipal AuthPrincipal principal) {
+		String client = principal.getClient();
 
 		return resourceService.treeFind(client);
 	}

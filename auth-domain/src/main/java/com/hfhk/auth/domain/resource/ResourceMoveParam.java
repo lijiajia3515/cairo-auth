@@ -15,7 +15,7 @@ import java.util.Collection;
 @AllArgsConstructor
 
 @Builder
-public class ResourceMoveRequest {
+public class ResourceMoveParam {
 	/**
 	 * 要移动的 id
 	 */

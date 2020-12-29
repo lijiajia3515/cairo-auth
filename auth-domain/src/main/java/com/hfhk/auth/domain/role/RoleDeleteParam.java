@@ -1,4 +1,4 @@
-package com.hfhk.auth.domain.user;
+package com.hfhk.auth.domain.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,17 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Collection;
 
-/**
- * 重置密码
- */
 @Data
 @Accessors(chain = true)
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResetPasswordRequest implements Serializable {
-	private String uid;
-	private String password;
+public class RoleDeleteParam implements Serializable {
+	
+	private Collection<String> codes;
 }

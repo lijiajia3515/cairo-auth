@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Data
-public class UserFindRequest implements Serializable {
+public class UserFindParam implements Serializable {
 
 	@Getter
 	@Setter

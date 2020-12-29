@@ -1,26 +1,16 @@
 package com.hfhk.auth.domain.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Accessors(chain = true)
-
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserModifyRequest implements Serializable {
-
-	/**
-	 * uid
-	 */
-	private String uid;
+public class UserRegParam implements Serializable {
 
 	/**
 	 * 用户名
@@ -41,6 +31,11 @@ public class UserModifyRequest implements Serializable {
 	 * 名称
 	 */
 	private String name;
+
+	/**
+	 * 密码
+	 */
+	private String password;
 
 	/**
 	 * 角色code

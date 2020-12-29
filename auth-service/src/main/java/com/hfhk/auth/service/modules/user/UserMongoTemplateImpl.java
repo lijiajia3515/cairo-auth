@@ -2,7 +2,7 @@ package com.hfhk.auth.service.modules.user;
 
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.domain.user.UserPageFindRequest;
+import com.hfhk.auth.domain.user.UserPageFindParam;
 import com.hfhk.cairo.core.page.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -23,7 +23,7 @@ public class UserMongoTemplateImpl implements UserMongoTemplate {
 	}
 
 	@Override
-	public Page<UserMongo> pageFind(UserPageFindRequest request) {
+	public Page<UserMongo> pageFind(UserPageFindParam request) {
 		Query query = new Query();
 		Optional.ofNullable(request.getKeyword())
 			.map(x ->

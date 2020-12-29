@@ -15,7 +15,7 @@ public interface UserService {
 	 *
 	 * @param request 请求
 	 */
-	void reg(UserRegRequest request);
+	void reg(UserRegParam request);
 
 	/**
 	 * 修改
@@ -23,7 +23,7 @@ public interface UserService {
 	 * @param request request
 	 * @return user
 	 */
-	Optional<User> modify(String client, UserModifyRequest request);
+	Optional<User> modify(String client, UserModifyParam request);
 
 	/**
 	 * 密码重置
@@ -31,14 +31,14 @@ public interface UserService {
 	 * @param request request
 	 * @return 重置后的密码
 	 */
-	String passwordReset(UserResetPasswordRequest request);
+	String passwordReset(UserResetPasswordParam request);
 
 	/**
 	 * find
 	 *
 	 * @return user page
 	 */
-	Page<User> find(String client, UserPageFindRequest request);
+	Page<User> find(String client, UserPageFindParam request);
 
 	/**
 	 * find by id

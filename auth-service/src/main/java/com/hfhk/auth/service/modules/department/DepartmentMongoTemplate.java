@@ -1,6 +1,6 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.department.DepartmentPageFindRequest;
+import com.hfhk.auth.domain.department.DepartmentPageFindParam;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.cairo.core.page.Page;
 
@@ -35,6 +35,6 @@ public interface DepartmentMongoTemplate {
 	 * @param clientId clientId
 	 * @return 部门 mongo
 	 */
-	Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindRequest request);
+	Page<DepartmentMongo> pageFind(String clientId, DepartmentPageFindParam request);
 
 }

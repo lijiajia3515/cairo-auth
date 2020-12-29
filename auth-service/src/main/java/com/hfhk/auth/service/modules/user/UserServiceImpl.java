@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void reg(UserRegRequest request) {
+	public void reg(UserRegParam request) {
 		UserMongo data = UserMongo.builder()
 			.uid(UUID.randomUUID().toString())
 			.name(Strings.isEmpty(request.getName()) ? request.getName() : request.getUsername())
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Optional<User> modify(String client, UserModifyRequest request) {
+	public Optional<User> modify(String client, UserModifyParam request) {
 		Query query = Query.query(Criteria.where("uid").is(request.getUid()));
 		Update update = new Update();
 		Optional.ofNullable(request.getUsername()).filter(x -> !x.isBlank()).ifPresent(x -> update.set("username", x));
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String passwordReset(UserResetPasswordRequest request) {
+	public String passwordReset(UserResetPasswordParam request) {
 		String password = Optional.ofNullable(request.getPassword()).orElse(IdUtil.objectId());
 		Query query = Query.query(Criteria.where("uid").is(request.getUid()));
 		Update update = Update.update("password", passwordEncoder.encode(password));
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<User> find(String client,
-						   UserPageFindRequest request) {
+						   UserPageFindParam request) {
 		Page<UserMongo> page = userMongoTemplate.pageFind(request);
 
 		Set<String> roleCodes = page.stream().flatMap(x -> Optional.ofNullable(x.getClientRoles()).stream())

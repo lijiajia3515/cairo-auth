@@ -13,6 +13,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 
-public class RoleFindRequest {
+public class RoleFindParam {
 	private String keyword;
 }

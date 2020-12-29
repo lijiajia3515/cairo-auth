@@ -5,7 +5,6 @@ import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.resource.ResourceService;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
-import com.hfhk.cairo.starter.service.web.handler.BusinessResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,15 +28,16 @@ public class UserApi {
 		this.resourceService = resourceService;
 	}
 
+	// operate
 	@PostMapping("/Reg")
 	@PermitAll
-	public void reg(@RequestBody UserRegRequest request) {
+	public void reg(@RequestBody UserRegParam request) {
 		userService.reg(request);
 	}
 
-	@PatchMapping
+	@PatchMapping("/Modify")
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyRequest request) {
+	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyParam request) {
 		// auth.getClient().getId();
 		String client = principal.getClient();
 		return userService.modify(client, request).orElseThrow();
@@ -45,23 +45,30 @@ public class UserApi {
 
 	@PatchMapping("/PasswordReset")
 	@PreAuthorize("isAuthenticated()")
-	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordRequest request) {
+	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordParam request) {
 		String client = principal.getClient();
 		return userService.passwordReset(request);
 	}
 
+	// find
 	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
 	public Page<User> find(@AuthenticationPrincipal AuthPrincipal principal,
-						   @RequestBody UserPageFindRequest request) {
+						   @RequestBody UserPageFindParam request) {
 		String client = principal.getClient();
 		return userService.find(client, request);
 	}
 
+	@PostMapping("/FindById")
+	public User findById(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String uid) {
+		String client = principal.getClient();
+		return userService.findById(client, uid);
+	}
+
+	// current
 	@PostMapping("/Current")
 	@PreAuthorize("isAuthenticated()")
 	public com.hfhk.cairo.domain.auth.User currentUser(@AuthenticationPrincipal AuthPrincipal principal) {
-
 		return principal.getUser();
 	}
 

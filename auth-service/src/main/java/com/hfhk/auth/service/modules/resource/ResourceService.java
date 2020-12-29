@@ -1,9 +1,6 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.resource.ResourceModifyRequest;
-import com.hfhk.auth.domain.resource.ResourceMoveRequest;
-import com.hfhk.auth.domain.resource.ResourceSaveRequest;
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
+import com.hfhk.auth.domain.resource.*;
 
 import java.util.List;
 
@@ -40,34 +37,34 @@ public interface ResourceService {
 	/**
 	 * 资源保存
 	 *
-	 * @param request request
+	 * @param param param
 	 * @return 保存后的资源值
 	 */
-	ResourceTreeNode save(String client, ResourceSaveRequest request);
+	ResourceTreeNode save(String client, ResourceSaveParam param);
 
 	/**
 	 * 资源修改
 	 *
 	 * @param client  client
-	 * @param request request
+	 * @param param param
 	 * @return 修改后的资源值
 	 */
-	ResourceTreeNode modify(String client, ResourceModifyRequest request);
+	ResourceTreeNode modify(String client, ResourceModifyParam param);
 
 	/**
 	 * 资源 移动
 	 *
 	 * @param client  client
-	 * @param request request
+	 * @param param param
 	 */
-	void move(String client, ResourceMoveRequest request);
+	void move(String client, ResourceMoveParam param);
 
 	/**
 	 * 删除
 	 *
 	 * @param client client
-	 * @param id     id
+	 * @param param     param
 	 * @return 删除
 	 */
-	ResourceTreeNode delete(String client, String id);
+	List<ResourceTreeNode> delete(String client, ResourceDeleteParam param);
 }
