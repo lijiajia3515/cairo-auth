@@ -31,14 +31,12 @@ public class UserApi {
 
 	@PostMapping("/Reg")
 	@PermitAll
-	@BusinessResult
 	public void reg(@RequestBody UserRegRequest request) {
 		userService.reg(request);
 	}
 
 	@PatchMapping
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	@BusinessResult
 	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyRequest request) {
 		// auth.getClient().getId();
 		String client = principal.getClient();
@@ -47,14 +45,12 @@ public class UserApi {
 
 	@PatchMapping("/PasswordReset")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordRequest request) {
 		String client = principal.getClient();
 		return userService.passwordReset(request);
 	}
 
 	@PostMapping("/Find")
-	@BusinessResult
 	@PreAuthorize("isAuthenticated()")
 	public Page<User> find(@AuthenticationPrincipal AuthPrincipal principal,
 						   @RequestBody UserPageFindRequest request) {
@@ -64,7 +60,6 @@ public class UserApi {
 
 	@PostMapping("/Current")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public com.hfhk.cairo.domain.auth.User currentUser(@AuthenticationPrincipal AuthPrincipal principal) {
 
 		return principal.getUser();
@@ -72,7 +67,6 @@ public class UserApi {
 
 	@GetMapping("/Current/ResourceTree")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public List<ResourceTreeNode> userResources(@AuthenticationPrincipal AuthPrincipal principal) {
 		String client = principal.getClient();
 

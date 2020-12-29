@@ -25,7 +25,6 @@ public class RoleApi {
 
 	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	@BusinessResult
 	public void save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleSaveRequest request) {
 		String client = principal.getClient();
 		roleService.save(client, request);
@@ -33,7 +32,6 @@ public class RoleApi {
 
 	@PutMapping("/Modify")
 	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
-	@BusinessResult
 	public void modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleModifyRequest request) {
 		String client = principal.getClient();
 
@@ -42,7 +40,6 @@ public class RoleApi {
 
 	@DeleteMapping("/Delete/{id}")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public void delete(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
 		String client = principal.getClient();
 
@@ -51,7 +48,6 @@ public class RoleApi {
 
 	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public Page<Role> pageFind(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RolePageFindRequest request) {
 		String client = principal.getClient();
 

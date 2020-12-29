@@ -23,7 +23,6 @@ public class DepartmentApi {
 	}
 
 	@GetMapping
-	@BusinessResult
 	public Page<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
 								 @RequestBody DepartmentPageFindRequest request) {
 		String client = principal.getClient();
@@ -32,7 +31,6 @@ public class DepartmentApi {
 	}
 
 	@GetMapping("/Tree")
-	@BusinessResult
 	public List<DepartmentTreeNode> treeFind(@AuthenticationPrincipal AuthPrincipal principal) {
 		String client = principal.getClient();
 
@@ -40,7 +38,6 @@ public class DepartmentApi {
 	}
 
 	@PostMapping("/Save")
-	@BusinessResult
 	public Department save(@AuthenticationPrincipal AuthPrincipal principal,
 						   @RequestBody DepartmentSaveRequest request) {
 		String client = principal.getClient();
@@ -49,7 +46,6 @@ public class DepartmentApi {
 	}
 
 	@PutMapping("/Put")
-	@BusinessResult
 	public Department put(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentModifyRequest request) {
 		String client = principal.getClient();
 
@@ -57,7 +53,6 @@ public class DepartmentApi {
 	}
 
 	@DeleteMapping("/Delete/{id}")
-	@BusinessResult
 	public Department delete(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
 		String client = principal.getClient();
 

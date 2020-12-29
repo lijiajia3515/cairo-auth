@@ -1,4 +1,4 @@
-package com.hfhk.auth.service.modules.authentication;
+package com.hfhk.auth.service.modules.auth;
 
 import com.hfhk.cairo.security.authentication.RemoteUser;
 import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @Slf4j
 
 @RestController
-@RequestMapping("/service/authentication")
-public class AuthenticationService {
+@RequestMapping("/auth")
+public class AuthApi {
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")

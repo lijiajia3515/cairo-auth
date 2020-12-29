@@ -27,7 +27,6 @@ public class ResourceApi {
 
 	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public ResourceTreeNode save(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceSaveRequest request) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 
@@ -35,7 +34,6 @@ public class ResourceApi {
 	}
 
 	@PutMapping("/Modify")
-	@BusinessResult
 	public ResourceTreeNode modify(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceModifyRequest request) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 
@@ -44,7 +42,6 @@ public class ResourceApi {
 
 	@PatchMapping("/Move")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public void move(@AuthenticationPrincipal CairoAuthentication auth, @RequestBody ResourceMoveRequest request) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 
@@ -53,7 +50,6 @@ public class ResourceApi {
 
 	@DeleteMapping("/Delete/{id}")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public ResourceTreeNode delete(@AuthenticationPrincipal CairoAuthentication auth, @PathVariable String id) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 
@@ -62,7 +58,6 @@ public class ResourceApi {
 
 	@PostMapping("/Find/{id}")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public ResourceTreeNode find(@AuthenticationPrincipal CairoAuthentication auth, @PathVariable String id) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 
@@ -71,7 +66,6 @@ public class ResourceApi {
 
 	@GetMapping("/Tree")
 	@PreAuthorize("isAuthenticated()")
-	@BusinessResult
 	public List<ResourceTreeNode> tree(@AuthenticationPrincipal CairoAuthentication auth) {
 		String client = auth.getToken().getAudience().stream().findFirst().orElse("default");
 

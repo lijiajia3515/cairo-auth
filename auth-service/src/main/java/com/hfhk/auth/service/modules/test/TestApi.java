@@ -22,8 +22,6 @@ public class TestApi {
 	private final AtomicInteger i = new AtomicInteger();
 
 	@GetMapping("/exception")
-	@BusinessResult
-	@PermitAll
 	public Object exception() throws Exception {
 		switch (i.getAndIncrement() % 4) {
 			case 0:
@@ -39,21 +37,17 @@ public class TestApi {
 	}
 
 	@PostMapping("/exception2")
-	@BusinessResult
-	@PermitAll
 	public Object exception2(@RequestBody Map<String, String> x) {
 		return x;
 	}
 
 	@GetMapping("/auth")
-	@BusinessResult
 	@PreAuthorize("isAuthenticated()")
 	public Authentication auth(Authentication authentication) {
 		return authentication;
 	}
 
 	@GetMapping("/2")
-	@BusinessResult
 	@PermitAll
 	public Object a(HttpServletRequest request) {
 		return request.getSession(false).getAttribute(HttpSessionOAuth2AuthorizationRequestRepository.class
@@ -61,7 +55,6 @@ public class TestApi {
 	}
 
 	@GetMapping("/session1")
-	@BusinessResult
 	@PermitAll
 	public void sessionA(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.getSession(false).setAttribute("A", IdUtil.objectId());
@@ -70,7 +63,6 @@ public class TestApi {
 	}
 
 	@GetMapping("/session2")
-	@BusinessResult
 	@PermitAll
 	public void sessionB(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		System.out.println("2-" + request.getSession(false).getAttribute("A"));
@@ -78,7 +70,6 @@ public class TestApi {
 	}
 
 	@GetMapping("/session")
-	@BusinessResult
 	@PermitAll
 	public Object session(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
@@ -89,7 +80,6 @@ public class TestApi {
 	}
 
 	@GetMapping("/session21")
-	@BusinessResult
 	@PermitAll
 	public void session21(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
@@ -99,7 +89,6 @@ public class TestApi {
 	}
 
 	@GetMapping("/session22")
-	@BusinessResult
 	@PermitAll
 	public void session22(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(false);
