@@ -15,11 +15,11 @@ ENV LC_ALL C.UTF-8
 
 ENV SPRING_PROFILES_ACTIVE docker
 
-WORKDIR /hfhk/cairo/auth/service
+WORKDIR /hfhk/auth/service
 
-ADD build/libs/app.jar /hfhk/cairo/auth/service/app.jar
+ADD build/libs/app.jar /hfhk/auth/service/app.jar
 
-VOLUME /hfhk/cairo/auth/service/logs
+VOLUME /hfhk/auth/service/logs
 
 EXPOSE 80
 

@@ -1,6 +1,6 @@
 package com.hfhk.auth.domain.user;
 
-import com.hfhk.cairo.core.request.PageRequest;
+import com.hfhk.cairo.core.page.PageRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

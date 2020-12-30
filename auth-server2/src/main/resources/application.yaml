@@ -21,20 +21,28 @@ spring:
     cache: false
     settings:
       template_update_delay: 0
-  data:
-    mongodb:
-      auto-index-creation: true
   webflux:
     format:
       date: yyyy-MM-dd HH:mm:ss
+  data:
+    mongodb:
+      field-naming-strategy: com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
+      auto-index-creation: true
+      database: ${hfhk.mongo.database:hfhk-auth}
+      authentication-database: ${hfhk.mongo.authentication-database:hfhk}
+      host: ${hfhk.mongo.host:mongo}
+      port: ${hfhk.mongo.port:27017}
+      username: ${hfhk.mongo.username:hfhk}
+      password: ${hfhk.mongo.password:Hfhk.1320.}
 
 server:
+  port: 80
   http2:
     enabled: true
-  max-http-header-size: 16KB
   servlet:
     encoding:
       force: true
+  max-http-header-size: 16KB
 
 logging:
   level:
@@ -43,4 +51,5 @@ logging:
     org.springframework: info
     org.springframework.security: debug
     org.springframework.security.oauth2: debug
-    #org.springframework.boot.autoconfigure: DEBUG
+  file:
+    name: /hfhk/auth/server/logs/app.log

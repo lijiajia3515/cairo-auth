@@ -17,6 +17,7 @@ public class DefaultSecurityConfig {
 		http
 			.csrf().disable()
 			.authorizeRequests(authorizeRequests -> authorizeRequests
+				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)

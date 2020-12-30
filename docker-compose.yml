@@ -1,0 +1,92 @@
+version: '3.7'
+
+networks:
+  default:
+    name: cairo
+
+services:
+  consul_m_1:
+    image: consul:1.9.1
+    hostname: consul_m1
+    #command: sh
+    command: agent -server -client=0.0.0.0 -node=consul_m1 -datacenter=hfhk -ui -dev
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - consul
+    ports:
+      - 8500:8500
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+  auth_server:
+    image: registry.cn-beijing.aliyuncs.com/hfhksoft/auth-server:snapshot
+    hostname: auth_server
+    environment:
+      HFHK_MONGO_DABASE: hfhk-auth
+      HFHK_MONGO_AUTHENTICATION-DATABASE: hfhk
+      HFHK_MONGO_HOST: 192.168.30.21
+      HFHK_MONGO_PORT: 27017
+      HFHK_MONGO_USERNAME: hfhk
+      HFHK_MONGO_PASSWORD: Hfhk.1320.
+    tty: true
+    stdin_open: true
+    healthcheck:
+      disable: true
+    networks:
+      default:
+        aliases:
+          - auth-server
+    ports:
+      - 10000:80
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+  nginx:
+    image: nginx:stable
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /hfhk/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:r
+      - /hfhk/nginx/conf/conf.d:/etc/nginx/conf.d:r
+      - /hfhk/nginx/share:/usr/share/nginx
+      - /hfhk/nginx/logs:/var/log/nginx
+    networks:
+      default: { }
+    ports:
+      - 80:80
+      - 443:443
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure

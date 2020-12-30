@@ -1,0 +1,8 @@
+hfhk:
+  mongo:
+    database: hfhk-auth
+    authentication-database: hfhk
+    host: 192.168.30.21
+    port: 27017
+    username: hfhk
+    password: Hfhk.1320.
