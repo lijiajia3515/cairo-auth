@@ -28,9 +28,13 @@ dependencies {
 
   implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-  implementation "com.hfhk.cairo:core:${cairoVersion}"
+  implementation "com.hfhk.cairo:cairo-core:${cairoVersion}"
 
   implementation project(":auth-common")
+}
+
+test {
+  useJUnitPlatform()
 }
 
 bootJar {

@@ -9,7 +9,7 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list; \
     apt upgrade -y; \
     apt install curl wget jq -y
 
-ADD build/libs/app.jar /hfhk/auth/server/app.jar
+ADD build/libs/app.jar /hfhk/auth/service/app.jar
 
 ENV TZ Asia/Shanghai
 ENV LANG C.UTF-8

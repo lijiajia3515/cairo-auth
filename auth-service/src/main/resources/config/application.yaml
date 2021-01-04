@@ -35,7 +35,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://${hfhk.auth.server}/oauth2/jwks
+          jwk-set-uri: http://${hfhk.auth.server:auth-server}/oauth2/jwks
   data:
     mongodb:
       auto-index-creation: true
@@ -97,7 +97,7 @@ security:
       client-id: ${hfhk.auth.client.id:hfhk_auth}
       client-secret: ${hfhk.auth.client.id:hfhk_auth}
       grant-type: client_credentials
-      access-token-uri: http://${hfhk.auth.server:auth}/oauth2/token
+      access-token-uri: http://${hfhk.auth.server:auth-server}/oauth2/token
 
 feign:
   hystrix:

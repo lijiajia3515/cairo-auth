@@ -41,8 +41,8 @@ dependencies {
   // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 
   // cairo
-  implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
-  implementation("com.hfhk.cairo.starter:service:${cairoVersion}") {
+  implementation "com.hfhk.cairo.starter:cairo-starter-mongo:${cairoVersion}"
+  implementation("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
 
@@ -59,7 +59,7 @@ dependencies {
 }
 
 test {
-
+  useJUnitPlatform()
 }
 
 bootJar {

@@ -9,8 +9,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter"
   implementation "org.springframework.boot:spring-boot-starter-actuator"
 
-
-  // boot
+  // web
   implementation "org.springframework.boot:spring-boot-starter-web"
   implementation 'org.springframework.session:spring-session-core'
 
@@ -20,12 +19,12 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 
+  implementation "com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}"
+
   implementation project(':auth-domain')
 
-  implementation "com.hfhk.cairo.starter:service:${cairoVersion}"
-
   // test
-  testImplementation('org.springframework.boot:spring-boot-starter-test')
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'io.projectreactor:reactor-test'
   testImplementation 'org.springframework.security:spring-security-test'
 }

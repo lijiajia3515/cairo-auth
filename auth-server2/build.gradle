@@ -4,11 +4,6 @@ plugins {
 
 apply from: "${rootDir}/gradle/devtools.gradle"
 
-/*repositories {
-  maven {
-    url 'https://repo.spring.io/libs-snapshot-local'
-  }
-}*/
 dependencies {
 
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
@@ -22,8 +17,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-  implementation "com.hfhk.cairo.starter:mongo:${cairoVersion}"
-  implementation("com.hfhk.cairo.starter:service:${cairoVersion}") {
+  implementation "com.hfhk.cairo.starter:cairo-starter-mongo:${cairoVersion}"
+  implementation("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
 
