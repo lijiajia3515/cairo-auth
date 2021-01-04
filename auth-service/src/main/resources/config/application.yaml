@@ -76,17 +76,10 @@ spring:
       discovery:
         prefer-ip-address: true
         health-check-interval: 5s
-        instance-zone: hfhk
-        instance-group: hfhk
+        instance-zone: ${hfhk.consul.discovery.instance-zone:hfhk}
+        instance-group: ${hfhk.consul.discovery.instance-group:hfhk}
         tags:
           - v1
-
-logging:
-  level:
-    root: info
-    com.hfhk: debug
-  file:
-    name: /hfhk/auth/service/logs/hfhk.log
 
 server:
   port: 80
@@ -131,3 +124,9 @@ management:
           - '*'
 
 
+logging:
+  level:
+    root: info
+    com.hfhk: debug
+  file:
+    name: /hfhk/auth/service/logs/hfhk.log

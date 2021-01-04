@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 @Data
 @Accessors(chain = true)
@@ -21,4 +22,6 @@ public class UserPageFindParam implements Serializable {
 	private PageRequest page = new PageRequest();
 
 	private String keyword;
+
+	private Collection<String> uids;
 }

@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "service-auth-v1", path = "/auth", contextId = "serviceAuthV1AuthenticationBasicClient")
+@FeignClient(name = "service-auth-v1", path = "/auth", contextId = "serviceAuthV1AuthBasicClient")
 public interface AuthBasicClient {
 
 	@GetMapping

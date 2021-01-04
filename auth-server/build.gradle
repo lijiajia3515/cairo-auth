@@ -2,6 +2,8 @@ plugins {
   id 'org.springframework.boot'
 }
 
+apply from: "${rootDir}/gradle/devtools.gradle"
+
 dependencies {
   annotationProcessor "org.springframework.boot:spring-boot-starter"
 

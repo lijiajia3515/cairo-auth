@@ -51,18 +51,27 @@ public class UserApi {
 	}
 
 	// find
-	@PostMapping("/Find")
+	@PostMapping("Find")
 	@PreAuthorize("isAuthenticated()")
-	public Page<User> find(@AuthenticationPrincipal AuthPrincipal principal,
-						   @RequestBody UserPageFindParam request) {
+	public List<User> find(@AuthenticationPrincipal AuthPrincipal principal,
+						   @RequestBody UserFindParam param) {
 		String client = principal.getClient();
-		return userService.find(client, request);
+		return userService.find(client, param);
 	}
 
-	@PostMapping("/FindById")
+	@PostMapping("/FindPage")
+	@PreAuthorize("isAuthenticated()")
+	public Page<User> find(@AuthenticationPrincipal AuthPrincipal principal,
+						   @RequestBody UserPageFindParam param) {
+		String client = principal.getClient();
+		return userService.findPage(client, param);
+	}
+
+	@PostMapping("/FindById/{uid}")
+	@PreAuthorize("isAuthenticated()")
 	public User findById(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String uid) {
 		String client = principal.getClient();
-		return userService.findById(client, uid);
+		return userService.findById(client, uid).orElseThrow();
 	}
 
 	// current

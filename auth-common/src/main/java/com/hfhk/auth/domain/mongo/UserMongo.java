@@ -105,9 +105,10 @@ public class UserMongo implements Serializable {
 	public static final Field FIELD = new Field();
 
 	public static class Field extends AbstractUpperCamelCaseField {
-		private Field(){
+		private Field() {
 
 		}
+
 		public final String UID = field("Uid");
 		public final String NAME = field("Name");
 		public final String USERNAME = field("Username");
@@ -120,8 +121,39 @@ public class UserMongo implements Serializable {
 		public final String ACCOUNT_ENABLED = field("AccountEnabled");
 		public final String ACCOUNT_LOCKED = field("AccountLocked");
 
-		public final String CLIENT_ROLES = field("ClientRoles");
-		public final String CLIENT_DEPARTMENTS = field("ClientDepartments");
-		public final String CLIENT_RESOURCES = field("ClientResources");
+		public final ClientRoles CLIENT_ROLES = new ClientRoles(this, "ClientRoles");
+		public final ClientDepartments CLIENT_DEPARTMENTS = new ClientDepartments(this, "ClientDepartments");
+		public final ClientResources CLIENT_RESOURCES = new ClientResources(this, "ClientResources");
+
+		public static abstract class AbstractClientField extends AbstractUpperCamelCaseField {
+
+			public AbstractClientField(AbstractMongoField parent, String prefix) {
+				super(parent, prefix);
+			}
+
+			public String client(String client) {
+				return field(client);
+			}
+		}
+
+		public static class ClientRoles extends AbstractClientField {
+			public ClientRoles(AbstractMongoField parent, String prefix) {
+				super(parent, prefix);
+			}
+		}
+
+		public static class ClientDepartments extends AbstractClientField {
+			public ClientDepartments(AbstractMongoField parent, String prefix) {
+				super(parent, prefix);
+			}
+		}
+
+		public static class ClientResources extends AbstractClientField {
+			public ClientResources(AbstractMongoField parent, String prefix) {
+				super(parent, prefix);
+			}
+		}
+
+
 	}
 }

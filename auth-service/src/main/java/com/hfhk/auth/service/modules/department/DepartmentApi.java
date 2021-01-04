@@ -45,7 +45,7 @@ public class DepartmentApi {
 						   @RequestBody DepartmentSaveParam request) {
 		String client = principal.getClient();
 
-		return departmentService.save(client, request);
+		return departmentService.save(client, request).orElseThrow();
 	}
 
 	@PutMapping("/Put")
@@ -53,12 +53,12 @@ public class DepartmentApi {
 	public Department put(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentModifyParam request) {
 		String client = principal.getClient();
 
-		return departmentService.modify(client, request);
+		return departmentService.modify(client, request).orElseThrow();
 	}
 
 	@DeleteMapping("/Delete")
 	@PreAuthorize("isAuthenticated()")
-	public Department delete(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentDeleteParam param) {
+	public List<Department> delete(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody DepartmentDeleteParam param) {
 		String client = principal.getClient();
 
 		return departmentService.delete(client, param);

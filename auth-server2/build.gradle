@@ -1,11 +1,14 @@
 plugins {
   id 'org.springframework.boot'
 }
-//repositories {
-//  maven {
-//    url 'https://repo.spring.io/libs-snapshot-local'
-//  }
-//}
+
+apply from: "${rootDir}/gradle/devtools.gradle"
+
+/*repositories {
+  maven {
+    url 'https://repo.spring.io/libs-snapshot-local'
+  }
+}*/
 dependencies {
 
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

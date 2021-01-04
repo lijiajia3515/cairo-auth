@@ -9,13 +9,15 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list; \
     apt upgrade -y; \
     apt install curl wget jq -y
 
+ADD build/libs/app.jar /hfhk/auth/server/app.jar
+
 ENV TZ Asia/Shanghai
 ENV LANG C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
 ENV SPRING_PROFILES_ACTIVE docker
-ADD build/libs/app.jar /hfhk/auth/server/app.jar
+
 
 WORKDIR /hfhk/auth/server
 VOLUME /hfhk/auth/server/logs

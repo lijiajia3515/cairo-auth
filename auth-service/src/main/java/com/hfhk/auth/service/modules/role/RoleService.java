@@ -1,22 +1,177 @@
 package com.hfhk.auth.service.modules.role;
 
+import cn.hutool.core.util.IdUtil;
+import com.hfhk.auth.domain.mongo.Mongo;
+import com.hfhk.auth.domain.mongo.ResourceMongo;
+import com.hfhk.auth.domain.mongo.RoleMongo;
+import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.auth.domain.role.*;
+import com.hfhk.auth.service.modules.resource.ResourceConverter;
+import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.core.page.Page;
+import com.hfhk.cairo.core.page.PageRequest;
+import com.mongodb.client.result.UpdateResult;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 服务 - 角色
  */
-public interface RoleService {
+@Slf4j
+@Service
+public class RoleService {
 
-	RoleV2 save(String client, RoleSaveParam request);
+	private final MongoTemplate mongoTemplate;
 
-	RoleV2 modify(String client, RoleModifyParam request);
-	List<RoleV2> delete(String client, RoleDeleteParam param);
+	public RoleService(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
 
-	Page<Role> pageFind(String client, RolePageFindParam request);
 
-	RoleV2 find(String client, String id);
+	/**
+	 * 保存
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	RoleV2 save(String client, RoleSaveParam param) {
+		RoleMongo role = RoleMongo.builder()
+			.client(client)
+			.code(Optional.ofNullable(param.getCode()).orElse(IdUtil.objectId()))
+			.name(param.getName())
+			.resources(param.getResources())
+			.build();
+		RoleMongo insert = mongoTemplate.insert(role, Mongo.Collection.ROLE);
+		log.debug("[role][insert] -> {}", insert);
+		return findByCode(client, insert.getId()).orElseThrow(() -> new UnknownBusinessException("code not found"));
+
+	}
+
+	/**
+	 * 修改
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return role
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	Optional<RoleV2> modify(String client, RoleModifyParam param) {
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(param.getCode()));
+		Update update = new Update();
+		Optional.ofNullable(param.getName()).ifPresent(name -> update.set(RoleMongo.FIELD.NAME, name));
+		Optional.ofNullable(param.getResources()).ifPresent(resourceIds -> update.set(RoleMongo.FIELD.RESOURCES, resourceIds));
+		UpdateResult result = mongoTemplate.updateFirst(query, update, RoleMongo.class, Mongo.Collection.ROLE);
+		log.debug("[role][update] -> {}", result);
+		return findByCode(client, param.getCode());
+	}
+
+	/**
+	 * 删除
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return delete role data
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	List<RoleV2> delete(String client, RoleDeleteParam param) {
+		Criteria criteria = Criteria.where(RoleMongo.FIELD.CLIENT).is(client);
+		Optional.of(param.getCodes()).filter(x -> !x.isEmpty()).ifPresent(x -> criteria.and(RoleMongo.FIELD.CODE).in(x));
+		Query query = Query.query(criteria);
+
+		List<RoleV2> deleteRoles = mongoTemplate.findAllAndRemove(query, RoleMongo.class, Mongo.Collection.ROLE)
+			.stream()
+			.map(x -> {
+				List<ResourceTreeNode> resources = findResources(x);
+				return RoleConverter.roleV2Optional(x, resources).orElseThrow(() -> new UnknownBusinessException("code not found"));
+			})
+			.collect(Collectors.toList());
+
+		log.debug("[role][delete] -> {}", deleteRoles);
+		return deleteRoles;
+
+	}
+
+
+	/**
+	 * find page
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return role page
+	 */
+	List<Role> find(String client, RoleFindParam param) {
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
+		Optional.ofNullable(param.getKeyword()).filter(kw -> !kw.isEmpty()).ifPresent(kw -> query.addCriteria(Criteria.where(RoleMongo.FIELD.NAME).regex(kw)));
+
+		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE)
+			.stream()
+			.flatMap(x -> RoleConverter.roleOptional(x).stream())
+			.collect(Collectors.toList());
+	}
+
+
+	/**
+	 * find page
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return role page
+	 */
+	Page<Role> pageFind(String client, RolePageFindParam param) {
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
+
+		long total = mongoTemplate.count(query, RoleMongo.class, Mongo.Collection.ROLE);
+
+		query.with(Optional.ofNullable(param.getPage()).orElse(new PageRequest()).pageable());
+		List<Role> content = mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE)
+			.stream()
+			.flatMap(x -> RoleConverter.roleOptional(x).stream())
+			.collect(Collectors.toList());
+
+		return new Page<>(param.getPage(), content, total);
+	}
+
+	/**
+	 * @param client client
+	 * @param id     id
+	 * @return role
+	 */
+	Optional<RoleV2> findById(String client, String id) {
+		return findByCode(client, id);
+	}
+
+
+	Optional<RoleV2> findByCode(String client, String code) {
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(code));
+
+		RoleMongo role = mongoTemplate.findOne(query, RoleMongo.class, Mongo.Collection.ROLE);
+
+		List<ResourceTreeNode> resources = findResources(role);
+		return RoleConverter.roleV2Optional(role, resources);
+	}
+
+	private List<ResourceTreeNode> findResources(RoleMongo role) {
+		return Optional.ofNullable(role)
+			.map(RoleMongo::getResources)
+			.filter(x -> !x.isEmpty())
+			.map(x ->
+				mongoTemplate.find(
+					Query.query(Criteria
+						.where(RoleMongo.FIELD.CODE).is(role.getClient())
+						.and(RoleMongo.FIELD._ID).in(x)),
+					ResourceMongo.class,
+					Mongo.Collection.RESOURCE)
+			).stream().flatMap(Collection::stream)
+			.map(ResourceConverter::resourceTreeNodeMapper)
+			.collect(Collectors.toList());
+	}
 
 }

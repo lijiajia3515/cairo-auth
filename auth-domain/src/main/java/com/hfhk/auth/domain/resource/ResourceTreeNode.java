@@ -29,7 +29,7 @@ public class ResourceTreeNode implements TreeNode<String, ResourceTreeNode> {
 	/**
 	 * 上级id
 	 */
-	private String parentId;
+	private String parent;
 
 	/**
 	 * 类型
@@ -71,7 +71,7 @@ public class ResourceTreeNode implements TreeNode<String, ResourceTreeNode> {
 
 	@Override
 	public String parentId() {
-		return parentId;
+		return parent;
 	}
 
 	@Override

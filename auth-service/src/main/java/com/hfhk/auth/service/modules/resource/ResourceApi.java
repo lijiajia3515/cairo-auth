@@ -1,7 +1,6 @@
 package com.hfhk.auth.service.modules.resource;
 
 import com.hfhk.auth.domain.resource.*;
-import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,21 +54,27 @@ public class ResourceApi {
 	}
 
 	//Find
-
 	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
-	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+	public List<ResourceTreeNode> find(@AuthenticationPrincipal AuthPrincipal principal, ResourceFindParam param) {
 		String client = principal.getClient();
-
-		return resourceService.find(client, id);
+		return resourceService.find(client, param);
 	}
 
-	@GetMapping("/Tree")
+	@PostMapping("/FindTree")
 	@PreAuthorize("isAuthenticated()")
 	public List<ResourceTreeNode> tree(@AuthenticationPrincipal AuthPrincipal principal) {
 		String client = principal.getClient();
 
 		return resourceService.treeFind(client);
+	}
+
+	@PostMapping("/FindById/{id}")
+	@PreAuthorize("isAuthenticated()")
+	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+		String client = principal.getClient();
+
+		return resourceService.treeFindById(client, id);
 	}
 
 
