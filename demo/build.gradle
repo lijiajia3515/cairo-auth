@@ -19,9 +19,12 @@ dependencies {
   implementation 'org.springframework.cloud:spring-cloud-starter-security'
   implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 
-  implementation "com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}"
-
+  implementation ("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
+    exclude group: "com.hfhk.auth", module: "auth-client"
+  }
+  implementation project(':auth-client')
   implementation project(':auth-domain')
+
 
   // test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
