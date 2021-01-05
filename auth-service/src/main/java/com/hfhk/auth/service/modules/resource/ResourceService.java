@@ -25,8 +25,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.hfhk.auth.service.constants.Constant.TREE_ROOT;
-
 /**
  * 资源 服务
  */
@@ -97,7 +95,7 @@ public class ResourceService {
 	ResourceTreeNode save(@NotNull String client, @Validated ResourceSaveParam param) {
 		ResourceMongo data = ResourceMongo.builder()
 			.client(client)
-			.parent(Optional.ofNullable(param.getParentId()).orElse(Constant.Resource.TREE_ROOT))
+			.parent(Optional.ofNullable(param.getParent()).orElse(Constant.Resource.TREE_ROOT))
 			.type(Optional.ofNullable(param.getType()).map(x -> ResourceMongo.Type.valueOf(x.name())).orElse(null))
 			.name(param.getName())
 			.permissions(param.getPermissions())
@@ -105,7 +103,7 @@ public class ResourceService {
 			.icon(param.getIcon())
 			.build();
 		data = mongoTemplate.insert(data, Mongo.Collection.RESOURCE);
-		return treeFindById(client, data.getId()).orElseThrow();
+		return treeFindByData(data);
 	}
 
 	/**
@@ -116,7 +114,7 @@ public class ResourceService {
 	 * @return 修改后的资源值
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	Optional<ResourceTreeNode> modify(@NotNull String client, @Validated ResourceModifyParam param) {
+	ResourceTreeNode modify(@NotNull String client, @Validated ResourceModifyParam param) {
 		ResourceMongo data = ResourceMongo.builder()
 			.client(client)
 			.id(param.getId())
@@ -128,7 +126,7 @@ public class ResourceService {
 			.icon(param.getIcon())
 			.build();
 		data = mongoTemplate.save(data, Mongo.Collection.RESOURCE);
-		return treeFindById(client, data.getId());
+		return treeFindByData(data);
 	}
 
 	/**
@@ -199,21 +197,36 @@ public class ResourceService {
 	}
 
 	/**
-	 * find
-	 *
-	 * @param client client
-	 * @param id     id
-	 * @return 资源
+	 * @param client
+	 * @param id
+	 * @return
 	 */
 	Optional<ResourceTreeNode> treeFindById(@NotNull String client, @NotNull String id) {
-		Set<ResourceMongo> contents = findSubsByIds(client, Collections.singleton(id));
-		List<ResourceTreeNode> list = buildTree(contents);
+		ResourceMongo resource = mongoTemplate.findOne(
+			Query.query(Criteria
+				.where(ResourceMongo.FIELD.CLIENT).is(client)
+				.and(ResourceMongo.FIELD._ID).is(id)),
+			ResourceMongo.class,
+			Mongo.Collection.RESOURCE
+		);
 
-		return list.stream()
-			.filter(x -> x.getId().equals(id)).findFirst()
-			.map(x -> TreeConverter.build(list, x.getParent(), RESOURCE_TREE_COMPARATOR))
-			.filter(x -> !x.isEmpty())
-			.map(x -> x.get(0));
+		return Optional.ofNullable(resource)
+			.map(x-> {
+				Set<ResourceMongo> contents = findSubsByIds(client, Collections.singleton(id));
+				List<ResourceTreeNode> list = buildTree(contents, id);
+				return ResourceConverter.resourceTreeNodeMapper(x).setSubs(list);
+			});
+	}
+
+	/**
+	 * @param data
+	 * @return
+	 */
+	ResourceTreeNode treeFindByData(@NotNull ResourceMongo data) {
+		Set<ResourceMongo> contents = findSubsByIds(data.getClient(), Collections.singleton(data.getId()));
+		List<ResourceTreeNode> list = buildTree(contents, data.getId());
+
+		return ResourceConverter.resourceTreeNodeMapper(data).setSubs(list);
 	}
 
 	/**
@@ -228,6 +241,7 @@ public class ResourceService {
 			Criteria.where(ResourceMongo.FIELD.CLIENT).is(client)
 				.and(ResourceMongo.FIELD._ID).in(ids)
 		);
+
 		List<ResourceMongo> firstList = mongoTemplate.find(query, ResourceMongo.class, Mongo.Collection.RESOURCE);
 		Set<ResourceMongo> allList = new HashSet<>(firstList);
 		findSubs(allList, firstList);
@@ -244,22 +258,29 @@ public class ResourceService {
 	void findSubs(Collection<ResourceMongo> data, List<ResourceMongo> list) {
 		Optional.of(list.stream().map(ResourceMongo::getId).collect(Collectors.toSet()))
 			.filter(x -> !x.isEmpty())
-			.ifPresent(parentIds -> {
+			.ifPresent(ids -> {
 				List<ResourceMongo> subList = mongoTemplate.find(
 					Query.query(
-						Criteria.where(ResourceMongo.FIELD._ID).in(parentIds)
+						Criteria.where(ResourceMongo.FIELD.PARENT).in(ids)
 					),
 					ResourceMongo.class,
 					Mongo.Collection.RESOURCE
 				);
-				data.addAll(subList);
-				findSubs(data, subList);
+
+				if (!subList.isEmpty()) {
+					data.addAll(subList);
+					findSubs(data, subList);
+				}
 			});
 	}
 
 	public List<ResourceTreeNode> buildTree(Collection<ResourceMongo> contents) {
+		return buildTree(contents, Constant.Resource.TREE_ROOT);
+	}
+
+	public List<ResourceTreeNode> buildTree(Collection<ResourceMongo> contents, String root) {
 		List<ResourceTreeNode> nodes = contents.stream().map(ResourceConverter::resourceTreeNodeMapper).collect(Collectors.toList());
-		return TreeConverter.build(nodes, Constant.Resource.TREE_ROOT, RESOURCE_TREE_COMPARATOR);
+		return TreeConverter.build(nodes, root, RESOURCE_TREE_COMPARATOR);
 	}
 
 

@@ -35,7 +35,7 @@ public class ResourceApi {
 	public ResourceTreeNode modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceModifyParam param) {
 		String client = principal.getClient();
 
-		return resourceService.modify(client, param).orElseThrow(() -> new UnknownBusinessException("111"));
+		return resourceService.modify(client, param);
 	}
 
 	@PatchMapping("/Move")
@@ -70,9 +70,9 @@ public class ResourceApi {
 		return resourceService.treeFind(client);
 	}
 
-	@PostMapping("/FindById/{id}")
+	@PostMapping("/FindById}")
 	@PreAuthorize("isAuthenticated()")
-	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
+	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @RequestParam String id) {
 		String client = principal.getClient();
 
 		return resourceService.treeFindById(client, id).orElseThrow(() -> new UnknownBusinessException("111"));

@@ -22,7 +22,7 @@ public class ResourceSaveParam implements Serializable {
 	/**
 	 * 上级 id
 	 */
-	private String parentId;
+	private String parent;
 
 	/**
 	 * 资源类型
