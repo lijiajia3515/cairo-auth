@@ -1,4 +1,4 @@
-package com.hfhk.auth.server2.modules.user;
+package com.hfhk.auth.server2.modules.auth;
 
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;

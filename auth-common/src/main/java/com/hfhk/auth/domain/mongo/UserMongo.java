@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,6 +98,11 @@ public class UserMongo implements Serializable {
 	private Map<String, Set<String>> clientAuthorities;
 
 	/**
+	 * 最后登录时间
+	 */
+	private LocalDateTime lastLoginAt;
+
+	/**
 	 * 元信息
 	 */
 	@Builder.Default
@@ -117,6 +123,7 @@ public class UserMongo implements Serializable {
 		public final String PHONE_NUMBER = field("PhoneNumber");
 
 		public final String AVATAR_URL = field("AvatarUrl");
+		public final String LAST_LOGIN_AT = field("LastLoginAt");
 
 		public final String ACCOUNT_ENABLED = field("AccountEnabled");
 		public final String ACCOUNT_LOCKED = field("AccountLocked");

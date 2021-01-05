@@ -1,7 +1,6 @@
 package com.hfhk.auth.domain.role;
 
-import com.hfhk.cairo.core.page.AbstractPageRequest;
-import com.hfhk.cairo.core.page.PageRequest;
+import com.hfhk.cairo.core.page.AbstractPage;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -13,7 +12,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 
-public class RolePageFindParam extends AbstractPageRequest<RolePageFindParam> {
+public class RolePageFindParam extends AbstractPage<RolePageFindParam> {
 
 	private String keyword;
 }

@@ -1,6 +1,6 @@
 package com.hfhk.auth.server2.config;
 
-import com.hfhk.auth.server2.modules.client.HfhkRegisteredClientRepository;
+import com.hfhk.auth.server2.modules.auth.HfhkRegisteredClientRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

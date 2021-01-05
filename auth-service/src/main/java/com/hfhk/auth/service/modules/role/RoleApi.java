@@ -25,14 +25,14 @@ public class RoleApi {
 	// Operate
 
 	@PostMapping("/Save")
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
+	@PreAuthorize("isAuthenticated()")
 	public RoleV2 save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleSaveParam request) {
 		String client = principal.getClient();
 		return roleService.save(client, request);
 	}
 
 	@PutMapping("/Modify")
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
+	@PreAuthorize("isAuthenticated()")
 	public RoleV2 modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleModifyParam request) {
 		String client = principal.getClient();
 

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -42,15 +43,22 @@ public class AuthUser implements UserDetails {
 	 */
 	private String email;
 
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
+
 	/**
 	 * 头像
 	 */
 	private String avatarUrl;
 
 	/**
-	 * 密码
+	 * 最后登录
 	 */
-	private String password;
+	private LocalDateTime lastLoginAt;
 
 	/**
 	 * 账号 -是否启用

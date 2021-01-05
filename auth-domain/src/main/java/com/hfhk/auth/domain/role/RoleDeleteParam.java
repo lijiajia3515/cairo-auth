@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -16,6 +18,8 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 public class RoleDeleteParam implements Serializable {
-	
+
+	@NotEmpty
+	@NotNull
 	private Collection<String> codes;
 }

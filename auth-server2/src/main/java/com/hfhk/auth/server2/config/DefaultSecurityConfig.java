@@ -1,6 +1,7 @@
 package com.hfhk.auth.server2.config;
 
-import com.hfhk.auth.server2.modules.user.HfhkUserService;
+import com.hfhk.auth.server2.modules.auth.HfhkAuthSuccessHandler;
+import com.hfhk.auth.server2.modules.auth.HfhkUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class DefaultSecurityConfig {
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http, HfhkAuthSuccessHandler successHandler) throws Exception {
 		http
 			.csrf().disable()
 			.authorizeRequests(authorizeRequests -> authorizeRequests
@@ -22,6 +23,7 @@ public class DefaultSecurityConfig {
 				.mvcMatchers("/**").authenticated()
 			)
 			.formLogin()
+			.successHandler(successHandler)
 			.and()
 			//.oauth2Login()
 			//.and()

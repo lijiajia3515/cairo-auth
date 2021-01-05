@@ -13,7 +13,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +94,26 @@ public class DepartmentService {
 		return content.stream().map(DepartmentConverter::departmentMapper).collect(Collectors.toList());
 	}
 
+	public List<Department> find(@NotNull String client, @Validated DepartmentFindParam param) {
+		Criteria criteria = Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client);
+		Optional.ofNullable(param.getParent()).ifPresent(parent -> criteria.and(DepartmentMongo.FIELD.PARENT).is(parent));
+
+		Query query = Query
+			.query(criteria)
+			.with(
+				Sort.by(
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(DepartmentMongo.FIELD._ID)
+				)
+			);
+
+		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT)
+			.stream()
+			.map(DepartmentConverter::departmentMapper)
+			.collect(Collectors.toList());
+
+	}
 
 	/**
 	 * 查找
@@ -108,7 +130,7 @@ public class DepartmentService {
 
 		long total = mongoTemplate.count(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 
-		query.with(request.getPage().pageable());
+		query.with(request.pageable());
 		query.with(
 			Sort.by(
 				Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
@@ -121,7 +143,7 @@ public class DepartmentService {
 			.map(DepartmentConverter::departmentMapper)
 			.collect(Collectors.toList());
 
-		return new Page<>(request.getPage(), contents, total);
+		return new Page<>(request, contents, total);
 	}
 
 	/**
@@ -131,10 +153,14 @@ public class DepartmentService {
 	 * @return 部门 list
 	 */
 	public List<DepartmentTreeNode> treeFind(String client) {
-		List<DepartmentTreeNode> nodes = find(client)
-			.stream()
+		List<DepartmentTreeNode> nodes = mongoTemplate.find(
+			Query.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client)),
+			DepartmentMongo.class,
+			Mongo.Collection.DEPARTMENT
+		).stream()
 			.map(DepartmentConverter::departmentTreeNodeMapper)
 			.collect(Collectors.toList());
+
 		return TreeConverter.build(nodes, Constant.DEPARTMENT_TREE_ROOT, Constant.TREE_COMPARATOR);
 	}
 
@@ -154,18 +180,5 @@ public class DepartmentService {
 			.stream().map(DepartmentConverter::departmentMapper);
 	}
 
-	public List<DepartmentMongo> find(String client) {
-		Query query = Query
-			.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client))
-			.with(
-				Sort.by(
-					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
-					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
-					Sort.Order.asc(DepartmentMongo.FIELD._ID)
-				)
-			);
-
-		return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
-	}
 
 }

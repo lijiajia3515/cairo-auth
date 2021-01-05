@@ -168,17 +168,14 @@ public class UserService {
 	 * @return user page
 	 */
 	public Page<User> findPage(@NotNull String client, @Validated UserPageFindParam param) {
-
 		Criteria criteria = new Criteria();
-		Optional.ofNullable(param).ifPresent(p -> {
-			Optional.ofNullable(p.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
-			Optional.ofNullable(p.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
-		});
+		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
 
 		Query query = new Query(criteria);
 		long total = mongoTemplate.count(query, UserMongo.class, Mongo.Collection.USER);
 
-		query.with(param.getPage().pageable());
+		query.with(param.pageable());
 		List<UserMongo> users = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
 		log.debug("[user][pageFind] query: {}", users);
 
@@ -190,7 +187,7 @@ public class UserService {
 
 		List<User> contents = UserConverter.usersMapper(client, users, roles, departments);
 
-		return new Page<>(param.getPage(), contents, total);
+		return new Page<>(param, contents, total);
 	}
 
 	/**

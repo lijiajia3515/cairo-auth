@@ -6,20 +6,25 @@ import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.auth.domain.role.*;
+import com.hfhk.auth.service.constants.Constant;
 import com.hfhk.auth.service.modules.resource.ResourceConverter;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.core.page.Page;
-import com.hfhk.cairo.core.page.PageRequest;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +35,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class RoleService {
+
+	public final Collection<String> UNMODIFIABLE_ROLE_CODES = Collections.singletonList(Constant.Role.ADMIN);
 
 	private final MongoTemplate mongoTemplate;
 
@@ -43,6 +50,7 @@ public class RoleService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	RoleV2 save(String client, RoleSaveParam param) {
+		validUnModifiableRole(Collections.singleton(param.getCode()));
 		RoleMongo role = RoleMongo.builder()
 			.client(client)
 			.code(Optional.ofNullable(param.getCode()).orElse(IdUtil.objectId()))
@@ -51,7 +59,7 @@ public class RoleService {
 			.build();
 		RoleMongo insert = mongoTemplate.insert(role, Mongo.Collection.ROLE);
 		log.debug("[role][insert] -> {}", insert);
-		return findByCode(client, insert.getId()).orElseThrow(() -> new UnknownBusinessException("code not found"));
+		return findByCode(client, insert.getCode()).orElseThrow(() -> new UnknownBusinessException("code not found"));
 
 	}
 
@@ -63,7 +71,8 @@ public class RoleService {
 	 * @return role
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	Optional<RoleV2> modify(String client, RoleModifyParam param) {
+	Optional<RoleV2> modify(String client, @Validated RoleModifyParam param) {
+		validUnModifiableRole(Collections.singleton(param.getCode()));
 		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(param.getCode()));
 		Update update = new Update();
 		Optional.ofNullable(param.getName()).ifPresent(name -> update.set(RoleMongo.FIELD.NAME, name));
@@ -81,7 +90,8 @@ public class RoleService {
 	 * @return delete role data
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	List<RoleV2> delete(String client, RoleDeleteParam param) {
+	List<RoleV2> delete(@NotNull String client, @Validated RoleDeleteParam param) {
+		validUnModifiableRole(param.getCodes());
 		Criteria criteria = Criteria.where(RoleMongo.FIELD.CLIENT).is(client);
 		Optional.of(param.getCodes()).filter(x -> !x.isEmpty()).ifPresent(x -> criteria.and(RoleMongo.FIELD.CODE).in(x));
 		Query query = Query.query(criteria);
@@ -107,10 +117,16 @@ public class RoleService {
 	 * @param param  param
 	 * @return role page
 	 */
-	List<Role> find(String client, RoleFindParam param) {
+	List<Role> find(@NotNull String client, @Validated RoleFindParam param) {
 		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
 		Optional.ofNullable(param.getKeyword()).filter(kw -> !kw.isEmpty()).ifPresent(kw -> query.addCriteria(Criteria.where(RoleMongo.FIELD.NAME).regex(kw)));
-
+		query.with(
+			Sort.by(
+				Sort.Order.asc(RoleMongo.FIELD.METADATA.SORT),
+				Sort.Order.asc(RoleMongo.FIELD.METADATA.CREATED.AT),
+				Sort.Order.asc(RoleMongo.FIELD.METADATA.CREATED.AT)
+			)
+		);
 		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE)
 			.stream()
 			.flatMap(x -> RoleConverter.roleOptional(x).stream())
@@ -125,29 +141,19 @@ public class RoleService {
 	 * @param param  param
 	 * @return role page
 	 */
-	Page<Role> pageFind(String client, RolePageFindParam param) {
+	Page<Role> pageFind(@NotNull String client, @Validated RolePageFindParam param) {
 		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
 
 		long total = mongoTemplate.count(query, RoleMongo.class, Mongo.Collection.ROLE);
 
-		query.with(Optional.ofNullable(param.getPage()).orElse(new PageRequest()).pageable());
+		query.with(param.pageable());
 		List<Role> content = mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE)
 			.stream()
 			.flatMap(x -> RoleConverter.roleOptional(x).stream())
 			.collect(Collectors.toList());
 
-		return new Page<>(param.getPage(), content, total);
+		return new Page<>(param, content, total);
 	}
-
-	/**
-	 * @param client client
-	 * @param id     id
-	 * @return role
-	 */
-	Optional<RoleV2> findById(String client, String id) {
-		return findByCode(client, id);
-	}
-
 
 	Optional<RoleV2> findByCode(String client, String code) {
 		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(code));
@@ -172,6 +178,11 @@ public class RoleService {
 			).stream().flatMap(Collection::stream)
 			.map(ResourceConverter::resourceTreeNodeMapper)
 			.collect(Collectors.toList());
+	}
+
+	private void validUnModifiableRole(Collection<String> codes) {
+		List<String> unModifiableRoleCodes = codes.stream().filter(UNMODIFIABLE_ROLE_CODES::contains).collect(Collectors.toList());
+		if (!unModifiableRoleCodes.isEmpty()) throw new AccessDeniedException(String.format("无权修改编辑 %s 角色", codes));
 	}
 
 }

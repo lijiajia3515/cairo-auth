@@ -1,7 +1,7 @@
 package com.hfhk.auth.domain.department;
 
 
-import com.hfhk.cairo.core.page.AbstractPageRequest;
+import com.hfhk.cairo.core.page.AbstractPage;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DepartmentPageFindParam extends AbstractPageRequest<DepartmentPageFindParam> implements Serializable {
+public class DepartmentPageFindParam extends AbstractPage<DepartmentPageFindParam> implements Serializable {
 
 	private String parent;
 }

@@ -84,6 +84,7 @@ public class SecurityConfiguration {
 				.formLogin()
 				.loginPage("/login")
 				.loginProcessingUrl("/login")
+
 				//.successHandler()
 				//.failureHandler()
 				.and()

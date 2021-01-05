@@ -5,7 +5,7 @@ import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.domain.resource.*;
-import com.hfhk.auth.service.constants.AuthConstant;
+import com.hfhk.auth.service.constants.Constant;
 import com.hfhk.cairo.core.auth.RoleConstant;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import com.mongodb.client.result.UpdateResult;
@@ -17,7 +17,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,7 +33,6 @@ import static com.hfhk.auth.service.constants.Constant.TREE_ROOT;
 @Slf4j
 @Service
 public class ResourceService {
-	private static final String RESOURCE_TREE_ROOT = TREE_ROOT;
 	private final Comparator<ResourceTreeNode> RESOURCE_TREE_COMPARATOR = Comparator.comparing(ResourceTreeNode::getSort).thenComparing(ResourceTreeNode::getId);
 
 	private final MongoTemplate mongoTemplate;
@@ -92,10 +94,10 @@ public class ResourceService {
 	 * @return 保存后的资源值
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	ResourceTreeNode save(String client, ResourceSaveParam param) {
+	ResourceTreeNode save(@NotNull String client, @Validated ResourceSaveParam param) {
 		ResourceMongo data = ResourceMongo.builder()
 			.client(client)
-			.parent(Optional.ofNullable(param.getParentId()).orElse(AuthConstant.RESOURCE_TREE_ROOT))
+			.parent(Optional.ofNullable(param.getParentId()).orElse(Constant.Resource.TREE_ROOT))
 			.type(Optional.ofNullable(param.getType()).map(x -> ResourceMongo.Type.valueOf(x.name())).orElse(null))
 			.name(param.getName())
 			.permissions(param.getPermissions())
@@ -103,7 +105,7 @@ public class ResourceService {
 			.icon(param.getIcon())
 			.build();
 		data = mongoTemplate.insert(data, Mongo.Collection.RESOURCE);
-		return treeFindById(client, data.getId());
+		return treeFindById(client, data.getId()).orElseThrow();
 	}
 
 	/**
@@ -114,7 +116,7 @@ public class ResourceService {
 	 * @return 修改后的资源值
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	ResourceTreeNode modify(String client, ResourceModifyParam param) {
+	Optional<ResourceTreeNode> modify(@NotNull String client, @Validated ResourceModifyParam param) {
 		ResourceMongo data = ResourceMongo.builder()
 			.client(client)
 			.id(param.getId())
@@ -136,7 +138,7 @@ public class ResourceService {
 	 * @param param  param
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	void move(String client, ResourceMoveParam param) {
+	void move(@NotNull String client, @Validated ResourceMoveParam param) {
 		Query query = Query.query(
 			Criteria
 				.where(ResourceMongo.FIELD.CLIENT).is(client)
@@ -157,7 +159,7 @@ public class ResourceService {
 	 * @return 删除
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	List<ResourceTreeNode> delete(String client, ResourceDeleteParam param) {
+	List<ResourceTreeNode> delete(@NotNull String client, @Validated ResourceDeleteParam param) {
 		Criteria criteria = Criteria.where(ResourceMongo.FIELD.CLIENT).is(client);
 		Optional.ofNullable(param.getIds()).ifPresent(ids -> criteria.and(ResourceMongo.FIELD._ID).in(ids));
 
@@ -177,7 +179,7 @@ public class ResourceService {
 	 * @param client client
 	 * @return 资源树 list
 	 */
-	List<ResourceTreeNode> treeFind(String client) {
+	List<ResourceTreeNode> treeFind(@NotNull String client) {
 		Query query = Query.query(Criteria.where(ResourceMongo.FIELD.CLIENT).is(client));
 		query.with(Sort.by(Sort.Order.asc(ResourceMongo.FIELD.METADATA.SORT)));
 		List<ResourceMongo> contents = mongoTemplate.find(query, ResourceMongo.class, Mongo.Collection.RESOURCE);
@@ -185,7 +187,14 @@ public class ResourceService {
 		return buildTree(contents);
 	}
 
-	List<ResourceTreeNode> find(String client, ResourceFindParam param) {
+	/**
+	 * 查询
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return resource tree node list
+	 */
+	List<ResourceTreeNode> find(@NotNull String client, @Validated ResourceFindParam param) {
 		return Collections.emptyList();
 	}
 
@@ -196,7 +205,7 @@ public class ResourceService {
 	 * @param id     id
 	 * @return 资源
 	 */
-	ResourceTreeNode treeFindById(String client, String id) {
+	Optional<ResourceTreeNode> treeFindById(@NotNull String client, @NotNull String id) {
 		Set<ResourceMongo> contents = findSubsByIds(client, Collections.singleton(id));
 		List<ResourceTreeNode> list = buildTree(contents);
 
@@ -204,8 +213,7 @@ public class ResourceService {
 			.filter(x -> x.getId().equals(id)).findFirst()
 			.map(x -> TreeConverter.build(list, x.getParent(), RESOURCE_TREE_COMPARATOR))
 			.filter(x -> !x.isEmpty())
-			.map(x -> x.get(0))
-			.orElse(null);
+			.map(x -> x.get(0));
 	}
 
 	/**
@@ -215,7 +223,7 @@ public class ResourceService {
 	 * @param ids    ids
 	 * @return 资源 mongo
 	 */
-	Set<ResourceMongo> findSubsByIds(String client, Collection<String> ids) {
+	Set<ResourceMongo> findSubsByIds(@NotNull String client, @NotNull @NotEmpty Collection<String> ids) {
 		Query query = Query.query(
 			Criteria.where(ResourceMongo.FIELD.CLIENT).is(client)
 				.and(ResourceMongo.FIELD._ID).in(ids)
@@ -251,7 +259,7 @@ public class ResourceService {
 
 	public List<ResourceTreeNode> buildTree(Collection<ResourceMongo> contents) {
 		List<ResourceTreeNode> nodes = contents.stream().map(ResourceConverter::resourceTreeNodeMapper).collect(Collectors.toList());
-		return TreeConverter.build(nodes, RESOURCE_TREE_ROOT, RESOURCE_TREE_COMPARATOR);
+		return TreeConverter.build(nodes, Constant.Resource.TREE_ROOT, RESOURCE_TREE_COMPARATOR);
 	}
 
 

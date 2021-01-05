@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -61,6 +62,11 @@ public class User implements Serializable {
 	private List<Department> departments;
 
 	/**
+	 * 最后登录时间
+	 */
+	private LocalDateTime lastLoginAt;
+
+	/**
 	 * 账号 启用
 	 */
 	private Boolean accountEnabled;
@@ -69,5 +75,6 @@ public class User implements Serializable {
 	 * 账号 锁定
 	 */
 	private Boolean accountLocked;
+
 
 }

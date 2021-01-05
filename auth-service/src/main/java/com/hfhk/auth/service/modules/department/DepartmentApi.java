@@ -1,7 +1,6 @@
 package com.hfhk.auth.service.modules.department;
 
 import com.hfhk.auth.domain.department.*;
-import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,11 +23,11 @@ public class DepartmentApi {
 
 	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
-	public Page<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
-								 @RequestBody DepartmentPageFindParam request) {
+	public List<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
+								 @RequestBody DepartmentFindParam request) {
 		String client = principal.getClient();
 
-		return departmentService.pageFind(client, request);
+		return departmentService.find(client, request);
 	}
 
 	@PostMapping("/Tree")

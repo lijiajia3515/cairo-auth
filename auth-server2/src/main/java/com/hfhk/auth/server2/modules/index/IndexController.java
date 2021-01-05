@@ -1,4 +1,4 @@
-package com.hfhk.auth.server2.controller;
+package com.hfhk.auth.server2.modules.index;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;

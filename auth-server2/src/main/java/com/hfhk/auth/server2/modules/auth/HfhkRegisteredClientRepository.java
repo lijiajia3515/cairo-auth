@@ -1,7 +1,8 @@
-package com.hfhk.auth.server2.modules.client;
+package com.hfhk.auth.server2.modules.auth;
 
 import com.hfhk.auth.domain.mongo.ClientMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
+import com.hfhk.auth.server2.modules.client.Converter;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

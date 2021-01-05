@@ -1,6 +1,7 @@
 package com.hfhk.auth.service.modules.resource;
 
 import com.hfhk.auth.domain.resource.*;
+import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,7 +35,7 @@ public class ResourceApi {
 	public ResourceTreeNode modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody ResourceModifyParam param) {
 		String client = principal.getClient();
 
-		return resourceService.modify(client, param);
+		return resourceService.modify(client, param).orElseThrow(() -> new UnknownBusinessException("111"));
 	}
 
 	@PatchMapping("/Move")
@@ -74,7 +75,7 @@ public class ResourceApi {
 	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String id) {
 		String client = principal.getClient();
 
-		return resourceService.treeFindById(client, id);
+		return resourceService.treeFindById(client, id).orElseThrow(() -> new UnknownBusinessException("111"));
 	}
 
 

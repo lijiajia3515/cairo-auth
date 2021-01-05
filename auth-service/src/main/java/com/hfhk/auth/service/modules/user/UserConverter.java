@@ -50,6 +50,7 @@ public class UserConverter {
 			.departments(departments.stream().map(DepartmentConverter::departmentMapper).collect(Collectors.toList()))
 			.accountEnabled(user.getAccountEnabled())
 			.accountLocked(user.getAccountLocked())
+			.lastLoginAt(user.getLastLoginAt())
 			.build();
 	}
 }
