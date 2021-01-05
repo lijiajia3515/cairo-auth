@@ -118,8 +118,9 @@ public class RoleService {
 	 * @return role page
 	 */
 	List<Role> find(@NotNull String client, @Validated RoleFindParam param) {
-		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
-		Optional.ofNullable(param.getKeyword()).filter(kw -> !kw.isEmpty()).ifPresent(kw -> query.addCriteria(Criteria.where(RoleMongo.FIELD.NAME).regex(kw)));
+		Criteria criteria = buildFindParamCriteria(client, param);
+		Query query = Query.query(criteria);
+
 		query.with(
 			Sort.by(
 				Sort.Order.asc(RoleMongo.FIELD.METADATA.SORT),
@@ -127,6 +128,7 @@ public class RoleService {
 				Sort.Order.asc(RoleMongo.FIELD.METADATA.CREATED.AT)
 			)
 		);
+
 		return mongoTemplate.find(query, RoleMongo.class, Mongo.Collection.ROLE)
 			.stream()
 			.flatMap(x -> RoleConverter.roleOptional(x).stream())
@@ -141,8 +143,9 @@ public class RoleService {
 	 * @param param  param
 	 * @return role page
 	 */
-	Page<Role> pageFind(@NotNull String client, @Validated RolePageFindParam param) {
-		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client));
+	Page<Role> pageFind(@NotNull String client, @Validated RoleFindParam param) {
+		Criteria criteria = buildFindParamCriteria(client, param);
+		Query query = Query.query(criteria);
 
 		long total = mongoTemplate.count(query, RoleMongo.class, Mongo.Collection.ROLE);
 
@@ -153,6 +156,12 @@ public class RoleService {
 			.collect(Collectors.toList());
 
 		return new Page<>(param, content, total);
+	}
+
+	Criteria buildFindParamCriteria(@NotNull String client, @NotNull RoleFindParam param) {
+		Criteria criteria = Criteria.where(RoleMongo.FIELD.CLIENT).is(client);
+		Optional.ofNullable(param.getKeyword()).filter(kw -> !kw.isEmpty()).ifPresent(kw -> criteria.and(RoleMongo.FIELD.NAME).regex(kw));
+		return criteria;
 	}
 
 	Optional<RoleV2> findByCode(String client, String code) {

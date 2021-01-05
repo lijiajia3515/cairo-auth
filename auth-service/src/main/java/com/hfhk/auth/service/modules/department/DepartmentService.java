@@ -95,9 +95,7 @@ public class DepartmentService {
 	}
 
 	public List<Department> find(@NotNull String client, @Validated DepartmentFindParam param) {
-		Criteria criteria = Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client);
-		Optional.ofNullable(param.getParent()).ifPresent(parent -> criteria.and(DepartmentMongo.FIELD.PARENT).is(parent));
-
+		Criteria criteria = buildFindParam(client, param);
 		Query query = Query
 			.query(criteria)
 			.with(
@@ -115,22 +113,28 @@ public class DepartmentService {
 
 	}
 
+
 	/**
 	 * 查找
 	 *
 	 * @param client client
 	 * @return 部门查询
 	 */
-	public Page<Department> pageFind(String client, DepartmentPageFindParam request) {
-		Query query = Query.query(Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client));
-
-
-		Optional.ofNullable(request.getParent())
-			.ifPresent(x -> query.addCriteria(Criteria.where(DepartmentMongo.FIELD.PARENT).is(request.getParent())));
+	public Page<Department> findPage(@NotNull String client, @Validated DepartmentFindParam param) {
+		Criteria criteria = buildFindParam(client, param);
+		Query query = Query
+			.query(criteria)
+			.with(
+				Sort.by(
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
+					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(DepartmentMongo.FIELD._ID)
+				)
+			);
 
 		long total = mongoTemplate.count(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 
-		query.with(request.pageable());
+		query.with(param.pageable());
 		query.with(
 			Sort.by(
 				Sort.Order.asc(DepartmentMongo.FIELD.METADATA.SORT),
@@ -143,7 +147,7 @@ public class DepartmentService {
 			.map(DepartmentConverter::departmentMapper)
 			.collect(Collectors.toList());
 
-		return new Page<>(request, contents, total);
+		return new Page<>(param, contents, total);
 	}
 
 	/**
@@ -163,6 +167,14 @@ public class DepartmentService {
 
 		return TreeConverter.build(nodes, Constant.DEPARTMENT_TREE_ROOT, Constant.TREE_COMPARATOR);
 	}
+
+
+	Criteria buildFindParam(@NotNull String client, @NotNull DepartmentFindParam param) {
+		Criteria criteria = Criteria.where(DepartmentMongo.FIELD.CLIENT).is(client);
+		Optional.ofNullable(param.getParent()).ifPresent(parent -> criteria.and(DepartmentMongo.FIELD.PARENT).is(parent));
+		return criteria;
+	}
+
 
 	private Stream<Department> findByIds(String client, Collection<String> ids) {
 		Query query = Query

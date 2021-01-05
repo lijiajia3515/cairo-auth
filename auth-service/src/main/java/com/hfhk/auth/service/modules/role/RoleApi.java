@@ -58,10 +58,10 @@ public class RoleApi {
 
 	@PostMapping("/FindPage")
 	@PreAuthorize("isAuthenticated()")
-	public Page<Role> pageFind(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RolePageFindParam request) {
+	public Page<Role> findPage(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleFindParam param) {
 		String client = principal.getClient();
 
-		return roleService.pageFind(client, request);
+		return roleService.pageFind(client, param);
 	}
 
 }

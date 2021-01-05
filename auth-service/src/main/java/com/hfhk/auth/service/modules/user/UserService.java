@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,8 +33,6 @@ public class UserService {
 	private static final String DEFAULT_PASSWORD = "123456";
 
 	private final MongoTemplate mongoTemplate;
-
-
 	private final PasswordEncoder passwordEncoder;
 
 	public UserService(
@@ -143,10 +140,7 @@ public class UserService {
 	 * @return user list
 	 */
 	public List<User> find(@NotNull String client, @Validated UserFindParam param) {
-		Criteria criteria = new Criteria();
-		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
-		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
-
+		Criteria criteria = buildFindParamCriteria(client, param);
 		Query query = new Query(criteria);
 
 		List<UserMongo> users = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
@@ -167,12 +161,10 @@ public class UserService {
 	 *
 	 * @return user page
 	 */
-	public Page<User> findPage(@NotNull String client, @Validated UserPageFindParam param) {
-		Criteria criteria = new Criteria();
-		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
-		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
-
+	public Page<User> findPage(@NotNull String client, @Validated UserFindParam param) {
+		Criteria criteria = buildFindParamCriteria(client, param);
 		Query query = new Query(criteria);
+
 		long total = mongoTemplate.count(query, UserMongo.class, Mongo.Collection.USER);
 
 		query.with(param.pageable());
@@ -286,6 +278,15 @@ public class UserService {
 			.collect(Collectors.toSet());
 	}
 
+	public Criteria buildFindParamCriteria(String client, UserFindParam param) {
+		Criteria criteria = new Criteria();
+		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getRoleCodes()).flatMap(x -> roleCodeCriteria(client, x)).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getEnabled()).flatMap(this::enabledCriteria).ifPresent(x -> x.andOperator(criteria));
+		return criteria;
+	}
+
 
 	public Optional<Criteria> keywordCriteria(String keyword) {
 		return Optional.ofNullable(keyword)
@@ -303,6 +304,19 @@ public class UserService {
 		return Optional.ofNullable(uids)
 			.filter(x -> !x.isEmpty())
 			.map(x -> Criteria.where(UserMongo.FIELD.UID).in(x));
+	}
+
+	public Optional<Criteria> roleCodeCriteria(String client, Collection<String> roleCodes) {
+		return Optional.ofNullable(roleCodes)
+			.filter(x -> !x.isEmpty())
+			.map(x -> Criteria.where(UserMongo.FIELD.CLIENT_ROLES.client(client)).in(roleCodes));
+	}
+
+	public Optional<Criteria> enabledCriteria(Collection<Boolean> statuses) {
+		return Optional.ofNullable(statuses)
+			.filter(x -> !x.isEmpty())
+			.map(x -> x.stream().filter(Objects::nonNull).collect(Collectors.toList()))
+			.map(x -> Criteria.where(UserMongo.FIELD.ACCOUNT_ENABLED).in(statuses));
 	}
 
 
