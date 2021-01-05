@@ -1,16 +1,14 @@
 package com.hfhk.auth.domain.user;
 
 import com.hfhk.cairo.core.page.AbstractPage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Collection;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 
 @NoArgsConstructor
@@ -36,6 +34,6 @@ public class UserFindParam extends AbstractPage<UserFindParam> implements Serial
 	/**
 	 * 用户状态
 	 */
-	private Collection<Boolean> enabled;
+	private Collection<Boolean> status;
 
 }
