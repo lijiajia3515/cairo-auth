@@ -11,7 +11,7 @@ hfhk:
       namespace: hfhk
       group: hfhk
   consul:
-    host: 192.168.30.21
+    host: 192.168.30.22
     port: 8500
     discovery:
       instance-zone: hfhk

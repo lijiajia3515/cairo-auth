@@ -18,7 +18,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +51,7 @@ public class UserService {
 	 * @param param 请求
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public void reg(UserRegParam param) {
+	public void reg(@Validated UserRegParam param) {
 		UserMongo data = UserMongo.builder()
 			.uid(UUID.randomUUID().toString())
 			.name(Strings.isEmpty(param.getName()) ? param.getName() : param.getUsername())
@@ -73,7 +76,7 @@ public class UserService {
 	 * @return user
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Optional<User> modify(String client, UserModifyParam request) {
+	public Optional<User> modify(@NotNull String client, @Validated UserModifyParam request) {
 		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(request.getUid()));
 		Update update = new Update();
 		Optional.ofNullable(request.getUsername()).filter(x -> !x.isBlank()).ifPresent(x -> update.set(UserMongo.FIELD.USERNAME, x));
@@ -99,7 +102,7 @@ public class UserService {
 	 * @return 重置后的密码
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public String passwordReset(UserResetPasswordParam request) {
+	public String passwordReset(@Validated UserResetPasswordParam request) {
 		String password = Optional.ofNullable(request.getPassword()).orElse(IdUtil.objectId());
 		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(request.getUid()));
 		Update update = Update.update(UserMongo.FIELD.PASSWORD, passwordEncoder.encode(password));
@@ -109,7 +112,7 @@ public class UserService {
 		return password;
 	}
 
-	public Optional<User> findUserByUid(String client, String uid) {
+	public Optional<User> findUserByUid(@NotNull String client, @NotNull String uid) {
 		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid));
 		return Optional.ofNullable(mongoTemplate.findOne(query, UserMongo.class))
 			.map(user -> {
@@ -139,7 +142,7 @@ public class UserService {
 	 * @param param  param
 	 * @return user list
 	 */
-	public List<User> find(String client, UserFindParam param) {
+	public List<User> find(@NotNull String client, @Validated UserFindParam param) {
 		Criteria criteria = new Criteria();
 		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
 		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
@@ -149,8 +152,8 @@ public class UserService {
 		List<UserMongo> users = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
 		log.debug("[user][page] query: {}", users);
 
-		Collection<String> roleCodes = roleCodesMapper(client,users);
-		Collection<String> departmentIds =departmentIdsMapper(client,users);
+		Collection<String> roleCodes = roleCodesMapper(client, users);
+		Collection<String> departmentIds = departmentIdsMapper(client, users);
 
 		List<RoleMongo> roles = findRoleByCodes(client, roleCodes);
 		List<DepartmentMongo> departments = findDepartmentByIds(client, departmentIds);
@@ -164,12 +167,13 @@ public class UserService {
 	 *
 	 * @return user page
 	 */
-	public Page<User> findPage(String client,
-							   UserPageFindParam param) {
+	public Page<User> findPage(@NotNull String client, @Validated UserPageFindParam param) {
 
 		Criteria criteria = new Criteria();
-		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
-		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param).ifPresent(p -> {
+			Optional.ofNullable(p.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
+			Optional.ofNullable(p.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
+		});
 
 		Query query = new Query(criteria);
 		long total = mongoTemplate.count(query, UserMongo.class, Mongo.Collection.USER);

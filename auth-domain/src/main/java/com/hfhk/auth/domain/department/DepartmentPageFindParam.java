@@ -1,11 +1,8 @@
 package com.hfhk.auth.domain.department;
 
 
-import com.hfhk.cairo.core.page.PageRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.hfhk.cairo.core.page.AbstractPageRequest;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -14,15 +11,13 @@ import java.io.Serializable;
  * 部门 保存 请求
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DepartmentPageFindParam implements Serializable {
-
-	@Builder.Default
-	private PageRequest page = new PageRequest();
+public class DepartmentPageFindParam extends AbstractPageRequest<DepartmentPageFindParam> implements Serializable {
 
 	private String parent;
 }

@@ -1,26 +1,21 @@
 package com.hfhk.auth.domain.user;
 
-import com.hfhk.cairo.core.page.PageRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.hfhk.cairo.core.page.AbstractPageRequest;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Collection;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserPageFindParam implements Serializable {
-
-	@Builder.Default
-	private PageRequest page = new PageRequest();
-
+public class UserPageFindParam extends AbstractPageRequest<UserFindParam> implements Serializable {
+	
 	private String keyword;
 
 	private Collection<String> uids;

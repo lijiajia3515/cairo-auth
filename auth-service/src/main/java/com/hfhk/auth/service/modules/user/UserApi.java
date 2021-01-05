@@ -54,7 +54,7 @@ public class UserApi {
 	@PostMapping("Find")
 	@PreAuthorize("isAuthenticated()")
 	public List<User> find(@AuthenticationPrincipal AuthPrincipal principal,
-						   @RequestBody UserFindParam param) {
+						   @RequestBody(required = false) UserFindParam param) {
 		String client = principal.getClient();
 		return userService.find(client, param);
 	}
