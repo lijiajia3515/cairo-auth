@@ -1,6 +1,5 @@
 package com.hfhk.auth.service.modules.user;
 
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
 import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.service.modules.resource.ResourceService;
 import com.hfhk.cairo.core.page.Page;
@@ -21,11 +20,8 @@ public class UserApi {
 
 	private final UserService userService;
 
-	private final ResourceService resourceService;
-
-	public UserApi(UserService userService, ResourceService resourceService) {
+	public UserApi(UserService userService) {
 		this.userService = userService;
-		this.resourceService = resourceService;
 	}
 
 	// operate
@@ -75,18 +71,10 @@ public class UserApi {
 	}
 
 	// current
-	@PostMapping("/Current")
+	@GetMapping("/Current")
 	@PreAuthorize("isAuthenticated()")
 	public com.hfhk.cairo.domain.auth.User currentUser(@AuthenticationPrincipal AuthPrincipal principal) {
 		return principal.getUser();
-	}
-
-	@GetMapping("/Current/ResourceTree")
-	@PreAuthorize("isAuthenticated()")
-	public List<ResourceTreeNode> userResources(@AuthenticationPrincipal AuthPrincipal principal) {
-		String client = principal.getClient();
-
-		return resourceService.treeFindByUid(client, principal.getUser().getUid());
 	}
 
 }

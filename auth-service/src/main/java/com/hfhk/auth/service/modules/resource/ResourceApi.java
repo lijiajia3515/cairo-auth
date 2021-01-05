@@ -22,6 +22,14 @@ public class ResourceApi {
 		this.resourceService = resourceService;
 	}
 
+	@GetMapping("/Current")
+	@PreAuthorize("isAuthenticated()")
+	public List<ResourceTreeNode> userResources(@AuthenticationPrincipal AuthPrincipal principal) {
+		String client = principal.getClient();
+
+		return resourceService.treeFindByUid(client, principal.getUser().getUid());
+	}
+
 	//Operate
 	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated()")
@@ -70,7 +78,7 @@ public class ResourceApi {
 		return resourceService.treeFind(client);
 	}
 
-	@PostMapping("/FindById}")
+	@PostMapping("/FindById")
 	@PreAuthorize("isAuthenticated()")
 	public ResourceTreeNode find(@AuthenticationPrincipal AuthPrincipal principal, @RequestParam String id) {
 		String client = principal.getClient();

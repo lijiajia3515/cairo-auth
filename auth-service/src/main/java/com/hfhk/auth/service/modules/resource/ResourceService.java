@@ -75,7 +75,7 @@ public class ResourceService {
 								.map(ids -> mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.FIELD._ID).in(ids)), ResourceMongo.class, Mongo.Collection.RESOURCE));
 
 						} else {
-							return Optional.of(mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.FIELD._ID).is(client)), ResourceMongo.class, Mongo.Collection.RESOURCE));
+							return Optional.of(mongoTemplate.find(Query.query(Criteria.where(ResourceMongo.FIELD.CLIENT).is(client)), ResourceMongo.class, Mongo.Collection.RESOURCE));
 						}
 					});
 			})

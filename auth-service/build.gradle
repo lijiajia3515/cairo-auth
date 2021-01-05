@@ -46,8 +46,8 @@ dependencies {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
 
-  compile project(':auth-common')
-  compile project(':auth-domain')
+  implementation project(':auth-common')
+  implementation project(':auth-domain')
 
   // test
   testImplementation('org.springframework.boot:spring-boot-starter-test') {

@@ -1,7 +1,6 @@
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
-  compile 'jakarta.validation:jakarta.validation-api'
   compile 'org.springframework.data:spring-data-commons'
 
   compile "com.hfhk.cairo:cairo-domain:${cairoVersion}"

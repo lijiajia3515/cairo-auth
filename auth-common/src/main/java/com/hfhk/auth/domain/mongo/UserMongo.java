@@ -133,6 +133,9 @@ public class UserMongo implements Serializable {
 		public final ClientResources CLIENT_RESOURCES = new ClientResources(this, "ClientResources");
 
 		public static abstract class AbstractClientField extends AbstractUpperCamelCaseField {
+			public AbstractClientField() {
+
+			}
 
 			public AbstractClientField(AbstractMongoField parent, String prefix) {
 				super(parent, prefix);
@@ -144,6 +147,7 @@ public class UserMongo implements Serializable {
 		}
 
 		public static class ClientRoles extends AbstractClientField {
+
 			public ClientRoles(AbstractMongoField parent, String prefix) {
 				super(parent, prefix);
 			}
