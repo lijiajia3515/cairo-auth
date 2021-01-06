@@ -50,10 +50,10 @@ public class RoleService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	RoleV2 save(String client, RoleSaveParam param) {
-		validUnModifiableRole(Collections.singleton(param.getCode()));
+		validUnModifiableRole(Collections.singleton(param.getId()));
 		RoleMongo role = RoleMongo.builder()
 			.client(client)
-			.code(Optional.ofNullable(param.getCode()).orElse(IdUtil.objectId()))
+			.code(Optional.ofNullable(param.getId()).orElse(IdUtil.objectId()))
 			.name(param.getName())
 			.resources(param.getResources())
 			.build();
@@ -72,14 +72,14 @@ public class RoleService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	Optional<RoleV2> modify(String client, @Validated RoleModifyParam param) {
-		validUnModifiableRole(Collections.singleton(param.getCode()));
-		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(param.getCode()));
+		validUnModifiableRole(Collections.singleton(param.getId()));
+		Query query = Query.query(Criteria.where(RoleMongo.FIELD.CLIENT).is(client).and(RoleMongo.FIELD.CODE).is(param.getId()));
 		Update update = new Update();
 		Optional.ofNullable(param.getName()).ifPresent(name -> update.set(RoleMongo.FIELD.NAME, name));
 		Optional.ofNullable(param.getResources()).ifPresent(resourceIds -> update.set(RoleMongo.FIELD.RESOURCES, resourceIds));
 		UpdateResult result = mongoTemplate.updateFirst(query, update, RoleMongo.class, Mongo.Collection.ROLE);
-		log.debug("[role][update] -> {}", result);
-		return findByCode(client, param.getCode());
+		log.debug("[role][modify] -> {}", result);
+		return findByCode(client, param.getId());
 	}
 
 	/**
@@ -91,9 +91,9 @@ public class RoleService {
 	 */
 	@Transactional(rollbackFor = Exception.class)
 	List<RoleV2> delete(@NotNull String client, @Validated RoleDeleteParam param) {
-		validUnModifiableRole(param.getCodes());
+		validUnModifiableRole(param.getIds());
 		Criteria criteria = Criteria.where(RoleMongo.FIELD.CLIENT).is(client);
-		Optional.of(param.getCodes()).filter(x -> !x.isEmpty()).ifPresent(x -> criteria.and(RoleMongo.FIELD.CODE).in(x));
+		Optional.of(param.getIds()).filter(x -> !x.isEmpty()).ifPresent(x -> criteria.and(RoleMongo.FIELD.CODE).in(x));
 		Query query = Query.query(criteria);
 
 		List<RoleV2> deleteRoles = mongoTemplate.findAllAndRemove(query, RoleMongo.class, Mongo.Collection.ROLE)

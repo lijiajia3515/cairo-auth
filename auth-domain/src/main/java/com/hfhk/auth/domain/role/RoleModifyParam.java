@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class RoleModifyParam implements Serializable {
 
-	private String code;
+	private String id;
 
 	private String name;
 

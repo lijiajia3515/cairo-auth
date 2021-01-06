@@ -26,17 +26,17 @@ public class RoleApi {
 
 	@PostMapping("/Save")
 	@PreAuthorize("isAuthenticated()")
-	public RoleV2 save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleSaveParam request) {
+	public RoleV2 save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleSaveParam param) {
 		String client = principal.getClient();
-		return roleService.save(client, request);
+		return roleService.save(client, param);
 	}
 
 	@PutMapping("/Modify")
 	@PreAuthorize("isAuthenticated()")
-	public RoleV2 modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleModifyParam request) {
+	public RoleV2 modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody RoleModifyParam param) {
 		String client = principal.getClient();
 
-		return roleService.modify(client, request).orElseThrow(() -> new UnknownBusinessException("code not found"));
+		return roleService.modify(client, param).orElseThrow(() -> new UnknownBusinessException("id not found"));
 	}
 
 	@DeleteMapping("/Delete")

@@ -18,10 +18,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResetPasswordParam implements Serializable {
+public class UserModifyStatusParam implements Serializable {
 
 	@NotNull
 	private String uid;
 
-	private String password;
+	@NotNull
+	private Boolean status;
 }

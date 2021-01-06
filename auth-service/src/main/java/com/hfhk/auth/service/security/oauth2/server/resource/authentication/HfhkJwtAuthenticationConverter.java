@@ -5,6 +5,7 @@ import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.service.constants.Redis;
+
 import com.hfhk.cairo.core.auth.RoleConstant;
 import com.hfhk.cairo.domain.auth.Department;
 import com.hfhk.cairo.domain.auth.Role;
@@ -78,7 +79,7 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 					.orElse(Collections.emptySet());
 
 				List<Role> roles = roleCodes.stream()
-					.map(y -> Role.builder().code(y).name(y).build())
+					.map(y -> Role.builder().id(y).name(y).build())
 					.collect(Collectors.toList());
 				List<Department> departments = departmentCodes.stream()
 					.map(y -> Department.builder().id(y).name(y).build())

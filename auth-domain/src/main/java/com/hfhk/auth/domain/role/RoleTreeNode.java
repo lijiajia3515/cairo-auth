@@ -12,11 +12,10 @@ import java.util.List;
 @Accessors(chain = true)
 public class RoleTreeNode implements TreeNode<String, RoleTreeNode>, Serializable {
 	private String id;
-	private String parentId;
-	private String code;
+	private String parent;
 	private String name;
 	private Long sort;
-	private List<RoleTreeNode> sub = new ArrayList<>(1);
+	private List<RoleTreeNode> subs = new ArrayList<>(1);
 
 	@Override
 	public String id() {
@@ -25,11 +24,11 @@ public class RoleTreeNode implements TreeNode<String, RoleTreeNode>, Serializabl
 
 	@Override
 	public String parentId() {
-		return parentId;
+		return parent;
 	}
 
 	@Override
 	public List<RoleTreeNode> subs() {
-		return sub;
+		return subs;
 	}
 }

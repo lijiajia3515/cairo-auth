@@ -45,7 +45,7 @@ public class UserModifyParam implements Serializable {
 	/**
 	 * 角色code
 	 */
-	private List<String> roleCodes;
+	private List<String> roleIds;
 
 	/**
 	 * 部门

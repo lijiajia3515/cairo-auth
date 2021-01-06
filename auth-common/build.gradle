@@ -1,9 +1,9 @@
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
-  implementation "com.hfhk.cairo:cairo-domain:${cairoVersion}"
-  implementation "com.hfhk.cairo:cairo-mongo:${cairoVersion}"
+  compile "com.hfhk.cairo:cairo-domain:${cairoVersion}"
+  compile "com.hfhk.cairo:cairo-mongo:${cairoVersion}"
 
   implementation 'org.springframework.data:spring-data-commons'
-  implementation 'org.springframework.data:spring-data-mongodb'
+  compile 'org.springframework.data:spring-data-mongodb'
 }

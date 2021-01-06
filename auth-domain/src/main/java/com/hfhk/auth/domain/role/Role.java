@@ -20,9 +20,9 @@ import java.io.Serializable;
 public class Role implements Serializable {
 
 	/**
-	 * 角色标识
+	 * id
 	 */
-	private String code;
+	private String id;
 
 	/**
 	 * 名称

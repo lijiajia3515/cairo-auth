@@ -1,11 +1,11 @@
 package com.hfhk.auth.service.modules.user;
 
-import cn.hutool.core.util.IdUtil;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.domain.user.*;
+import com.hfhk.cairo.core.Constants;
 import com.hfhk.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -43,20 +43,21 @@ public class UserService {
 	}
 
 	/**
-	 * 注册
+	 * 用户 注册
 	 *
 	 * @param param 请求
+	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public void reg(@Validated UserRegParam param) {
+	public User reg(@Validated UserSaveParam param) {
 		UserMongo data = UserMongo.builder()
-			.uid(UUID.randomUUID().toString())
+			.uid(Constants.SNOWFLAKE.nextIdStr())
 			.name(Strings.isEmpty(param.getName()) ? param.getName() : param.getUsername())
 			.username(param.getUsername())
 			.phoneNumber(param.getPhoneNumber())
 			.email(param.getEmail())
 			.password(passwordEncoder.encode(Optional.ofNullable(param.getPassword()).orElse(DEFAULT_PASSWORD)))
-			.accountEnabled(true)
+			.accountEnabled(false)
 			.accountLocked(false)
 			.clientDepartments(Collections.emptyMap())
 			.clientRoles(Collections.emptyMap())
@@ -64,6 +65,34 @@ public class UserService {
 			.build();
 		UserMongo insert = mongoTemplate.insert(data, Mongo.Collection.USER);
 		log.debug("[user][reg] result -> {} ", insert);
+		return findById(null, insert.getUid()).orElseThrow();
+	}
+
+	/**
+	 * 后台 新增用户
+	 *
+	 * @param client client
+	 * @param param  param
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public User save(@NotNull String client, @Validated UserSaveParam param) {
+		UserMongo data = UserMongo.builder()
+			.uid(Constants.SNOWFLAKE.nextIdStr())
+			.name(Strings.isEmpty(param.getName()) ? param.getName() : param.getUsername())
+			.username(param.getUsername())
+			.phoneNumber(param.getPhoneNumber())
+			.email(param.getEmail())
+			.password(passwordEncoder.encode(Optional.ofNullable(param.getPassword()).orElse(DEFAULT_PASSWORD)))
+			.accountEnabled(true)
+			.accountLocked(false)
+			.clientRoles(Collections.singletonMap(client, param.getRoleIds()))
+			.clientDepartments(Collections.singletonMap(client, param.getDepartmentIds()))
+			.clientResources(Collections.singletonMap(client, param.getResourceIds()))
+			.build();
+		UserMongo insert = mongoTemplate.insert(data, Mongo.Collection.USER);
+		log.debug("[user][save] result -> {} ", insert);
+		return findById(client, insert.getUid()).orElseThrow();
 	}
 
 	/**
@@ -81,12 +110,12 @@ public class UserService {
 		Optional.ofNullable(request.getEmail()).filter(x -> !x.isBlank()).ifPresent(x -> update.set(UserMongo.FIELD.EMAIL, x));
 		Optional.ofNullable(request.getName()).filter(x -> !x.isBlank()).ifPresent(x -> update.set(UserMongo.FIELD.NAME, x));
 
-		Optional.ofNullable(request.getRoleCodes()).ifPresent(x -> update.set(UserMongo.FIELD.CLIENT_ROLES.client(client), x));
+		Optional.ofNullable(request.getRoleIds()).ifPresent(x -> update.set(UserMongo.FIELD.CLIENT_ROLES.client(client), x));
 		Optional.ofNullable(request.getDepartmentIds()).ifPresent(x -> update.set(UserMongo.FIELD.CLIENT_DEPARTMENTS.client(client), x));
 		Optional.ofNullable(request.getResourceIds()).ifPresent(x -> update.set(UserMongo.FIELD.CLIENT_RESOURCES.client(client), x));
 
-		UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserMongo.class);
-		log.debug("[user][update] result -> {}", updateResult);
+		UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserMongo.class, Mongo.Collection.USER);
+		log.debug("[user][modify] result -> {}", updateResult);
 
 		return findUserByUid(client, request.getUid());
 	}
@@ -95,23 +124,42 @@ public class UserService {
 	/**
 	 * 密码重置
 	 *
-	 * @param request request
+	 * @param param param
 	 * @return 重置后的密码
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public String passwordReset(@Validated UserResetPasswordParam request) {
-		String password = Optional.ofNullable(request.getPassword()).orElse(IdUtil.objectId());
-		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(request.getUid()));
+	public Optional<String> resetPassword(@NotNull String client, @Validated UserResetPasswordParam param) {
+		String password = Optional.ofNullable(param.getPassword()).orElse(DEFAULT_PASSWORD);
+		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(param.getUid()));
 		Update update = Update.update(UserMongo.FIELD.PASSWORD, passwordEncoder.encode(password));
 
-		UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserMongo.class);
-		log.debug("[user][password_reset] result -> {}", updateResult);
-		return password;
+		UserMongo updateUser = mongoTemplate.findAndModify(query, update, UserMongo.class, Mongo.Collection.USER);
+		log.debug("[user][password reset] result -> {}", updateUser);
+		return Optional.ofNullable(updateUser).map(x->password);
 	}
+
+	/**
+	 * 密码重置
+	 *
+	 * @param param param
+	 * @return 重置后的密码
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public Optional<Boolean> modifyStatus(@NotNull String client, @Validated UserModifyStatusParam param) {
+		Criteria criteria = Criteria.where(UserMongo.FIELD.UID).is(param.getUid());
+		Query query = Query.query(criteria);
+		Update update = Update.update(UserMongo.FIELD.ACCOUNT_ENABLED, param.getStatus());
+
+		UserMongo updateUser = mongoTemplate.findAndModify(query, update, UserMongo.class, Mongo.Collection.USER);
+		log.debug("[user][modify status] result -> {}", updateUser);
+
+		return Optional.ofNullable(updateUser).map(UserMongo::getAccountEnabled);
+	}
+
 
 	public Optional<User> findUserByUid(@NotNull String client, @NotNull String uid) {
 		Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid));
-		return Optional.ofNullable(mongoTemplate.findOne(query, UserMongo.class))
+		return Optional.ofNullable(mongoTemplate.findOne(query, UserMongo.class, Mongo.Collection.USER))
 			.map(user -> {
 
 				Set<String> roleCodes = Optional.ofNullable(user.getClientRoles()).stream()
@@ -144,9 +192,9 @@ public class UserService {
 		Query query = new Query(criteria);
 
 		List<UserMongo> users = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
-		log.debug("[user][page] query: {}", users);
+		log.debug("[user][find] query: {}", users);
 
-		Collection<String> roleCodes = roleCodesMapper(client, users);
+		Collection<String> roleCodes = roleIdsMapper(client, users);
 		Collection<String> departmentIds = departmentIdsMapper(client, users);
 
 		List<RoleMongo> roles = findRoleByCodes(client, roleCodes);
@@ -171,7 +219,7 @@ public class UserService {
 		List<UserMongo> users = mongoTemplate.find(query, UserMongo.class, Mongo.Collection.USER);
 		log.debug("[user][pageFind] query: {}", users);
 
-		Collection<String> roleCodes = roleCodesMapper(client, users);
+		Collection<String> roleCodes = roleIdsMapper(client, users);
 		Collection<String> departmentIds = departmentIdsMapper(client, users);
 
 		List<RoleMongo> roles = findRoleByCodes(client, roleCodes);
@@ -256,15 +304,12 @@ public class UserService {
 					Sort.Order.asc(DepartmentMongo.FIELD.METADATA.CREATED.AT),
 					Sort.Order.asc(DepartmentMongo.FIELD._ID)
 				));
-				return mongoTemplate.find(query,
-					DepartmentMongo.class,
-					Mongo.Collection.DEPARTMENT
-				);
+				return mongoTemplate.find(query, DepartmentMongo.class, Mongo.Collection.DEPARTMENT);
 			})
 			.orElse(Collections.emptyList());
 	}
 
-	public Collection<String> roleCodesMapper(String client, List<UserMongo> users) {
+	public Collection<String> roleIdsMapper(String client, List<UserMongo> users) {
 		return users.stream().flatMap(x -> Optional.ofNullable(x.getClientRoles()).stream())
 			.filter(clientRole -> clientRole.containsKey(client))
 			.flatMap(clientRole -> Optional.ofNullable(clientRole.get(client)).stream().flatMap(Collection::stream))

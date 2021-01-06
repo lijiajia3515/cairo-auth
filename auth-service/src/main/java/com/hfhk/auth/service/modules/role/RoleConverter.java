@@ -12,7 +12,7 @@ public class RoleConverter {
 
 	public static Role roleMapper(RoleMongo data) {
 		return Role.builder()
-			.code(data.getCode())
+			.id(data.getCode())
 			.name(data.getName())
 			.build();
 	}
@@ -23,7 +23,7 @@ public class RoleConverter {
 
 	public static RoleV2 roleV2Mapper(RoleMongo data, List<ResourceTreeNode> resources) {
 		return RoleV2.builder()
-			.code(data.getCode())
+			.id(data.getCode())
 			.name(data.getName())
 			.resources(resources)
 			.build();

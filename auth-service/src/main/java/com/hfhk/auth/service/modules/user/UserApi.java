@@ -1,7 +1,6 @@
 package com.hfhk.auth.service.modules.user;
 
 import com.hfhk.auth.domain.user.*;
-import com.hfhk.auth.service.modules.resource.ResourceService;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User
@@ -27,23 +27,36 @@ public class UserApi {
 	// operate
 	@PostMapping("/Reg")
 	@PermitAll
-	public void reg(@RequestBody UserRegParam request) {
-		userService.reg(request);
+	public User reg(@RequestBody UserSaveParam request) {
+		return userService.reg(request);
 	}
 
-	@PatchMapping("/Modify")
-	@PreAuthorize("isAuthenticated() && #oauth2.isUser()")
+	@PostMapping("/Save")
+	@PreAuthorize("isAuthenticated()")
+	public User save(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserSaveParam param) {
+		String client = principal.getClient();
+		return userService.save(client, param);
+	}
+
+	@PutMapping("/Modify")
+	@PreAuthorize("isAuthenticated()")
 	public User modify(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyParam request) {
-		// auth.getClient().getId();
 		String client = principal.getClient();
 		return userService.modify(client, request).orElseThrow();
 	}
 
 	@PatchMapping("/PasswordReset")
 	@PreAuthorize("isAuthenticated()")
-	public String passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordParam request) {
+	public Optional<String> passwordReset(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserResetPasswordParam param) {
 		String client = principal.getClient();
-		return userService.passwordReset(request);
+		return userService.resetPassword(client, param);
+	}
+
+	@PatchMapping("/StatusModify")
+	@PreAuthorize("isAuthenticated()")
+	public Optional<Boolean> modifyStatus(@AuthenticationPrincipal AuthPrincipal principal, @RequestBody UserModifyStatusParam param) {
+		String client = principal.getClient();
+		return userService.modifyStatus(client, param);
 	}
 
 	// find
@@ -58,7 +71,7 @@ public class UserApi {
 	@PostMapping("/FindPage")
 	@PreAuthorize("isAuthenticated()")
 	public Page<User> findPage(@AuthenticationPrincipal AuthPrincipal principal,
-						   @RequestBody UserFindParam param) {
+							   @RequestBody UserFindParam param) {
 		String client = principal.getClient();
 		return userService.findPage(client, param);
 	}

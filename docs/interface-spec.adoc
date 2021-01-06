@@ -1,0 +1,63 @@
+= Interface Specification(接口规范)
+
+== HttpStatus&Business Specification (状态码和业务规范)
+
+== Error httpMessage(错误消息响应)
+
+[source,json5]
+----
+{
+    "Code": "AuthAccessBad", // 业务状态码
+    "Message": "访问凭证-错误", // 业务消息
+    "Data": "" // 错误码需要的数据
+}
+----
+
+=== 执行成功
+#描述# 执行成功
+
+#响应消息#
+
+[source,json5]
+----
+[
+    {
+        "Uid": "root",
+        "Username": "root",
+        "PhoneNumber": "root",
+        "Email": "root@haofangsoft.com",
+        "Roles": [
+            {
+                "Code": "ADMIN",
+                "Name": "管理员"
+            }
+        ],
+        "LastLoginAt": "2021-01-05T11:34:29.315",
+        "AccountEnabled": true,
+        "AccountLocked": false
+    }
+]
+----
+#备注#
+
+
+=== 参数错误
+#描述# 参数缺失,参数格式错误,参数不符合约束
+#状态码# 400
+#响应消息#
+```
+{
+  "Code": "ParamError",
+  "Message": "参数错误",
+  "Data": [
+    {
+      "field": "name",
+      "message": "required"
+    },
+    {
+      "field": "username",
+      "message": "required"
+    }
+  ]
+}
+```

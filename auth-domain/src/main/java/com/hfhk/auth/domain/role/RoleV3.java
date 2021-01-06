@@ -26,11 +26,6 @@ public class RoleV3 implements Serializable {
 	private String id;
 
 	/**
-	 * 角色标识
-	 */
-	private String code;
-
-	/**
 	 * 名称
 	 */
 	private String name;

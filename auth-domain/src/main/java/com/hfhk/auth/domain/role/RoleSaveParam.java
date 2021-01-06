@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class RoleSaveParam implements Serializable {
-	private String code;
+	private String id;
 
 	private String name;
 

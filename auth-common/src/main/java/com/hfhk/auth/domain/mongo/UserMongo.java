@@ -3,6 +3,7 @@ package com.hfhk.auth.domain.mongo;
 import com.hfhk.cairo.mongo.data.Metadata;
 import com.hfhk.cairo.mongo.data.mapping.model.AbstractMongoField;
 import com.hfhk.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
+import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

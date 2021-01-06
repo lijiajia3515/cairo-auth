@@ -21,5 +21,5 @@ public class RoleDeleteParam implements Serializable {
 
 	@NotEmpty
 	@NotNull
-	private Collection<String> codes;
+	private Collection<String> ids;
 }

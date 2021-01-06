@@ -18,11 +18,6 @@ import java.util.Set;
  * Client
  */
 
-@CompoundIndexes(
-	@CompoundIndex(
-
-	)
-)
 @Data
 @Accessors(chain = true)
 
@@ -81,12 +76,14 @@ public class ClientMongo {
 		private Boolean reuseRefreshTokens;
 		private Duration refreshTokenTimeToLive;
 	}
+
 	public static final Field FIELD = new Field();
 
 	public static final class Field extends AbstractUpperCamelCaseField {
-		private Field(){
+		private Field() {
 
 		}
+
 		public final String CLIENT_ID = field("ClientId");
 		public final String CLIENT_SECRET = field("ClientSecret");
 		public final String CLIENT_AUTHENTICATION_METHODS = field("ClientAuthenticationMethods");

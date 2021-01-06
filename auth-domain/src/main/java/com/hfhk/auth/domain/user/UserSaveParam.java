@@ -1,16 +1,18 @@
 package com.hfhk.auth.domain.user;
 
+import com.sun.source.doctree.SeeTree;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegParam implements Serializable {
+public class UserSaveParam implements Serializable {
 
 	/**
 	 * 用户名
@@ -40,15 +42,15 @@ public class UserRegParam implements Serializable {
 	/**
 	 * 角色code
 	 */
-	private List<String> roleCodes;
+	private Set<String> roleIds;
 
 	/**
 	 * 部门
 	 */
-	private List<String> departmentIds;
+	private Set<String> departmentIds;
 
 	/**
 	 * 资源code
 	 */
-	private List<String> resourceIds;
+	private Set<String> resourceIds;
 }
