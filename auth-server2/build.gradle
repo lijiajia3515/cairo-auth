@@ -5,6 +5,7 @@ plugins {
 apply from: "${rootDir}/gradle/devtools.gradle"
 
 dependencies {
+  compile project(":auth-common")
 
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -21,8 +22,6 @@ dependencies {
   implementation("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
-
-  implementation project(":auth-common")
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.security:spring-security-test'

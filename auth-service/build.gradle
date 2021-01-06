@@ -5,6 +5,9 @@ plugins {
 apply from: "${rootDir}/gradle/devtools.gradle"
 
 dependencies {
+  compile project(':auth-common')
+  compile project(':auth-domain')
+
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
   // boot
@@ -46,14 +49,9 @@ dependencies {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
 
-  implementation project(':auth-common')
-  implementation project(':auth-domain')
-
   // test
-  testImplementation('org.springframework.boot:spring-boot-starter-test') {
-    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-  }
-  // testImplementation 'io.projectreactor:reactor-test'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'io.projectreactor:reactor-test'
   testImplementation 'org.springframework.security:spring-security-test'
 }
 

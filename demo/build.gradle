@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+  compile project(':auth-client')
+  compile project(':auth-domain')
+
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
   // boot
@@ -22,9 +25,6 @@ dependencies {
   implementation ("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
-  implementation project(':auth-client')
-  implementation project(':auth-domain')
-
 
   // test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
