@@ -23,7 +23,7 @@ public class RoleTreeNode implements TreeNode<String, RoleTreeNode>, Serializabl
 	}
 
 	@Override
-	public String parentId() {
+	public String parent() {
 		return parent;
 	}
 

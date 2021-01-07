@@ -22,7 +22,7 @@ public class DepartmentConverter {
 	public static DepartmentTreeNode departmentTreeNodeMapper(DepartmentMongo data) {
 		return DepartmentTreeNode.builder()
 			.id(data.getId())
-			.parentId(data.getParent())
+			.parent(data.getParent())
 			.name(data.getName())
 			.sort(data.getMetadata().getSort())
 			.build();

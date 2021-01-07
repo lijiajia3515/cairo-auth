@@ -76,7 +76,7 @@ public class UserApi {
 		return userService.findPage(client, param);
 	}
 
-	@PostMapping("/FindById/{uid}")
+	@GetMapping("/Find/{uid}")
 	@PreAuthorize("isAuthenticated()")
 	public User findById(@AuthenticationPrincipal AuthPrincipal principal, @PathVariable String uid) {
 		String client = principal.getClient();

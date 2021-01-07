@@ -70,7 +70,7 @@ public class ResourceTreeNode implements TreeNode<String, ResourceTreeNode> {
 	}
 
 	@Override
-	public String parentId() {
+	public String parent() {
 		return parent;
 	}
 

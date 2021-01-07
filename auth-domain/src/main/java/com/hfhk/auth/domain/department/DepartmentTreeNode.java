@@ -28,7 +28,7 @@ public class DepartmentTreeNode implements TreeNode<String, DepartmentTreeNode> 
 	/**
 	 * 父级 id
 	 */
-	private String parentId;
+	private String parent;
 
 	/**
 	 * 部门名称
@@ -57,8 +57,8 @@ public class DepartmentTreeNode implements TreeNode<String, DepartmentTreeNode> 
 	}
 
 	@Override
-	public String parentId() {
-		return parentId;
+	public String parent() {
+		return parent;
 	}
 
 	@Override
