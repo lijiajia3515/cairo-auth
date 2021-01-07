@@ -327,8 +327,8 @@ public class UserService {
 		Criteria criteria = new Criteria();
 		Optional.ofNullable(param.getKeyword()).flatMap(this::keywordCriteria).ifPresent(x -> x.andOperator(criteria));
 		Optional.ofNullable(param.getUids()).flatMap(this::uidCriteria).ifPresent(x -> x.andOperator(criteria));
-		Optional.ofNullable(param.getRoleCodes()).flatMap(x -> roleCodeCriteria(client, x)).ifPresent(x -> x.andOperator(criteria));
-		Optional.ofNullable(param.getStatus()).flatMap(this::enabledCriteria).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getRoleIds()).flatMap(x -> roleCodeCriteria(client, x)).ifPresent(x -> x.andOperator(criteria));
+		Optional.ofNullable(param.getStatuses()).flatMap(this::enabledCriteria).ifPresent(x -> x.andOperator(criteria));
 		return criteria;
 	}
 

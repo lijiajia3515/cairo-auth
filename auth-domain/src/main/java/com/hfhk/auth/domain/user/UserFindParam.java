@@ -29,11 +29,11 @@ public class UserFindParam extends AbstractPage<UserFindParam> implements Serial
 	/**
 	 * 角色编码
 	 */
-	private Collection<String> roleCodes;
+	private Collection<String> roleIds;
 
 	/**
 	 * 用户状态
 	 */
-	private Collection<Boolean> status;
+	private Collection<Boolean> statuses;
 
 }

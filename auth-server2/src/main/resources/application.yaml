@@ -46,8 +46,8 @@ server:
 
 logging:
   level:
-    root: INFO
-    com.hfhk: DEBUG
+    root: debug
+    com.hfhk: debug
     org.springframework: info
     org.springframework.security: debug
     org.springframework.security.oauth2: debug
