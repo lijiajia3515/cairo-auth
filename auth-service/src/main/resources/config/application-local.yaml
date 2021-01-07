@@ -4,6 +4,16 @@ hfhk:
     client:
       id: hfhk_auth
       secret: hfhk_auth
+  mongo:
+    database: hfhk-auth
+    gridfs:
+      database: hfhk-auth
+      bucket: hfhk
+    authentication-database: hfhk
+    host: 192.168.30.21
+    port: 27017
+    username: hfhk
+    password: Hfhk.1320.
   consul:
     host: 192.168.30.22
     port: 8500

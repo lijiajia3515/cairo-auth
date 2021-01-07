@@ -65,16 +65,16 @@ public class AuthorizationServerConfiguration {
 	}
 
 	@Configuration
-	public static class AuthorConfig extends AuthorizationServerConfigurerAdapter {
+	public static class AuthConfig extends AuthorizationServerConfigurerAdapter {
 		private final MongoTemplate mongoTemplate;
 		private final AuthenticationManager authenticationManager;
 		private final AccessTokenConverter accessTokenConverter;
 		private final TokenStore tokenStore;
 
-		public AuthorConfig(MongoTemplate mongoTemplate,
-							AuthenticationManager authenticationManager,
-							@Qualifier("myAccessTokenConverter") AccessTokenConverter accessTokenConverter,
-							@Qualifier("myTokenStore") TokenStore tokenStore) {
+		public AuthConfig(MongoTemplate mongoTemplate,
+						  AuthenticationManager authenticationManager,
+						  @Qualifier("myAccessTokenConverter") AccessTokenConverter accessTokenConverter,
+						  @Qualifier("myTokenStore") TokenStore tokenStore) {
 			this.mongoTemplate = mongoTemplate;
 			this.authenticationManager = authenticationManager;
 			this.accessTokenConverter = accessTokenConverter;

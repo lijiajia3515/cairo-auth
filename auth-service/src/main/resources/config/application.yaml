@@ -40,14 +40,14 @@ spring:
     mongodb:
       auto-index-creation: true
       field-naming-strategy: com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
-      database: hfhk-auth
+      database: ${hfhk.mongo.database:hfhk-auth}
       gridfs:
-        database: hfhk-auth
-      host: 192.168.30.21
-      port: 27017
-      username: hfhk
-      password: Hfhk.1320.
-      authentication-database: hfhk
+        database: ${hfhk.mongo.gridfs.database:hfhk-auth}
+      host: ${hfhk.mongo.host:mongo}
+      port: ${hfhk.mongo.port:27017}
+      username: ${hfhk.mongo.username:hfhk}
+      password: ${Hfhk.mongo.password:Hfhk.1320.}
+      authentication-database: ${hfhk.mongo.authentication-database:hfhk}
   redis:
     database: 10
     host: 192.168.30.21
@@ -62,14 +62,6 @@ spring:
         max-idle: 8
         min-idle: 0
   cloud:
-    nacos:
-      server-addr: ${hfhk.nacos.server.addr:localhost:8848}
-      discovery:
-        server-addr: ${hfhk.nacos.discovery.server-addr:${hfhk.nacos.server-addr:localhost:8848}}
-        namespace: ${hfhk.nacos.discovery.namespace:${hfhk.nacos.namespace:cairo}}
-        group: ${hfhk.nacos.discovery.group:${hfhk.nacos.group:cairo}}
-        metadata:
-          version: v1
     consul:
       host: ${hfhk.consul.host:localhost}
       port: ${hfhk.consul.port:8500}
@@ -80,7 +72,6 @@ spring:
         instance-group: ${hfhk.consul.discovery.instance-group:hfhk}
         tags:
           - v1
-
 server:
   port: 80
   http2:
