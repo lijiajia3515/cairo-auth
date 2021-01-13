@@ -4,6 +4,6 @@ dependencies {
   compile "com.hfhk.cairo:cairo-domain:${cairoVersion}"
   compile "com.hfhk.cairo:cairo-mongo:${cairoVersion}"
 
-  implementation 'org.springframework.data:spring-data-commons'
+  compile 'org.springframework.data:spring-data-commons'
   compile 'org.springframework.data:spring-data-mongodb'
 }
