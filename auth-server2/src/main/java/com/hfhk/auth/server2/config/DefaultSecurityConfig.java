@@ -33,7 +33,7 @@ public class DefaultSecurityConfig {
 			.successHandler(successHandler)
 			.and()
 			.logout()
-			.logoutSuccessUrl("/logout")
+			.logoutSuccessUrl("/")
 			.permitAll()
 			.and()
 			//.oauth2Login()

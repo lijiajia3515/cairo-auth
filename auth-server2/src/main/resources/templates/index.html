@@ -15,16 +15,31 @@
 
 <div th:if="${user != null}">
   <div class="card user-info" style="width: 15rem;height: 25rem; margin: auto">
-    <img th:src="${user.avatarUrl}?:'http://himg.bdimg.com/sys/portrait/item/750a6c696a69616a69613335313593f2.jpg'" class="card-img-top" alt="avatar" src=""/>
-    <h5 class="card-title" th:text="'Uid:' + (${user.uid}?: '未知')"></h5>
-    <h6 class="card-subtitle mb-2" th:text="'Username: ' + (${user.username}?:'未知')"></h6>
-    <h6 class="card-subtitle mb-2" th:text="'Email: ' + (${user.email}?:'未知')"></h6>
-    <h6 class="card-subtitle mb-2" th:text="'PhoneNumber: ' + (${user.phoneNumber}?:'未知')"></h6>
-    <h6 class="card-subtitle mb-2" th:text="'Roles: ' + (${user.roles}?:'未知')"></h6>
-    <h6 class="card-subtitle mb-2" th:text="'Departments: ' + (${user.roles}?:'未知')"></h6>
+    <img th:src="${user.avatarUrl}?:'http://himg.bdimg.com/sys/portrait/item/750a6c696a69616a69613335313593f2.jpg'"
+         class="card-img-top" alt="avatar"
+         src="http://himg.bdimg.com/sys/portrait/item/750a6c696a69616a69613335313593f2.jpg"/>
+    <h5 class="card-title" th:text="'Uid:' + (${user.uid}?: '未知')">Uid: Root</h5>
+    <h6 class="card-subtitle mb-2" th:text="'Username: ' + (${user.username}?:'未知')">Username: hfhk</h6>
+    <h6 class="card-subtitle mb-2" th:text="'Email: ' + (${user.email}?:'未知')">Email: Email</h6>
+    <h6 class="card-subtitle mb-2" th:text="'PhoneNumber: ' + (${user.phoneNumber}?:'未知')">PhoneNumber: PhoneNumber</h6>
+    <h6 class="card-subtitle mb-2" th:text="'Roles: ' + (${user.roles}?:'未知')">Roles: Roles</h6>
+    <h6 class="card-subtitle mb-2" th:text="'Departments: ' + (${user.roles}?:'未知')">Departments: Departments</h6>
+    <form th:action="@{/logout}" class="form-signin" method="post" action="/logout">
+      <button type="submit" class="btn btn-success" style="width: 15rem">登出</button>
+    </form>
   </div>
 </div>
+<div th:if="${user == null}">
+  当前未登录,三秒后自动跳转到登录页,如果自动跳转失败, 请手动点击跳转 。<a href="/login">跳转</a>
+  <script type="text/javascript">
+    setTimeout(function () {
+      window.location.href = '/login';
+    }, 3000);
+  </script>
+</div>
 
-<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
 </body>
 </html>
