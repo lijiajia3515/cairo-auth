@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hfhk Auth Server</title>
+</head>
+<body>
+<div id="container" class="">
+  <div id="login" class="width-vertical login-label-text login-view-password aliyun">
+    <div class="corner-icon-view view-type-qrcode">
+      <div class="master-login-title">密码登录</div>
+      <i class="iconfont icon-qrcode"></i>
+      <!--<div class="login-tip">
+        <div class="poptip">
+          <div class="poptip-arrow"><em></em><span></span></div>
+          <div class="poptip-content">扫码登录</div>
+        </div>
+      </div>-->
+    </div>
+    <div class="login-content nc-outer-box">
+      <div class="login-password">
+        <div id="login-error" class="login-error" style="display: none;"><i class="iconfont icon-warning"></i>
+          <div class="login-error-msg"></div>
+        </div>
+        <form id="login-form" class="login-form">
+          <div class="fm-field"><label class="fm-label"><span><label>登录名</label></span></label>
+            <div class="input-plain-wrap input-wrap-loginid "><input name="fm-login-id" type="text" class="fm-text"
+                                                                     id="fm-login-id" tabindex="1"
+                                                                     aria-label="邮箱/会员名/8位ID" placeholder="邮箱/会员名/8位ID"
+                                                                     autocapitalize="off"></div>
+          </div>
+          <div class="fm-field"><label class="fm-label"><span><label>登录密码</label></span></label>
+            <div class="input-plain-wrap input-wrap-password"><input name="fm-login-password" type="password"
+                                                                     class="fm-text" id="fm-login-password" tabindex="2"
+                                                                     aria-label="请输入登录密码" placeholder="请输入登录密码"
+                                                                     maxlength="40" autocapitalize="off"></div>
+          </div>
+          <!--<div>
+            <div class="baxia-container tb-login">
+              <div id="baxia-password" style="display: block;"></div>
+            </div>
+            <div id="nocaptcha-password" class="nc-container tb-login" style="display: none;" data-nc-idx="1">
+              <div id="nc_1_wrapper" class="nc_wrapper">
+                <div id="nc_1_n1t" class="nc_scale">
+                  <div id="nc_1__bg" class="nc_bg"></div>
+                  <span id="nc_1_n1z" class="nc_iconfont btn_slide"></span>
+                  <div id="nc_1__scale_text" class="scale_text slidetounlock"><span class="nc-lang-cnt"
+                                                                                    data-nc-lang="_startTEXT">请按住滑块，拖动到最右边</span>
+                  </div>
+                  <div id="nc_1_clickCaptcha" class="clickCaptcha">
+                    <div class="clickCaptcha_text">
+                      <b id="nc_1__captcha_text" class="nc_captch_text"></b>
+                      <i id="nc_1__btn_2" class="nc_iconfont nc_btn_2 btn_refresh"></i>
+                    </div>
+                    <div class="clickCaptcha_img"></div>
+                    <div class="clickCaptcha_btn"></div>
+                  </div>
+                  <div id="nc_1_imgCaptcha" class="imgCaptcha">
+                    <div class="imgCaptcha_text"><input id="nc_1_captcha_input" maxlength="6" type="text"
+                                                        style="ime-mode:disabled"></div>
+                    <div class="imgCaptcha_img" id="nc_1__imgCaptcha_img"></div>
+                    <i id="nc_1__btn_1" class="nc_iconfont nc_btn_1 btn_refresh"
+                       onclick="document.getElementById('nc_1__imgCaptcha_img').children[0].click()"></i>
+                    <div class="imgCaptcha_btn">
+                      <div id="nc_1__captcha_img_text" class="nc_captcha_img_text"></div>
+                      <div id="nc_1_scale_submit" class="nc_scale_submit"></div>
+                    </div>
+                  </div>
+                  <div id="nc_1_cc" class="nc-cc"></div>
+                  <i id="nc_1__voicebtn" tabindex="0" role="button" class="nc_voicebtn nc_iconfont"
+                     style="display:none"></i>
+                  <b id="nc_1__helpbtn" class="nc_helpbtn"><span class="nc-lang-cnt"
+                                                                 data-nc-lang="_learning">了解新功能</span></b>
+                </div>
+                <div id="nc_1__voice" class="nc_voice"></div>
+              </div>
+            </div>
+          </div>-->
+          <div class="fm-btn">
+            <button type="submit" tabindex="3" class="fm-button fm-submit password-login">登录</button>
+          </div>
+          <div class="login-blocks login-links">
+            <a href="https://passport.aliyun.com/ac/password_find.htm?lang=zh_CN&amp;appName=aliyun&amp;fromSite=6&amp;call_back_url=##returnUrl##" target="_blank" class="">忘记密码</a>
+            <a href="https://account.aliyun.com/find_loginid/findLoginId.htm?from=login&amp;lang=zh_CN" target="_blank" class="">忘记会员名</a>
+            <a href="https://account.aliyun.com/register/register.htm?oauth_callback=https%3A%2F%2Fwww.aliyun.com%2F" target="_blank" class="">免费注册</a>
+          </div>
+          <div class="login-blocks sns-login-block">
+            <div class="sns-login">
+              <div class="sns-login-title">其他方式登录：</div>
+              <div id="thirdpart-login">
+                <a href="javascript:;" attr-action="top_redirect" attr-type="taobao" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-taobao" title="淘宝授权登录"></a>
+                <a href="javascript:;" attr-action="top_redirect" attr-type="cbu" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-cbu" title="1688授权登录"></a>
+                <a href="javascript:;" attr-action="top_redirect" attr-type="weibo" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-weibo" title="微博授权登录"></a>
+                <a href="javascript:;" attr-action="top_redirect" attr-type="alipay" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-alipay" title="支付宝授权登录"></a>
+                <a href="javascript:;" attr-action="top_redirect" attr-type="dingtalk_qr" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-dingtalk_qr" title="钉钉授权登录"></a>
+                <a href="javascript:;" attr-action="top_redirect" attr-type="umeng" attr-customurl="" attr-onclickfn="" class="thirdpart-login-icon icon-umeng" title="友盟授权登录"></a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,8 +1,8 @@
 spring:
-  profiles:
-    active: local
   application:
     name: auth-server-v2
+  profiles:
+    active: local
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -17,13 +17,12 @@ spring:
       ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
   mvc:
     static-path-pattern: /**
-  freemarker:
-    cache: false
-    settings:
-      template_update_delay: 0
+
   webflux:
     format:
       date: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
   data:
     mongodb:
       field-naming-strategy: com.hfhk.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy

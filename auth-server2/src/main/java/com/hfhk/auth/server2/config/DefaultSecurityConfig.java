@@ -2,10 +2,12 @@ package com.hfhk.auth.server2.config;
 
 import com.hfhk.auth.server2.modules.auth.HfhkAuthSuccessHandler;
 import com.hfhk.auth.server2.modules.auth.HfhkUserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,23 +16,27 @@ import org.springframework.security.web.SecurityFilterChain;
 public class DefaultSecurityConfig {
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http, HfhkAuthSuccessHandler successHandler) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http,
+											@Qualifier("hfhkUserServices") UserDetailsService userDetailsService,
+											HfhkAuthSuccessHandler successHandler) throws Exception {
 		http
-			.csrf().disable()
+			//.csrf().disable()
 			.authorizeRequests(authorizeRequests -> authorizeRequests
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
+				.mvcMatchers("/login").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)
 			.formLogin()
+			.loginPage("/login")
 			.successHandler(successHandler)
 			.and()
 			//.oauth2Login()
 			//.and()
 			//.oauth2Client()
 			//.and()
-			.sessionManagement()
-			.enableSessionUrlRewriting(true)
+			.rememberMe()
+			.userDetailsService(userDetailsService)
 			.and()
 			.exceptionHandling()
 			.and();
@@ -53,7 +59,7 @@ public class DefaultSecurityConfig {
 	}
 
 	@Bean
-	HfhkUserService users(MongoTemplate mongoTemplate) {
+	HfhkUserService hfhkUserServices(MongoTemplate mongoTemplate) {
 		return new HfhkUserService(mongoTemplate);
 	}
 
