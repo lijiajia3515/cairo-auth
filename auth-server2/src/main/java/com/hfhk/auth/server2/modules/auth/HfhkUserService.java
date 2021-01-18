@@ -72,6 +72,7 @@ public class HfhkUserService implements UserDetailsService {
 					.password(user.getPassword())
 					.phoneNumber(user.getPhoneNumber())
 					.email(user.getEmail())
+					.avatarUrl(user.getAvatarUrl())
 					.roles(roleCodes)
 					.departments(departmentCodes)
 					.authorities(authorities)

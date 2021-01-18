@@ -5,9 +5,26 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <style>
+  </style>
   <title>统一登录认证中心</title>
 </head>
 <body>
-<p th:text="'统一登录认证中心'">统一登录认证中心</p>
+
+<div th:if="${user != null}">
+  <div class="card user-info" style="width: 15rem;height: 25rem; margin: auto">
+    <img th:src="${user.avatarUrl}?:'http://himg.bdimg.com/sys/portrait/item/750a6c696a69616a69613335313593f2.jpg'" class="card-img-top" alt="avatar" src=""/>
+    <h5 class="card-title" th:text="'Uid:' + (${user.uid}?: '未知')"></h5>
+    <h6 class="card-subtitle mb-2" th:text="'Username: ' + (${user.username}?:'未知')"></h6>
+    <h6 class="card-subtitle mb-2" th:text="'Email: ' + (${user.email}?:'未知')"></h6>
+    <h6 class="card-subtitle mb-2" th:text="'PhoneNumber: ' + (${user.phoneNumber}?:'未知')"></h6>
+    <h6 class="card-subtitle mb-2" th:text="'Roles: ' + (${user.roles}?:'未知')"></h6>
+    <h6 class="card-subtitle mb-2" th:text="'Departments: ' + (${user.roles}?:'未知')"></h6>
+  </div>
+</div>
+
+<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>
