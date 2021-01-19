@@ -36,29 +36,24 @@ spring:
     oauth2:
       client:
         registration:
-          hfhk-wxmp:
-            provider: wxmp
-            client-name: 浩方恒科-微信公众号
+          wechat-qr:
+            provider: WECHAT-QR
+            client-name: 微信
             client-id: wx22abd8cc8e58faff
             client-secret: 8b7462a4373e48b00a84ce51ac13534c
             client-authentication-method: basic
             authorization-grant-type: authorization_code
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope:
-              - snsapi_base
-          hfhk-wxmp-test:
-            provider: wxmp
-            client-name: 浩方恒科-微信公众号
-            client-id: wx3b85664f4b01519d
-            client-secret: 0273dcaec2b634519d11723cf20b8717
-            client-authentication-method: basic
-            authorization-grant-type: authorization_code
-            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
-            scope:
               - snsapi_login
+          github:
+            provider: GITHUB
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Github
         provider:
-          wxmp:
-            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wx3b85664f4b01519d
+          WECHAT-QR:
+            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wx22abd8cc8e58faff
             token-uri: https://open.weixin.qq.com/connect/oauth2/token
 
 

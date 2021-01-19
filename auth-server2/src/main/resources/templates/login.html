@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
   <title>Hello, world!</title>
 </head>
@@ -28,16 +28,30 @@
         <label for="password" style="display:inline;">密码:&nbsp;</label>
         <input type="password" class="form-control" id="password" name="password" style="display:inline;width:17rem;" placeholder="请输入密码"/>
       </div>
-      <div class="form-group" style="width: 20rem;margin: 2rem auto">
+      <div class="form-group" style="width: 20rem; height: 1rem; margin: 1rem auto">
         <label><input type="checkbox" name="remember-me" value="true">&nbsp;自动登录</label>
+        <a class="btn btn-link btn-blue" style="padding: 0 0.1rem" href="javascript:alert('别点了,没做');">忘记密码</a>
+        <a class="btn btn-link btn-blue" style="padding: 0 0.1rem" href="javascript:alert('暂不开放公网用户注册');">注册</a>
+
+      </div>
+      <div class="form-group" style="width: 20rem; margin: 1rem auto">
         <button type="submit" class="btn btn-primary" style="width: 20rem;">登录</button>
+        三方登录:
+        <a class="btn btn-blue" style="padding: 0.2rem 0.1rem" th:href="@{/oauth2/authorization/wechat-mp}" href="javascript:alert('wechat')">微信</a>
+        <a class="btn btn-blue" style="padding: 0.2rem 0.1rem" th:href="@{/oauth2/authorization/dingding}" href="javascript:alert('dingding');">钉钉</a>
+        <a class="btn btn-blue" style="padding: 0.2rem 0.1rem" th:href="@{/oauth2/authorization/alipay}" href="javascript:alert('alipay');">支付宝</a>
+        <a class="btn btn-blue" style="padding: 0.2rem 0.1rem" th:href="@{/oauth2/authorization/github}" href="javascript:alert('github');">Github</a>
+        <br>
         <span class="text-justify" style="font-size: 0.7rem;color: orangered">tips: &nbsp;①手机号需中国大陆11位手机号码,&nbsp;②登录名至少4位字符,&nbsp;③邮箱登录需绑定后使用,&nbsp;④以上全是废话</span>
+      </div>
+      <div class="form-group" style="width: 20rem;margin: 0 auto">
+
       </div>
     </form>
   </div>
 </div>
 
 
-<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>
