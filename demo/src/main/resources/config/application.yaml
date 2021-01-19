@@ -87,6 +87,45 @@ security:
       access-token-uri: http://${hfhk.auth.server:auth-server}/oauth2/token
 
 
+feign:
+  hystrix:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    connection-timeout: 60000
+  compression:
+    request:
+      min-request-size: 204000
+  client:
+    default-to-properties: true
+    config:
+      client:
+        default-to-properties: true
+        config:
+          default:
+            logger-level: FULL
+          serviceAuthV1AuthBasicClient:
+            logger-level: FULL
+            request-interceptors:
+              - com.hfhk.cairo.feign.interceptor.BasicRequestInterceptor
+          serviceAuthV1UserClientCredentialsClient:
+            logger-level: FULL
+            request-interceptors:
+              - com.hfhk.cairo.feign.interceptor.ClientOAuth2RequestInterceptor
+          serviceSystemV1FileRequestClient:
+            logger-level: FULL
+            request-interceptors:
+              - com.hfhk.cairo.feign.interceptor.RequestOAuth2RequestInterceptor
+          serviceSystemV1FileClientCredentialsClient:
+            logger-level: FULL
+            request-interceptors:
+              - com.hfhk.cairo.feign.interceptor.ClientOAuth2RequestInterceptor
+          serviceSystemV1DictionaryClientCredentialsClient:
+            logger-level: FULL
+            request-interceptors:
+              - com.hfhk.cairo.feign.interceptor.ClientOAuth2RequestInterceptor
+
 server:
   port: 80
   http2:
@@ -107,3 +146,4 @@ management:
     web:
       exposure:
         include: "*"
+

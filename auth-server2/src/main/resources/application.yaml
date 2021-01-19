@@ -17,7 +17,6 @@ spring:
       ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
   mvc:
     static-path-pattern: /**
-
   webflux:
     format:
       date: yyyy-MM-dd HH:mm:ss
@@ -33,6 +32,35 @@ spring:
       port: ${hfhk.mongo.port:27017}
       username: ${hfhk.mongo.username:hfhk}
       password: ${hfhk.mongo.password:Hfhk.1320.}
+  security:
+    oauth2:
+      client:
+        registration:
+          hfhk-wxmp:
+            provider: wxmp
+            client-name: 浩方恒科-微信公众号
+            client-id: wx22abd8cc8e58faff
+            client-secret: 8b7462a4373e48b00a84ce51ac13534c
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_base
+          hfhk-wxmp-test:
+            provider: wxmp
+            client-name: 浩方恒科-微信公众号
+            client-id: wx3b85664f4b01519d
+            client-secret: 0273dcaec2b634519d11723cf20b8717
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_login
+        provider:
+          wxmp:
+            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wx3b85664f4b01519d
+            token-uri: https://open.weixin.qq.com/connect/oauth2/token
+
 
 server:
   port: 80

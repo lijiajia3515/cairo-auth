@@ -5,6 +5,7 @@ import com.hfhk.auth.server2.modules.auth.HfhkUserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,12 +26,17 @@ public class DefaultSecurityConfig {
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/login").permitAll()
+				.mvcMatchers("/login/**").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)
 			.formLogin()
 			.loginPage("/login")
 			.permitAll()
 			.successHandler(successHandler)
+			.and()
+			.oauth2Login()
+			.loginPage("/login")
+			.permitAll()
 			.and()
 			.logout()
 			.logoutSuccessUrl("/")
