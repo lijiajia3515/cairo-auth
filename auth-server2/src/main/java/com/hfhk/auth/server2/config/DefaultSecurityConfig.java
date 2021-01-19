@@ -25,8 +25,6 @@ public class DefaultSecurityConfig {
 			.authorizeRequests(authorizeRequests -> authorizeRequests
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
-				.mvcMatchers("/login").permitAll()
-				.mvcMatchers("/login/**").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)
 			.formLogin()
