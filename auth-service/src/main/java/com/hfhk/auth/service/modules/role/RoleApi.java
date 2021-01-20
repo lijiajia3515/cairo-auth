@@ -1,6 +1,7 @@
 package com.hfhk.auth.service.modules.role;
 
 import com.hfhk.auth.domain.role.*;
+import com.hfhk.auth.modules.role.*;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;

@@ -2,7 +2,6 @@ package com.hfhk.auth.server2.modules.auth;
 
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.server2.domain.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -40,7 +39,6 @@ public class HfhkAuthSuccessHandler extends SavedRequestAwareAuthenticationSucce
 			if (authentication.getPrincipal() instanceof AuthUser) {
 				AuthUser authUser = (AuthUser) authentication.getPrincipal();
 				LocalDateTime now = LocalDateTime.now();
-				authUser.setLastLoginAt(now);
 				Query query = Query.query(Criteria.where(UserMongo.FIELD.UID).is(authUser.getUid()));
 				Update update = Update.update(UserMongo.FIELD.LAST_LOGIN_AT, now);
 				mongoTemplate.updateFirst(query, update, UserMongo.class, Mongo.Collection.USER);

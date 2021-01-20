@@ -1,6 +1,7 @@
 package com.hfhk.auth.service.modules.user;
 
 import com.hfhk.auth.domain.user.*;
+import com.hfhk.auth.modules.user.*;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,9 +1,9 @@
 package com.hfhk.auth.service.modules.role;
 
 import com.hfhk.auth.domain.mongo.RoleMongo;
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
-import com.hfhk.auth.domain.role.Role;
-import com.hfhk.auth.domain.role.RoleV2;
+import com.hfhk.auth.modules.resource.ResourceTreeNode;
+import com.hfhk.auth.modules.role.Role;
+import com.hfhk.auth.modules.role.RoleV2;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,12 @@
 package com.hfhk.auth.server2.config;
 
+import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.server2.modules.auth.HfhkAuthSuccessHandler;
+import com.hfhk.auth.server2.modules.auth.HfhkOAuth2UserService;
 import com.hfhk.auth.server2.modules.auth.HfhkUserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,40 +18,60 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 public class DefaultSecurityConfig {
+	@Bean
+	@Primary
+	HfhkUserService hfhkUserServices(MongoTemplate mongoTemplate) {
+		return new HfhkUserService(mongoTemplate);
+	}
+
+	@Bean
+	public HfhkOAuth2UserService hfhkOAuth2UserService(MongoTemplate mongoTemplate) {
+		return new HfhkOAuth2UserService(mongoTemplate);
+	}
+
+	public
+
+	@Bean
+	PasswordEncoder hfhkPasswordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
-											@Qualifier("hfhkUserServices") UserDetailsService userDetailsService,
+											HfhkUserService hfhkUserService,
+											HfhkOAuth2UserService hfhkOAuth2UserService,
 											HfhkAuthSuccessHandler successHandler) throws Exception {
 		http
 			//.csrf().disable()
-			.authorizeRequests(authorizeRequests -> authorizeRequests
+			.authorizeRequests(requests -> requests
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)
-			.formLogin()
-			.loginPage("/login")
-			.permitAll()
-			.successHandler(successHandler)
-			.and()
-			.oauth2Login()
-			.loginPage("/login")
-			.permitAll()
-			.and()
-			.logout()
-			.logoutSuccessUrl("/")
-			.permitAll()
-			.and()
-			//.oauth2Login()
-			//.and()
-			//.oauth2Client()
-			//.and()
-			.rememberMe()
-			.userDetailsService(userDetailsService)
-			.and()
-			.exceptionHandling()
-			.and();
+			.formLogin(config -> {
+				config.loginPage("/login")
+					.permitAll()
+					.successHandler(successHandler);
+			})
+			.oauth2Login(x -> {
+				x.loginPage("/login")
+					.permitAll();
+				x.userInfoEndpoint(endpointConfig ->
+					endpointConfig
+						.userService(hfhkOAuth2UserService)
+				);
+			})
+			.logout(config -> {
+				config.logoutSuccessUrl("/")
+					.permitAll();
+			})
+			.rememberMe(config -> {
+				config.userDetailsService(hfhkUserService);
+			})
+			.exceptionHandling(config -> {
+
+			});
+
 		return http.build();
 	}
 
@@ -62,14 +85,5 @@ public class DefaultSecurityConfig {
 	//	return new InMemoryUserDetailsManager(user);
 	//}
 
-	@Bean
-	PasswordEncoder hfhkPasswordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
-
-	@Bean
-	HfhkUserService hfhkUserServices(MongoTemplate mongoTemplate) {
-		return new HfhkUserService(mongoTemplate);
-	}
 
 }

@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,6 +80,11 @@ public class UserMongo implements Serializable {
 	private Boolean accountLocked = false;
 
 	/**
+	 * 互联
+	 */
+	private List<Connection> connections;
+
+	/**
 	 * 角色
 	 */
 	private Map<String, Set<String>> clientRoles;
@@ -109,6 +115,19 @@ public class UserMongo implements Serializable {
 	@Builder.Default
 	private Metadata metadata = new Metadata();
 
+	@Data
+	@Accessors(chain = true)
+
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	public static class Connection {
+		private String connection;
+		private String subject;
+		private Boolean enabled;
+		private LocalDateTime createdAt;
+	}
+
 	public static final Field FIELD = new Field();
 
 	public static class Field extends AbstractUpperCamelCaseField {
@@ -128,7 +147,7 @@ public class UserMongo implements Serializable {
 
 		public final String ACCOUNT_ENABLED = field("AccountEnabled");
 		public final String ACCOUNT_LOCKED = field("AccountLocked");
-
+		public final Connections CONNECTIONS = new Connections(this, "Connections");
 		public final ClientRoles CLIENT_ROLES = new ClientRoles(this, "ClientRoles");
 		public final ClientDepartments CLIENT_DEPARTMENTS = new ClientDepartments(this, "ClientDepartments");
 		public final ClientResources CLIENT_RESOURCES = new ClientResources(this, "ClientResources");
@@ -145,6 +164,17 @@ public class UserMongo implements Serializable {
 			public String client(String client) {
 				return field(client);
 			}
+		}
+
+		public static class Connections extends AbstractClientField {
+			public Connections(AbstractMongoField parent, String prefix) {
+				super(parent, prefix);
+			}
+
+			public final String CONNECTION = field("Connection");
+			public final String SUBJECT = field("Subject");
+			public final String ENABLED = field("Enabled");
+			public final String CREATED_AT = field("CreatedAt");
 		}
 
 		public static class ClientRoles extends AbstractClientField {

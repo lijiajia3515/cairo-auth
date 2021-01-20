@@ -1,6 +1,6 @@
 package com.hfhk.auth.server2.modules.controller;
 
-import com.hfhk.auth.server2.domain.AuthUser;
+import com.hfhk.auth.server2.modules.auth.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping
 public class IndexController {
 	@GetMapping
-	public String index(Authentication authentication, @AuthenticationPrincipal AuthUser user, Model model) {
-		log.info("[authentication]: {}", authentication);
-		model.addAttribute("authentication", authentication);
+	public String index(@AuthenticationPrincipal AuthUser user, Model model) {
 		model.addAttribute("user", user);
 		return "index";
 	}

@@ -1,6 +1,5 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.department.*;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.cairo.core.Constants;

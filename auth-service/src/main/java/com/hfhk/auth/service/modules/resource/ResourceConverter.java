@@ -1,9 +1,9 @@
 package com.hfhk.auth.service.modules.resource;
 
 import com.hfhk.auth.domain.mongo.ResourceMongo;
-import com.hfhk.auth.domain.resource.ResourceTreeNode;
-import com.hfhk.auth.domain.resource.ResourceType;
-import com.hfhk.auth.domain.resource.ResourceV1;
+import com.hfhk.auth.modules.resource.ResourceTreeNode;
+import com.hfhk.auth.modules.resource.ResourceType;
+import com.hfhk.auth.modules.resource.ResourceV1;
 import com.hfhk.cairo.mongo.data.Metadata;
 
 import java.util.Optional;

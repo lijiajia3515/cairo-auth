@@ -1,7 +1,7 @@
 package com.hfhk.auth.service.modules.department;
 
-import com.hfhk.auth.domain.department.Department;
-import com.hfhk.auth.domain.department.DepartmentTreeNode;
+import com.hfhk.auth.modules.department.Department;
+import com.hfhk.auth.modules.department.DepartmentTreeNode;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 
 import java.util.Optional;

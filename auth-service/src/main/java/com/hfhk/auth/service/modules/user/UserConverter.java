@@ -3,7 +3,7 @@ package com.hfhk.auth.service.modules.user;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.domain.user.User;
+import com.hfhk.auth.modules.user.User;
 import com.hfhk.auth.service.modules.department.DepartmentConverter;
 import com.hfhk.auth.service.modules.role.RoleConverter;
 
