@@ -96,7 +96,7 @@ public class AuthUser implements OAuth2User, UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return accountLocked;
+		return !accountLocked;
 	}
 
 	@Override

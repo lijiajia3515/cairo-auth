@@ -71,7 +71,7 @@ public class UserMongo implements Serializable {
 	 * 账号 启用
 	 */
 	@Builder.Default
-	private Boolean accountEnabled = false;
+	private Boolean accountEnabled = true;
 
 	/**
 	 * 账号 锁定

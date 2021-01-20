@@ -36,11 +36,11 @@ spring:
     oauth2:
       client:
         registration:
-          wechat-qr:
-            provider: WECHAT-QR
+          wechat-web:
+            provider: WECHAT-WEB
             client-name: 微信
-            client-id: wx22abd8cc8e58faff
-            client-secret: 8b7462a4373e48b00a84ce51ac13534c
+            client-id: wxc8e16be9316211a1
+            client-secret: b5a161ff99e3088576f0cb37ab34175e
             client-authentication-method: basic
             authorization-grant-type: authorization_code
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
@@ -57,8 +57,8 @@ spring:
             client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
             client-name: Google
         provider:
-          WECHAT-QR:
-            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wx22abd8cc8e58faff
+          WECHAT-WEB:
+            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wxc8e16be9316211a1
             token-uri: https://open.weixin.qq.com/connect/oauth2/token
 
 
