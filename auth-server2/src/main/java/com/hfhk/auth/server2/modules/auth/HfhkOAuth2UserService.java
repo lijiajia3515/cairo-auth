@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class HfhkOAuth2UserService extends AbstractPrincipalService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -89,6 +90,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 		return principal(query)
 			.or(() -> Optional.of(createOAuthUser(connection, subject)))
 			.map(x -> {
+				x.setAttributes(userAttributes);
 				x.getAuthorities().addAll(authorities);
 				return x;
 			}).orElseThrow();
@@ -172,7 +174,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 			.clientDepartments(Collections.emptyMap())
 			.clientAuthorities(Collections.emptyMap())
 			.clientResources(Collections.emptyMap())
-			.connections(Collections.singletonList(UserMongo.Connection.builder().connection(connection).subject(subject).build()))
+			.connections(Collections.singletonList(UserMongo.Connection.builder().connection(connection).subject(subject).enabled(true).createdAt(LocalDateTime.now()).build()))
 			.build();
 
 		mongo = mongoTemplate.insert(mongo, Mongo.Collection.USER);

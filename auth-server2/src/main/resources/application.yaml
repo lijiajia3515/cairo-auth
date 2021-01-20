@@ -51,6 +51,11 @@ spring:
             client-id: 7e06c0a50323ab314627
             client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
             client-name: Github
+          google:
+            provider: GOOGLE
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Google
         provider:
           WECHAT-QR:
             authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wx22abd8cc8e58faff
