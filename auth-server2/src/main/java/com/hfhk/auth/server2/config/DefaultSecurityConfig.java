@@ -4,6 +4,7 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.server2.modules.auth.HfhkAuthSuccessHandler;
 import com.hfhk.auth.server2.modules.auth.HfhkOAuth2UserService;
 import com.hfhk.auth.server2.modules.auth.HfhkUserService;
+import com.hfhk.auth.server2.modules.auth.oauth2.client.endpoint.CommonAuthorizationCodeTokenResponseClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -48,26 +49,22 @@ public class DefaultSecurityConfig {
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/**").authenticated()
 			)
-			.formLogin(config -> {
-				config.loginPage("/login")
-					.permitAll()
-					.successHandler(successHandler);
-			})
-			.oauth2Login(x -> {
+			.formLogin(config -> config.loginPage("/login")
+				.permitAll()
+				.successHandler(successHandler))
+			.oauth2Login(x ->
 				x.loginPage("/login")
-					.permitAll();
-				x.userInfoEndpoint(endpointConfig ->
-					endpointConfig
-						.userService(hfhkOAuth2UserService)
-				);
-			})
-			.logout(config -> {
+					.permitAll()
+					.tokenEndpoint(tokenEndpointConfig ->
+						tokenEndpointConfig.accessTokenResponseClient(new CommonAuthorizationCodeTokenResponseClient()))
+					.userInfoEndpoint(endpointConfig ->
+						endpointConfig
+							.userService(hfhkOAuth2UserService)))
+			.logout(config ->
 				config.logoutSuccessUrl("/")
-					.permitAll();
-			})
-			.rememberMe(config -> {
-				config.userDetailsService(hfhkUserService);
-			})
+					.permitAll())
+			.rememberMe(config ->
+				config.userDetailsService(hfhkUserService))
 			.exceptionHandling(config -> {
 
 			});
