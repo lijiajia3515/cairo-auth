@@ -37,10 +37,10 @@ import org.springframework.web.util.UriComponentsBuilder;
  * {@link RequestEntity} representation of a request for the UserInfo Endpoint.
  *
  * @author Joe Grandja
- * @since 5.1
  * @see Converter
  * @see OAuth2UserRequest
  * @see RequestEntity
+ * @since 5.1
  */
 public class OAuth2UserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
 
@@ -48,6 +48,7 @@ public class OAuth2UserRequestEntityConverter implements Converter<OAuth2UserReq
 
 	/**
 	 * Returns the {@link RequestEntity} used for the UserInfo Request.
+	 *
 	 * @param userRequest the user request
 	 * @return the {@link RequestEntity} used for the UserInfo Request
 	 */
@@ -58,22 +59,15 @@ public class OAuth2UserRequestEntityConverter implements Converter<OAuth2UserReq
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		URI uri = UriComponentsBuilder
-				.fromUriString(clientRegistration.getProviderDetails().getUserInfoEndpoint().getUri()).build().toUri();
+			.fromUriString(clientRegistration.getProviderDetails().getUserInfoEndpoint().getUri()).build().toUri();
 
 		RequestEntity<?> request;
-		if (HttpMethod.GET.equals(httpMethod)){
+		if (HttpMethod.POST.equals(httpMethod)) {
 			headers.setContentType(DEFAULT_CONTENT_TYPE);
 			MultiValueMap<String, String> formParameters = new LinkedMultiValueMap<>();
 			formParameters.add(OAuth2ParameterNames.ACCESS_TOKEN, userRequest.getAccessToken().getTokenValue());
 			request = new RequestEntity<>(formParameters, headers, httpMethod, uri);
-		}
-		else if (HttpMethod.POST.equals(httpMethod)) {
-			headers.setContentType(DEFAULT_CONTENT_TYPE);
-			MultiValueMap<String, String> formParameters = new LinkedMultiValueMap<>();
-			formParameters.add(OAuth2ParameterNames.ACCESS_TOKEN, userRequest.getAccessToken().getTokenValue());
-			request = new RequestEntity<>(formParameters, headers, httpMethod, uri);
-		}
-		else {
+		} else {
 			headers.setBearerAuth(userRequest.getAccessToken().getTokenValue());
 			request = new RequestEntity<>(headers, httpMethod, uri);
 		}
@@ -83,7 +77,7 @@ public class OAuth2UserRequestEntityConverter implements Converter<OAuth2UserReq
 
 	private HttpMethod getHttpMethod(ClientRegistration clientRegistration) {
 		if (AuthenticationMethod.FORM
-				.equals(clientRegistration.getProviderDetails().getUserInfoEndpoint().getAuthenticationMethod())) {
+			.equals(clientRegistration.getProviderDetails().getUserInfoEndpoint().getAuthenticationMethod())) {
 			return HttpMethod.POST;
 		}
 		return HttpMethod.GET;
