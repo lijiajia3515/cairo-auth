@@ -16,7 +16,6 @@ public class WechatWebMapOAuth2AccessTokenResponseConverter implements Converter
 	@Override
 	public OAuth2AccessTokenResponse convert(Map<String, String> tokenResponseParameters) {
 		String accessToken = tokenResponseParameters.get(OAuth2ParameterNames.ACCESS_TOKEN);
-		OAuth2AccessToken.TokenType accessTokenType = getAccessTokenType(tokenResponseParameters);
 		long expiresIn = getExpiresIn(tokenResponseParameters);
 		Set<String> scopes = getScopes(tokenResponseParameters);
 		String refreshToken = tokenResponseParameters.get(OAuth2ParameterNames.REFRESH_TOKEN);

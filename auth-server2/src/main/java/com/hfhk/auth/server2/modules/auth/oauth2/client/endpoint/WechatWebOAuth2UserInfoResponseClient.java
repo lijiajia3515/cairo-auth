@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class WechatWebOAuth2AuthorizationCodeTokenResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
+public class WechatWebOAuth2UserInfoResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
 
 	private static final String INVALID_TOKEN_RESPONSE_ERROR_CODE = "invalid_token_response";
 
@@ -31,7 +31,7 @@ public class WechatWebOAuth2AuthorizationCodeTokenResponseClient implements OAut
 
 	private RestOperations restOperations;
 
-	public WechatWebOAuth2AuthorizationCodeTokenResponseClient() {
+	public WechatWebOAuth2UserInfoResponseClient() {
 		OAuth2AccessTokenResponseHttpMessageConverter oAuth2AccessTokenResponseHttpMessageConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
 		oAuth2AccessTokenResponseHttpMessageConverter.setTokenResponseConverter(new WechatWebMapOAuth2AccessTokenResponseConverter());
 		oAuth2AccessTokenResponseHttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
