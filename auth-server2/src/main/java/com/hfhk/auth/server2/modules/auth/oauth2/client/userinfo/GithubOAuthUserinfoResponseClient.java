@@ -7,31 +7,23 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.util.Assert;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.UnknownContentTypeException;
 
-import java.util.Map;
-
-public class DefaultOAuth2UserInfoResponseClient implements OAuthUserInfoResponseClient<DefaultOAuthUserInfo> {
-	protected final ParameterizedTypeReference<Map<String, Object>> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
+public class GithubOAuthUserinfoResponseClient extends AbstractOAuthUserinfoResponseClient<GithubUserinfo> implements OAuthUserInfoResponseClient<GithubUserinfo> {
+	protected final ParameterizedTypeReference<GithubUserinfo> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
 	};
 
-	private static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
-
-	protected RestOperations restOperations;
-
-	public DefaultOAuth2UserInfoResponseClient() {
+	public GithubOAuthUserinfoResponseClient() {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-		this.restOperations = restTemplate;
+		super.restOperations = restTemplate;
 	}
 
-	public DefaultOAuthUserInfo getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
+	public GithubUserinfo getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
 		try {
-			return new DefaultOAuthUserInfo(
-				userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName(),
-				this.restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE).getBody()
-			);
+			return super.restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE).getBody();
 		} catch (OAuth2AuthorizationException ex) {
 			OAuth2Error oauth2Error = ex.getError();
 			StringBuilder errorDetails = new StringBuilder();
@@ -64,24 +56,4 @@ public class DefaultOAuth2UserInfoResponseClient implements OAuthUserInfoRespons
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), ex);
 		}
 	}
-
-	/**
-	 * Sets the {@link RestOperations} used when requesting the UserInfo resource.
-	 *
-	 * <p>
-	 * <b>NOTE:</b> At a minimum, the supplied {@code restOperations} must be configured
-	 * with the following:
-	 * <ol>
-	 * <li>{@link ResponseErrorHandler} - {@link OAuth2ErrorResponseErrorHandler}</li>
-	 * </ol>
-	 *
-	 * @param restOperations the {@link RestOperations} used when requesting the UserInfo
-	 *                       resource
-	 * @since 5.1
-	 */
-	public final void setRestOperations(RestOperations restOperations) {
-		Assert.notNull(restOperations, "restOperations cannot be null");
-		this.restOperations = restOperations;
-	}
-
 }

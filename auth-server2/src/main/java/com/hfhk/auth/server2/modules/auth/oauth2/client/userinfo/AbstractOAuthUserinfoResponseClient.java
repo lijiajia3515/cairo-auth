@@ -1,11 +1,7 @@
 package com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -14,29 +10,23 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
-public class WechatWebOAuth2UserInfoResponseClient implements OAuth2UserInfoResponseClient {
-	private static final ParameterizedTypeReference<Map<String, Object>> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
+public class AbstractOAuthUserinfoResponseClient<T> {
+	protected final ParameterizedTypeReference<T> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
 	};
 
-	private static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
+	protected static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
 
-	private RestOperations restOperations;
+	protected RestOperations restOperations;
 
-	public WechatWebOAuth2UserInfoResponseClient() {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
-		RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(), converter));
+	public AbstractOAuthUserinfoResponseClient() {
+		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
 		this.restOperations = restTemplate;
 	}
 
-	public ResponseEntity<Map<String, Object>> getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
+	public T getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
 		try {
-			return this.restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE);
+			return this.restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE).getBody();
 		} catch (OAuth2AuthorizationException ex) {
 			OAuth2Error oauth2Error = ex.getError();
 			StringBuilder errorDetails = new StringBuilder();
@@ -84,7 +74,7 @@ public class WechatWebOAuth2UserInfoResponseClient implements OAuth2UserInfoResp
 	 *                       resource
 	 * @since 5.1
 	 */
-	public final void setRestOperations(RestOperations restOperations) {
+	public void setRestOperations(RestOperations restOperations) {
 		Assert.notNull(restOperations, "restOperations cannot be null");
 		this.restOperations = restOperations;
 	}

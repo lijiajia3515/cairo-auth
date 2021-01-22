@@ -42,7 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @see RequestEntity
  * @since 5.1
  */
-public class OAuth2UserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
+public class OAuthUserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
 
 	private static final MediaType DEFAULT_CONTENT_TYPE = MediaType.valueOf(MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 

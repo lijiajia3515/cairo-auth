@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CommonOAuth2UserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
-	private final OAuth2UserRequestEntityConverter DEFAULT = new OAuth2UserRequestEntityConverter();
+	private final OAuthUserRequestEntityConverter DEFAULT = new OAuthUserRequestEntityConverter();
 	private final Map<String, Converter<OAuth2UserRequest, RequestEntity<?>>> converters = new ConcurrentHashMap<>();
 
 	public CommonOAuth2UserRequestEntityConverter() {

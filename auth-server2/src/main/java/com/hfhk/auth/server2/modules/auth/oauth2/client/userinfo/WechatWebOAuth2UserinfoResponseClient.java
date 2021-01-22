@@ -1,37 +1,40 @@
 package com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.util.Assert;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.UnknownContentTypeException;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Collections;
 
-public class DefaultOAuth2UserInfoResponseClient implements OAuthUserInfoResponseClient<DefaultOAuthUserInfo> {
-	protected final ParameterizedTypeReference<Map<String, Object>> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
+public class WechatWebOAuth2UserinfoResponseClient extends AbstractOAuthUserinfoResponseClient<WechatWebUserinfo> implements OAuthUserInfoResponseClient<WechatWebUserinfo> {
+	public WechatWebOAuth2UserinfoResponseClient() {
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_PLAIN));
+		RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(), converter));
+		restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
+		super.restOperations = restTemplate;
+	}
+
+	protected final ParameterizedTypeReference<WechatWebUserinfo> PARAMETERIZED_RESPONSE_TYPE = new ParameterizedTypeReference<>() {
 	};
 
 	private static final String INVALID_USER_INFO_RESPONSE_ERROR_CODE = "invalid_user_info_response";
 
-	protected RestOperations restOperations;
-
-	public DefaultOAuth2UserInfoResponseClient() {
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-		this.restOperations = restTemplate;
-	}
-
-	public DefaultOAuthUserInfo getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
+	public WechatWebUserinfo getResponse(OAuth2UserRequest userRequest, RequestEntity<?> request) {
 		try {
-			return new DefaultOAuthUserInfo(
-				userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName(),
-				this.restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE).getBody()
-			);
+			return restOperations.exchange(request, PARAMETERIZED_RESPONSE_TYPE).getBody();
 		} catch (OAuth2AuthorizationException ex) {
 			OAuth2Error oauth2Error = ex.getError();
 			StringBuilder errorDetails = new StringBuilder();
@@ -63,25 +66,6 @@ public class DefaultOAuth2UserInfoResponseClient implements OAuthUserInfoRespons
 				"An error occurred while attempting to retrieve the UserInfo Resource: " + ex.getMessage(), null);
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString(), ex);
 		}
-	}
-
-	/**
-	 * Sets the {@link RestOperations} used when requesting the UserInfo resource.
-	 *
-	 * <p>
-	 * <b>NOTE:</b> At a minimum, the supplied {@code restOperations} must be configured
-	 * with the following:
-	 * <ol>
-	 * <li>{@link ResponseErrorHandler} - {@link OAuth2ErrorResponseErrorHandler}</li>
-	 * </ol>
-	 *
-	 * @param restOperations the {@link RestOperations} used when requesting the UserInfo
-	 *                       resource
-	 * @since 5.1
-	 */
-	public final void setRestOperations(RestOperations restOperations) {
-		Assert.notNull(restOperations, "restOperations cannot be null");
-		this.restOperations = restOperations;
 	}
 
 }

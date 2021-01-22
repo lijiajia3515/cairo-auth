@@ -6,6 +6,7 @@ apply from: "${rootDir}/gradle/devtools.gradle"
 
 dependencies {
   compile project(":auth-common")
+  compile project(":auth-domain")
 
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

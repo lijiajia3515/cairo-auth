@@ -1,6 +1,7 @@
 package com.hfhk.auth.server2.modules.auth;
 
 import com.hfhk.auth.domain.mongo.UserMongo;
+import com.hfhk.auth.modules.auth.AuthType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,6 +30,6 @@ public class HfhkUserService extends AbstractPrincipalService implements UserDet
 			Sort.Order.asc(UserMongo.FIELD.METADATA.LAST_MODIFIED.AT),
 			Sort.Order.asc(UserMongo.FIELD._ID)
 		));
-		return principal(query).orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
+		return principal(query).map(x -> x.setType(AuthType.Password)).orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
 	}
 }

@@ -1,5 +1,6 @@
 package com.hfhk.auth.server2.modules.auth;
 
+import com.hfhk.auth.modules.auth.AuthType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Accessors(chain = true)
@@ -20,6 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class AuthUser implements OAuth2User, UserDetails {
+	/**
+	 * password
+	 */
+	private AuthType type;
+
 	/**
 	 * uid
 	 */
@@ -75,9 +79,11 @@ public class AuthUser implements OAuth2User, UserDetails {
 	/**
 	 * 权限值
 	 */
-	private Collection<GrantedAuthority> authorities;
+	@Builder.Default
+	private Collection<GrantedAuthority> authorities = new HashSet<>();
 
-	private Map<String, Object> attributes;
+	@Builder.Default
+	private Map<String, Object> attributes = new HashMap<>();
 
 	@Override
 	public String getPassword() {

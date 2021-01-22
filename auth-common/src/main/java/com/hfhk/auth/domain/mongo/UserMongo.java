@@ -126,6 +126,7 @@ public class UserMongo implements Serializable {
 		private String subject;
 		private Boolean enabled;
 		private LocalDateTime createdAt;
+		private Object info;
 	}
 
 	public static final Field FIELD = new Field();

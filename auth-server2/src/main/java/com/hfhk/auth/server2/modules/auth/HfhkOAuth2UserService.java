@@ -2,9 +2,8 @@ package com.hfhk.auth.server2.modules.auth;
 
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.CommonOAuth2UserInfoResponseClient;
-import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.OAuth2UserInfoResponseClient;
-import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.CommonOAuth2UserRequestEntityConverter;
+import com.hfhk.auth.modules.auth.AuthType;
+import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.*;
 import com.hfhk.cairo.core.Constants;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Sort;
@@ -12,7 +11,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,7 +19,6 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -35,7 +32,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 	private static final String MISSING_USER_NAME_ATTRIBUTE_ERROR_CODE = "missing_user_name_attribute";
 
 	private Converter<OAuth2UserRequest, RequestEntity<?>> requestEntityConverter = new CommonOAuth2UserRequestEntityConverter();
-	private OAuth2UserInfoResponseClient userInfoResponseClient = new CommonOAuth2UserInfoResponseClient();
+	private final OAuthUserInfoResponseClient<OAuthUserinfo> userInfoResponseClient = new CommonOAuth2UserInfoResponseClient();
 
 
 	public HfhkOAuth2UserService(MongoTemplate mongoTemplate) {
@@ -58,32 +55,43 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 			throw new OAuth2AuthenticationException(oauth2Error, oauth2Error.toString());
 		}
 		RequestEntity<?> request = this.requestEntityConverter.convert(userRequest);
-		ResponseEntity<Map<String, Object>> response = userInfoResponseClient.getResponse(userRequest, request);
-		Map<String, Object> userAttributes = Optional.ofNullable(response.getBody()).orElse(Collections.emptyMap());
-		Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-		authorities.add(new OAuth2UserAuthority(userAttributes));
-		OAuth2AccessToken token = userRequest.getAccessToken();
-		for (String authority : token.getScopes()) {
-			authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
-		}
-		String connection = userRequest.getClientRegistration().getRegistrationId();
-		String subject = userAttributes.get(userNameAttributeName).toString();
-		Query query = Query.query(Criteria
-			.where(UserMongo.FIELD.CONNECTIONS.CONNECTION).is(connection)
-			.and(UserMongo.FIELD.CONNECTIONS.SUBJECT).is(subject)
-			.and(UserMongo.FIELD.CONNECTIONS.ENABLED).is(true)
-		).with(Sort.by(
-			Sort.Order.asc(UserMongo.FIELD.METADATA.CREATED.AT),
-			Sort.Order.asc(UserMongo.FIELD.METADATA.LAST_MODIFIED.AT),
-			Sort.Order.asc(UserMongo.FIELD._ID)
-		));
-		return principal(query)
-			.or(() -> Optional.of(createOAuthUser(connection, subject)))
-			.map(x -> {
-				x.setAttributes(userAttributes);
-				x.getAuthorities().addAll(authorities);
-				return x;
-			}).orElseThrow();
+		OAuthUserinfo response = userInfoResponseClient.getResponse(userRequest, request);
+
+		return Optional.ofNullable(response)
+			.flatMap(userinfo -> {
+				Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+				OAuth2AccessToken token = userRequest.getAccessToken();
+				for (String authority : token.getScopes()) {
+					authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
+				}
+				String connection = userRequest.getClientRegistration().getRegistrationId();
+				String subject = userinfo.subject();
+
+				Query query = Query.query(Criteria
+					.where(UserMongo.FIELD.CONNECTIONS.CONNECTION).is(connection)
+					.and(UserMongo.FIELD.CONNECTIONS.SUBJECT).is(subject)
+					.and(UserMongo.FIELD.CONNECTIONS.ENABLED).is(true)
+				).with(Sort.by(
+					Sort.Order.asc(UserMongo.FIELD.METADATA.CREATED.AT),
+					Sort.Order.asc(UserMongo.FIELD.METADATA.LAST_MODIFIED.AT),
+					Sort.Order.asc(UserMongo.FIELD._ID)
+				));
+				return principal(query).or(() -> Optional.of(createUser(connection, userinfo)))
+					.map(x -> {
+						AuthType type;
+						if (userinfo instanceof WechatWebUserinfo) {
+							type = AuthType.Wechat;
+						} else if (userinfo instanceof GithubUserinfo) {
+							type = AuthType.Github;
+						} else {
+							type = AuthType.OAuth2;
+						}
+						x.setType(type);
+						x.getAuthorities().addAll(authorities);
+						return x;
+					});
+			})
+			.orElseThrow();
 	}
 
 
@@ -101,6 +109,20 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 	}
 
 	@Transactional(rollbackFor = Exception.class)
+	public AuthUser createUser(String connection, OAuthUserinfo userinfo) {
+		AuthUser user;
+		if (userinfo instanceof WechatWebUserinfo) {
+			user = createOAuthUser(connection, (WechatWebUserinfo) userinfo);
+		} else if (userinfo instanceof GithubUserinfo) {
+			user = createOAuthUser(connection, (GithubUserinfo) userinfo);
+		} else {
+			user = createOAuthUser(connection, userinfo.subject());
+		}
+		user.getAttributes().put("OAuth2Userinfo", userinfo);
+		return user;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
 	public AuthUser createOAuthUser(String connection, String subject) {
 		String uid = Constants.SNOWFLAKE.nextIdStr();
 		UserMongo mongo = UserMongo.builder()
@@ -111,6 +133,62 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 			.clientAuthorities(Collections.emptyMap())
 			.clientResources(Collections.emptyMap())
 			.connections(Collections.singletonList(UserMongo.Connection.builder().connection(connection).subject(subject).enabled(true).createdAt(LocalDateTime.now()).build()))
+			.build();
+
+		mongo = mongoTemplate.insert(mongo, Mongo.Collection.USER);
+		return principal(mongo);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public AuthUser createOAuthUser(String connection, WechatWebUserinfo userinfo) {
+		String uid = Constants.SNOWFLAKE.nextIdStr();
+
+		UserMongo.Connection userConnection = UserMongo.Connection.builder()
+			.connection(connection)
+			.subject(userinfo.subject())
+			.info(userinfo)
+			.enabled(true)
+			.createdAt(LocalDateTime.now())
+			.build();
+
+		UserMongo mongo = UserMongo.builder()
+			.uid(uid)
+			.username(uid)
+			.name(userinfo.getNickname())
+			.avatarUrl(userinfo.getHeadimgurl())
+			.clientRoles(Collections.emptyMap())
+			.clientDepartments(Collections.emptyMap())
+			.clientAuthorities(Collections.emptyMap())
+			.clientResources(Collections.emptyMap())
+			.connections(Collections.singletonList(userConnection))
+			.build();
+
+		mongo = mongoTemplate.insert(mongo, Mongo.Collection.USER);
+		return principal(mongo);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public AuthUser createOAuthUser(String connection, GithubUserinfo userinfo) {
+		String uid = Constants.SNOWFLAKE.nextIdStr();
+
+		UserMongo.Connection userConnection = UserMongo.Connection.builder()
+			.connection(connection)
+			.subject(userinfo.subject())
+			.info(userinfo)
+			.enabled(true)
+			.createdAt(LocalDateTime.now())
+			.build();
+
+		UserMongo mongo = UserMongo.builder()
+			.uid(uid)
+			.username(uid)
+			.name(userinfo.getName())
+			.avatarUrl(userinfo.getAvatarUrl())
+			.clientRoles(Collections.emptyMap())
+			.clientDepartments(Collections.emptyMap())
+			.clientAuthorities(Collections.emptyMap())
+			.clientResources(Collections.emptyMap())
+			.connections(Collections.singletonList(userConnection))
 			.build();
 
 		mongo = mongoTemplate.insert(mongo, Mongo.Collection.USER);

@@ -4,6 +4,7 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.server2.Constant;
+import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.OAuthUserinfo;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
