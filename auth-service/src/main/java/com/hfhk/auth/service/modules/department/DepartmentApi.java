@@ -1,5 +1,6 @@
 package com.hfhk.auth.service.modules.department;
 
+import com.hfhk.auth.modules.department.*;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class DepartmentApi {
 	@PostMapping("/Find")
 	@PreAuthorize("isAuthenticated()")
 	public List<Department> find(@AuthenticationPrincipal AuthPrincipal principal,
-                                 @RequestBody DepartmentFindParam param) {
+								 @RequestBody DepartmentFindParam param) {
 		String client = principal.getClient();
 
 		return departmentService.find(client, param);

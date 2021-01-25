@@ -5,7 +5,6 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.modules.resource.ResourceTreeNode;
-import com.hfhk.auth.domain.role.*;
 import com.hfhk.auth.modules.role.*;
 import com.hfhk.auth.service.constants.Constant;
 import com.hfhk.auth.service.modules.resource.ResourceConverter;

@@ -4,7 +4,6 @@ import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.domain.user.*;
 import com.hfhk.auth.modules.user.*;
 import com.hfhk.cairo.core.Constants;
 import com.hfhk.cairo.core.page.Page;

@@ -4,7 +4,6 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.ResourceMongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
-import com.hfhk.auth.domain.resource.*;
 import com.hfhk.auth.modules.resource.*;
 import com.hfhk.auth.service.constants.Constant;
 import com.hfhk.cairo.core.auth.RoleConstant;

@@ -1,6 +1,5 @@
 package com.hfhk.auth.service.modules.resource;
 
-import com.hfhk.auth.domain.resource.*;
 import com.hfhk.auth.modules.resource.*;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;

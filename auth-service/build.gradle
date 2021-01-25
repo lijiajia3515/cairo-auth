@@ -41,12 +41,13 @@ dependencies {
   // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
 
   // cairo
+  implementation project(':auth-common')
+  implementation project(':auth-domain')
   implementation "com.hfhk.cairo.starter:cairo-starter-mongo:${cairoVersion}"
   implementation("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
     exclude group: "com.hfhk.auth", module: "auth-client"
   }
-  implementation project(':auth-common')
-  implementation project(':auth-domain')
+
 
   // test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
