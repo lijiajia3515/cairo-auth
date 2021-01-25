@@ -30,6 +30,7 @@ public class HfhkUserService extends AbstractPrincipalService implements UserDet
 			Sort.Order.asc(UserMongo.FIELD.METADATA.LAST_MODIFIED.AT),
 			Sort.Order.asc(UserMongo.FIELD._ID)
 		));
-		return principal(query).map(x -> x.setType(AuthType.Password)).orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
+		return principal(query).map(x -> x.setType(AuthType.Password))
+			.orElseThrow(() -> new UsernameNotFoundException("用户名或密码错误"));
 	}
 }
