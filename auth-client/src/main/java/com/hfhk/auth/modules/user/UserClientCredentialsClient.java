@@ -1,7 +1,5 @@
-package com.hfhk.auth.client;
+package com.hfhk.auth.modules.user;
 
-import com.hfhk.auth.modules.user.User;
-import com.hfhk.auth.modules.user.UserFindParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@FeignClient(name = "service-auth-v1", path = "/User", contextId = "serviceAuthV1UserClientCredentialClient")
+@FeignClient(name = "service-auth-v1", path = "/User", contextId = "service-auth-v1-user-clientCredential-client")
 public interface UserClientCredentialsClient {
 
 	/**

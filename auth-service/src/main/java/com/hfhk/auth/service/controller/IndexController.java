@@ -1,4 +1,4 @@
-package com.hfhk.auth.service.modules.index;
+package com.hfhk.auth.service.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -10,13 +10,13 @@ import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping
-public class IndexApi {
+public class IndexController {
 
 	private final String applicationName;
 
 	private final ServerProperties server;
 
-	public IndexApi(@Value("${spring.application.name}") String applicationName, ServerProperties properties) {
+	public IndexController(@Value("${spring.application.name}") String applicationName, ServerProperties properties) {
 		this.applicationName = applicationName;
 		this.server = properties;
 	}
