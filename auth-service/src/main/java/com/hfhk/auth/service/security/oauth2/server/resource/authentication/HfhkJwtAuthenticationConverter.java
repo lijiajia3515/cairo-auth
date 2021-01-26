@@ -6,10 +6,10 @@ import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.service.constants.Redis;
 
-import com.hfhk.cairo.core.auth.RoleConstant;
 import com.hfhk.cairo.domain.auth.Department;
 import com.hfhk.cairo.domain.auth.Role;
 import com.hfhk.cairo.domain.auth.User;
+import com.hfhk.cairo.security.SecurityConstants;
 import com.hfhk.cairo.security.authentication.RemoteUser;
 import com.hfhk.cairo.security.oauth2.server.resource.authentication.CairoAuthentication;
 import com.hfhk.cairo.security.oauth2.user.AuthPrincipal;
@@ -119,7 +119,7 @@ public class HfhkJwtAuthenticationConverter implements Converter<Jwt, AbstractAu
 					.getOrDefault(client, Collections.emptySet());
 
 
-				boolean isAdmin = roleCodes.contains(RoleConstant.ADMIN);
+				boolean isAdmin = roleCodes.contains(SecurityConstants.Role.ADMIN);
 				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(roleCodes)), RoleMongo.class);
 				Stream<String> roleStream = Stream.concat(Stream.of("USER"), roles.parallelStream().map(RoleMongo::getCode))
 					.map("ROLE_"::concat);
