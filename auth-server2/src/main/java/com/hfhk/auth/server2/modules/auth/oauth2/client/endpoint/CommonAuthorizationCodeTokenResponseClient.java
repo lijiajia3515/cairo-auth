@@ -15,6 +15,7 @@ public class CommonAuthorizationCodeTokenResponseClient implements OAuth2AccessT
 	public CommonAuthorizationCodeTokenResponseClient() {
 		WechatWebOAuth2AuthorizationCodeTokenResponseClient wechatWeb = new WechatWebOAuth2AuthorizationCodeTokenResponseClient();
 		client.put("wechat-web", wechatWeb);
+		client.put("wechat-open", wechatWeb);
 	}
 
 	@Override

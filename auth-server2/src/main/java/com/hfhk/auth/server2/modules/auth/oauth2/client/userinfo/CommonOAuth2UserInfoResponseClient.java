@@ -12,6 +12,7 @@ public class CommonOAuth2UserInfoResponseClient implements OAuthUserInfoResponse
 
 	public CommonOAuth2UserInfoResponseClient() {
 		clients.put("wechat-web", new WechatWebOAuth2UserinfoResponseClient());
+		clients.put("wechat-open", new WechatWebOAuth2UserinfoResponseClient());
 		clients.put("github", new GithubOAuthUserinfoResponseClient());
 	}
 

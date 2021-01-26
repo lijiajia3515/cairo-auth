@@ -13,6 +13,7 @@ public class CommonOAuth2UserRequestEntityConverter implements Converter<OAuth2U
 
 	public CommonOAuth2UserRequestEntityConverter() {
 		converters.put("wechat-web", new WechatWebOAuth2UserRequestEntityConverter());
+		converters.put("wechat-open", new WechatWebOAuth2UserRequestEntityConverter());
 	}
 
 	@Override

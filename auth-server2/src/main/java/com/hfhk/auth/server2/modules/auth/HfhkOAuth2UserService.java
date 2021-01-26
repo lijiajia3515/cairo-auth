@@ -3,6 +3,7 @@ package com.hfhk.auth.server2.modules.auth;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.modules.auth.AuthType;
+import com.hfhk.auth.server2.modules.auth.oauth2.client.OAuth2ProviderConnection;
 import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.*;
 import com.hfhk.cairo.core.CoreConstants;
 import org.springframework.core.convert.converter.Converter;
@@ -64,7 +65,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 				for (String authority : token.getScopes()) {
 					authorities.add(new SimpleGrantedAuthority("SCOPE_" + authority));
 				}
-				String connection = userRequest.getClientRegistration().getRegistrationId();
+				String connection = OAuth2ProviderConnection.connection(userRequest.getClientRegistration().getRegistrationId());
 				String subject = userinfo.subject();
 
 				Query query = Query.query(Criteria
