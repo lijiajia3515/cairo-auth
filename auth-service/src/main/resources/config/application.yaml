@@ -118,7 +118,7 @@ feign:
             request-interceptors:
               - com.hfhk.cairo.feign.interceptor.ClientOAuth2RequestInterceptor
               -
-          serviceSystemV1-fileRequest-client:
+          serviceSystemV1-file-request-client:
             logger-level: FULL
             request-interceptors:
               - com.hfhk.cairo.feign.interceptor.RequestOAuth2RequestInterceptor
