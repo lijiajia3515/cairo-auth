@@ -1,6 +1,7 @@
 package com.hfhk.auth.server2.modules.auth.oauth2.client;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -10,6 +11,10 @@ public enum OAuth2ProviderConnection {
 	Github("github"),
 	Ali("alipay");
 	public final Set<String> REGISTRATIONS;
+
+	OAuth2ProviderConnection() {
+		this.REGISTRATIONS = Collections.emptySet();
+	}
 
 	OAuth2ProviderConnection(String... registrations) {
 		this.REGISTRATIONS = Stream.of(registrations).collect(Collectors.toSet());
