@@ -2,7 +2,7 @@ package com.hfhk.auth.server2.modules.client;
 
 import com.hfhk.auth.domain.mongo.ClientMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
-import com.hfhk.cairo.core.Constants;
+import com.hfhk.cairo.core.CoreConstants;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -43,7 +43,7 @@ public class ClientService {
 	public Optional<RegisteredClient> save(RegisteredClient client) {
 		return Optional.ofNullable(client)
 			.map(Converter::convert)
-			.map(x -> x.setId(null).setClientId(Constants.SNOWFLAKE.nextIdStr()).setClientSecret(Constants.SNOWFLAKE.nextIdStr()))
+			.map(x -> x.setId(null).setClientId(CoreConstants.SNOWFLAKE.nextIdStr()).setClientSecret(CoreConstants.SNOWFLAKE.nextIdStr()))
 			.map(x -> mongoTemplate.insert(x, Mongo.Collection.CLIENT))
 			.map(Converter::convert);
 	}

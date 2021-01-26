@@ -6,8 +6,8 @@ import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.modules.resource.*;
 import com.hfhk.auth.service.constants.Constant;
-import com.hfhk.cairo.core.auth.RoleConstant;
 import com.hfhk.cairo.core.tree.TreeConverter;
+import com.hfhk.cairo.security.SecurityConstants;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -63,7 +63,7 @@ public class ResourceService {
 					.flatMap(clientRoles -> Optional.ofNullable(clientRoles.get(client)))
 					.filter(roleCodes -> !roleCodes.isEmpty())
 					.flatMap(codes -> {
-						if (!codes.contains(RoleConstant.ADMIN)) {
+						if (!codes.contains(SecurityConstants.Role.ADMIN)) {
 							Query roleQuery = Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(codes));
 							Stream<String> roleResources = mongoTemplate.find(roleQuery, RoleMongo.class, Mongo.Collection.ROLE)
 								.stream()
@@ -211,7 +211,7 @@ public class ResourceService {
 		);
 
 		return Optional.ofNullable(resource)
-			.map(x-> {
+			.map(x -> {
 				Set<ResourceMongo> contents = findSubsByIds(client, Collections.singleton(id));
 				List<ResourceTreeNode> list = buildTree(contents, id);
 				return ResourceConverter.resourceTreeNodeMapper(x).setSubs(list);

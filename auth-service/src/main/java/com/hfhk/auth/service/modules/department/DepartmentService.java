@@ -3,7 +3,7 @@ package com.hfhk.auth.service.modules.department;
 import com.hfhk.auth.domain.mongo.DepartmentMongo;
 import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.modules.department.*;
-import com.hfhk.cairo.core.Constants;
+import com.hfhk.cairo.core.CoreConstants;
 import com.hfhk.cairo.core.page.Page;
 import com.hfhk.cairo.core.tree.TreeConverter;
 import org.springframework.data.domain.Sort;
@@ -48,7 +48,7 @@ public class DepartmentService {
 			.parent(param.getParentId())
 			.name(param.getName())
 			.build();
-		mongo.getMetadata().setSort(Constants.SNOWFLAKE.nextId());
+		mongo.getMetadata().setSort(CoreConstants.SNOWFLAKE.nextId());
 
 		mongo = mongoTemplate.insert(mongo);
 

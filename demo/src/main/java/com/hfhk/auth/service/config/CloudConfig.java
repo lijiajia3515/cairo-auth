@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableDiscoveryClient
 @EnableFeignClients(
 	basePackages = {
-		"com.hfhk.**.client"
+            "com.hfhk.auth.modules.auth.client"
 	}
 )
 

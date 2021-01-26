@@ -4,7 +4,7 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.modules.auth.AuthType;
 import com.hfhk.auth.server2.modules.auth.oauth2.client.userinfo.*;
-import com.hfhk.cairo.core.Constants;
+import com.hfhk.cairo.core.CoreConstants;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -124,7 +124,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 
 	@Transactional(rollbackFor = Exception.class)
 	public AuthUser createOAuthUser(String connection, String subject) {
-		String uid = Constants.SNOWFLAKE.nextIdStr();
+		String uid = CoreConstants.SNOWFLAKE.nextIdStr();
 		UserMongo mongo = UserMongo.builder()
 			.uid(uid)
 			.username(uid)
@@ -141,7 +141,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 
 	@Transactional(rollbackFor = Exception.class)
 	public AuthUser createOAuthUser(String connection, WechatWebUserinfo userinfo) {
-		String uid = Constants.SNOWFLAKE.nextIdStr();
+		String uid = CoreConstants.SNOWFLAKE.nextIdStr();
 
 		UserMongo.Connection userConnection = UserMongo.Connection.builder()
 			.connection(connection)
@@ -169,7 +169,7 @@ public class HfhkOAuth2UserService extends AbstractPrincipalService implements O
 
 	@Transactional(rollbackFor = Exception.class)
 	public AuthUser createOAuthUser(String connection, GithubUserinfo userinfo) {
-		String uid = Constants.SNOWFLAKE.nextIdStr();
+		String uid = CoreConstants.SNOWFLAKE.nextIdStr();
 
 		UserMongo.Connection userConnection = UserMongo.Connection.builder()
 			.connection(connection)

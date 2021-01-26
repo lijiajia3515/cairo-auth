@@ -5,7 +5,7 @@ import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.domain.mongo.RoleMongo;
 import com.hfhk.auth.domain.mongo.UserMongo;
 import com.hfhk.auth.modules.user.*;
-import com.hfhk.cairo.core.Constants;
+import com.hfhk.cairo.core.CoreConstants;
 import com.hfhk.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public User reg(@Validated UserSaveParam param) {
 		UserMongo data = UserMongo.builder()
-			.uid(Constants.SNOWFLAKE.nextIdStr())
+			.uid(CoreConstants.SNOWFLAKE.nextIdStr())
 			.name(Strings.isEmpty(param.getName()) ? param.getName() : param.getUsername())
 			.username(param.getUsername())
 			.phoneNumber(param.getPhoneNumber())
@@ -78,7 +78,7 @@ public class UserService {
 	@Transactional(rollbackFor = Exception.class)
 	public User save(@NotNull String client, @Validated UserSaveParam param) {
 		UserMongo data = UserMongo.builder()
-			.uid(Constants.SNOWFLAKE.nextIdStr())
+			.uid(CoreConstants.SNOWFLAKE.nextIdStr())
 			.name(Strings.isEmpty(param.getName()) ? param.getName() : param.getUsername())
 			.username(param.getUsername())
 			.phoneNumber(param.getPhoneNumber())
@@ -135,7 +135,7 @@ public class UserService {
 
 		UserMongo updateUser = mongoTemplate.findAndModify(query, update, UserMongo.class, Mongo.Collection.USER);
 		log.debug("[user][password reset] result -> {}", updateUser);
-		return Optional.ofNullable(updateUser).map(x->password);
+		return Optional.ofNullable(updateUser).map(x -> password);
 	}
 
 	/**

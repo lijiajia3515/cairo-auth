@@ -10,6 +10,7 @@ import com.hfhk.auth.service.constants.Constant;
 import com.hfhk.auth.service.modules.resource.ResourceConverter;
 import com.hfhk.cairo.core.exception.UnknownBusinessException;
 import com.hfhk.cairo.core.page.Page;
+import com.hfhk.cairo.security.SecurityConstants;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 @Service
 public class RoleService {
 
-	public final Collection<String> UNMODIFIABLE_ROLE_CODES = Collections.singletonList(Constant.Role.ADMIN);
+	public final Collection<String> UNMODIFIABLE_ROLE_CODES = Collections.singletonList(SecurityConstants.Role.ADMIN);
 
 	private final MongoTemplate mongoTemplate;
 
