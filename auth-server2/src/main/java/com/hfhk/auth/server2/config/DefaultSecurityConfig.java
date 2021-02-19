@@ -1,18 +1,15 @@
 package com.hfhk.auth.server2.config;
 
-import com.hfhk.auth.domain.mongo.Mongo;
 import com.hfhk.auth.server2.modules.auth.HfhkAuthSuccessHandler;
 import com.hfhk.auth.server2.modules.auth.HfhkOAuth2UserService;
 import com.hfhk.auth.server2.modules.auth.HfhkUserService;
 import com.hfhk.auth.server2.modules.auth.oauth2.client.endpoint.CommonAuthorizationCodeTokenResponseClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -45,6 +42,7 @@ public class DefaultSecurityConfig {
 		http
 			//.csrf().disable()
 			.authorizeRequests(requests -> requests
+				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/**").authenticated()
