@@ -1,13 +1,12 @@
 repositories {
 
   maven {
- //   url 'https://maven.aliyun.com/repository/public'
-    url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    url 'https://maven.aliyun.com/repository/public'
   }
 
   maven {
-//    url 'https://maven.aliyun.com/repository/spring'
-    http://maven.aliyun.com/nexus/content/groups/public/
+    url 'https://maven.aliyun.com/repository/spring'
+   
   }
   maven {
     url 'https://repo.spring.io/libs-milestone'
