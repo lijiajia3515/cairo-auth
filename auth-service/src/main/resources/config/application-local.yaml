@@ -1,6 +1,6 @@
 hfhk:
   auth:
-    server: auth.hfhksoft.com
+    server: localhost
     client:
       id: hfhk_auth
       secret: hfhk_auth
@@ -14,12 +14,17 @@ hfhk:
     port: 27017
     username: hfhk
     password: Hfhk.1320.
+  redis:
+    database: 10
+    host: 192.168.30.21
+    port: 6379
+    password: Hfhk-!@#-1230.
   consul:
     host: 192.168.30.22
     port: 8500
     discovery:
-      instance-zone: hfhk
-      instance-group: hfhk
+      instance-zone: local
+      instance-group: local
 
 server:
   port: 10000

@@ -32,6 +32,19 @@ spring:
       port: ${hfhk.mongo.port:27017}
       username: ${hfhk.mongo.username:hfhk}
       password: ${hfhk.mongo.password:Hfhk.1320.}
+  redis:
+    database: ${hfhk.redis.database:10}
+    host: ${hfhk.redis.host:192.168.30.21}
+    port: ${hfhk.redis.port:6379}
+    password: ${hfhk.redis.password:Hfhk-!@#-1230.}
+    timeout: 10s
+    lettuce:
+      shutdown-timeout: 5000ms
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
   security:
     oauth2:
       client:

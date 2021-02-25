@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 public class DefaultSecurityConfig {
+
 	@Bean
 	@Primary
 	HfhkUserService hfhkUserServices(MongoTemplate mongoTemplate) {
@@ -23,11 +24,9 @@ public class DefaultSecurityConfig {
 	}
 
 	@Bean
-	public HfhkOAuth2UserService hfhkOAuth2UserService(MongoTemplate mongoTemplate) {
+	HfhkOAuth2UserService hfhkOAuth2UserService(MongoTemplate mongoTemplate) {
 		return new HfhkOAuth2UserService(mongoTemplate);
 	}
-
-	public
 
 	@Bean
 	PasswordEncoder hfhkPasswordEncoder() {
@@ -69,16 +68,4 @@ public class DefaultSecurityConfig {
 
 		return http.build();
 	}
-
-	//@Bean
-	//UserDetailsService users() {
-	//	UserDetails user = User.withDefaultPasswordEncoder()
-	//		.username("root")
-	//		.password("root")
-	//		.roles("USER")
-	//		.build();
-	//	return new InMemoryUserDetailsManager(user);
-	//}
-
-
 }

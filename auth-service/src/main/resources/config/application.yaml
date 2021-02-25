@@ -49,10 +49,10 @@ spring:
       password: ${Hfhk.mongo.password:Hfhk.1320.}
       authentication-database: ${hfhk.mongo.authentication-database:hfhk}
   redis:
-    database: 10
-    host: 192.168.30.21
-    port: 6379
-    password: Hfhk-!@#-1230.
+    database: ${hfhk.redis.database:10}
+    host: ${hfhk.redis.host:192.168.30.21}
+    port: ${hfhk.redis.port:6379}
+    password: ${hfhk.redis.password:Hfhk-!@#-1230.}
     timeout: 10s
     lettuce:
       shutdown-timeout: 5000ms

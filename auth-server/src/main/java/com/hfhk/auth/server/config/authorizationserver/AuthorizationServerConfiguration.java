@@ -102,8 +102,7 @@ public class AuthorizationServerConfiguration {
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 			endpoints.authenticationManager(authenticationManager)
 				.accessTokenConverter(accessTokenConverter)
-				.tokenStore(this.tokenStore)
-			;
+				.tokenStore(this.tokenStore);
 		}
 
 
