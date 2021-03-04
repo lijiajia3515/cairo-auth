@@ -4,7 +4,6 @@ spring:
   profiles:
     active:
       - local
-
   web:
     locale: zh_CN
   webflux:
