@@ -1,0 +1,30 @@
+lijiajia3515:
+  auth:
+    server: localhost
+    client:
+      id: lijiajia3515_auth
+      secret: lijiajia3515_auth
+  mongo:
+    database: lijiajia3515-auth
+    gridfs:
+      database: lijiajia3515-auth
+      bucket: lijiajia3515
+    authentication-database: admin
+    host: 192.168.30.21
+    port: 27017
+    username: lijiajia3515
+    password: 1320.
+  redis:
+    database: 10
+    host: 192.168.30.21
+    port: 6379
+    password: lijiajia3515-!@#-1230.
+  consul:
+    host: 192.168.30.22
+    port: 8500
+    discovery:
+      instance-zone: local
+      instance-group: local
+
+server:
+  port: 10000

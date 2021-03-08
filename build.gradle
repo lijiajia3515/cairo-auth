@@ -3,14 +3,14 @@ buildscript {
 }
 
 plugins {
-  id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
-  id 'org.springframework.boot' version '2.4.1' apply false
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
+  id 'org.springframework.boot' version '2.4.3' apply false
 }
 
 allprojects {
   apply from: "${rootDir}/gradle/repositories.gradle"
 
-  group = 'com.hfhk.auth'
+  group = 'com.lijiajia3515.cairo.auth'
 
   tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"

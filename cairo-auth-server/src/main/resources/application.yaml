@@ -1,0 +1,136 @@
+spring:
+  application:
+    name: auth-server-v2
+  profiles:
+    active: local
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    locale: zh_CN
+    default-property-inclusion: non_empty
+    property-naming-strategy: UPPER_CAMEL_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+      WRITE_DATES_WITH_ZONE_ID: false
+    deserialization:
+      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
+  mvc:
+    static-path-pattern: /**
+  webflux:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+  data:
+    mongodb:
+      field-naming-strategy: com.lijiajia3515.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
+      auto-index-creation: true
+      database: lijiajia3515-auth
+      authentication-database: lijiajia3515
+      host: 192.168.30.22
+      port: 27017
+      username: lijiajia3515
+      password: 1320.1320.
+
+      # database: ${lijiajia3515.mongo.database:cairo-auth}
+      # authentication-database: ${lijiajia3515.mongo.authentication-database:cairo}
+      # host: ${lijiajia3515.mongo.host:mongo}
+      # port: ${lijiajia3515.mongo.port:27017}
+      # username: ${lijiajia3515.mongo.username:root}
+      # password: ${lijiajia3515.mongo.password:root}
+
+      # uri: mongodb://${lijiajia3515.mongo.username:root}:${lijiajia3515.mongo.password:root}@${lijiajia3515.mongo.host:mongo}:${lijiajia3515.mongo.port:27017}/${lijiajia3515.mongo.database:cairo-auth}?${lijiajia3515.mongo.authentication-database:cairo}=admin
+  redis:
+    database: 0
+    host: 192.168.30.21
+    port: 6379
+    password: Hfhk-!@#-1230.
+
+    # database: ${lijiajia3515.redis.database:0}
+    # host: ${lijiajia3515.redis.host:192.168.30.22}
+    # port: ${lijiajia3515.redis.port:6379}
+    # username: ${lijiajia3515.redis.username:root}
+    # password: ${lijiajia3515.redis.password:root}
+    timeout: 10S
+    lettuce:
+      shutdown-timeout: 5000ms
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+  security:
+    oauth2:
+      client:
+        registration:
+          wechat-web:
+            provider: WECHAT-WEB
+            client-name: 微信
+            client-id: wxc8e16be9316211a1
+            client-secret: b5a161ff99e3088576f0cb37ab34175e
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_login
+          wechat-open:
+            provider: WECHAT-OPEN
+            client-name: 微信
+            client-id: wx22abd8cc8e58faff
+            client-secret: 8b7462a4373e48b00a84ce51ac13534c
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_userinfo
+          github:
+            provider: GITHUB
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Github
+          google:
+            provider: GOOGLE
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Google
+        provider:
+          WECHAT-WEB:
+            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wxc8e16be9316211a1
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-info-authentication-method: form
+            user-name-attribute: unionid
+          WECHAT-OPEN:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx22abd8cc8e58faff
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-info-authentication-method: form
+            user-name-attribute: unionid
+
+
+server:
+  port: 80
+  http2:
+    enabled: true
+  servlet:
+    encoding:
+      force: true
+  max-http-header-size: 16KB
+
+logging:
+  level:
+    root: info
+    com.lijiajia3515: debug
+    org.springframework: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: info
+  file:
+    name: /lijiajia3515/auth/server/logs/app.log
+
+lijiajia3515:
+  oauth2:
+    jwks:
+      2021:
+        public-key: MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqtA/f9FDbcqciRavsDPRlVuyTs7nLeqUQiM7bi2rOCWsAXR/BhKGo2KIdRDMY1b0OUNMQj79eGAN6F5Hl2xK7GjzN9W0P1XF7DO5zWqyZ471ENSof41eHYVn0YbyvOy9GuW07zaXcGRC5Di2O+1rIvvSg+OFgtPotVkTIfEOmtYiFSNbxCPOgR9JHoQiSLMJ103MkHvcuHRQ5GEPRplOXNgW5F6UtMEd0kz0PiukqSxqG+28PvJNPFr8wM7WEZoR4l8tNH1zj1qw9fXKlFmlKu3oz8fvj4V7HfuQTM8ZG+WfuJiKJ6wcqMieSkz7rrV3k8hwEoPdN4niMcN0Q0ks4t6ITV7UnBThkYFF4u2LmuS97RoymvscILpqOknwqx2C8Ntt8Okyc07YDoXI1oseeRBNuYp3c+kABF5tl2g1J9uLqLWfdSeUficU1YhDuwcesqH0P+N3N9biZNvKrfAnzw069dqNLGGXKSPRaESKmgWC/nh8NAvf1GfP+j+2XAWzGY8D9Uck/3/L6nvh1QBpvdRh7jcUhLdjGW1rks3++E9RDJm4L6FEk5W8S7OAABKI/3FMpHl9xqOkpWzoR5vmcOqg+bvKwN2ffe/ugXVCWI5CzQmZi79OCrYxqcF4Z+KToe1Q+dJzNy0MGPsIS5czDX9Fwo1+CyA3FgoskK3JJv8CAwEAAQ==
+        private-key: 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

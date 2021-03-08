@@ -1,0 +1,9 @@
+apply from: "${rootDir}/gradle/publish.gradle"
+
+dependencies {
+  compile "com.lijiajia3515.cairo:cairo-domain:${cairoVersion}"
+  compile "com.lijiajia3515.cairo:cairo-mongo:${cairoVersion}"
+
+  compile 'org.springframework.data:spring-data-commons'
+  compile 'org.springframework.data:spring-data-mongodb'
+}

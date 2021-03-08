@@ -1,0 +1,40 @@
+plugins {
+  id 'org.springframework.boot'
+}
+
+apply from: "${rootDir}/gradle/devtools.gradle"
+
+dependencies {
+  compile project(":cairo-auth-common")
+  compile project(":cairo-auth-domain")
+
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+  implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+  implementation "org.apache.commons:commons-pool2"
+  implementation "org.springframework.boot:spring-boot-starter-data-redis"
+
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.security.experimental:spring-security-oauth2-authorization-server:0.1.0'
+
+
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+  implementation "com.lijiajia3515.cairo.starter:cairo-starter-mongo:${cairoVersion}"
+  implementation("com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}") {
+    exclude group: "com.lijiajia3515.cairo.auth", module: "cairo-auth-client"
+  }
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+bootJar {
+  archiveFileName = "app.${archiveExtension.get()}"
+}

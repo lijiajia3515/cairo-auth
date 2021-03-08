@@ -16,14 +16,14 @@ dependencies {
   // security
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-  implementation 'org.springframework.cloud:spring-cloud-starter-security'
-  implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+  // implementation 'org.springframework.cloud:spring-cloud-starter-security'
+  // implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 
-  implementation ("com.hfhk.cairo.starter:cairo-starter-service:${cairoVersion}") {
-    exclude group: "com.hfhk.auth", module: "auth-client"
+  implementation ("com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}") {
+    exclude group: "com.lijiajia3515.cairo.auth", module: "auth-client"
   }
-  implementation project(':auth-client')
-  implementation project(':auth-domain')
+  implementation project(':cairo-auth-client')
+  implementation project(':cairo-auth-domain')
 
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
   implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'

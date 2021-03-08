@@ -1,0 +1,9 @@
+apply from: "${rootDir}/gradle/publish.gradle"
+
+dependencies {
+  compile "com.lijiajia3515.cairo:cairo-client:${cairoVersion}"
+
+  compile project(":cairo-auth-domain")
+
+}
+

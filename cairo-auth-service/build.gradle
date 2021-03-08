@@ -1,0 +1,64 @@
+plugins {
+  id 'org.springframework.boot'
+}
+
+apply from: "${rootDir}/gradle/devtools.gradle"
+
+dependencies {
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter"
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+
+  // data
+  implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
+  implementation "org.springframework.boot:spring-boot-starter-data-redis"
+  implementation "org.apache.commons:commons-pool2"
+
+  // boot
+  implementation "org.springframework.boot:spring-boot-starter-hateoas"
+  implementation "org.springframework.boot:spring-boot-starter-validation"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation 'org.springframework.session:spring-session-core'
+
+  // security
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  // implementation 'org.springframework.cloud:spring-cloud-starter-security'
+  // implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+
+  // routing
+  implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+  implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+  implementation 'io.github.openfeign:feign-okhttp'
+
+  // discovery
+
+  implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+  // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery"
+  // implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config"
+
+  // cairo
+  implementation project(':cairo-auth-common')
+  implementation project(':cairo-auth-domain')
+  implementation "com.lijiajia3515.cairo.starter:cairo-starter-mongo:${cairoVersion}"
+  implementation("com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}") {
+    exclude group: "com.lijiajia3515.cairo.auth", module: "auth-client"
+  }
+
+
+  // test
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+  testImplementation 'io.projectreactor:reactor-test'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+bootJar {
+  archiveFileName = "app.${archiveExtension.get()}"
+}

@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: auth-server-v2
+  profiles:
+    active: local
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    locale: zh_CN
+    default-property-inclusion: non_empty
+    property-naming-strategy: UPPER_CAMEL_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: false
+      WRITE_DATES_WITH_ZONE_ID: false
+    deserialization:
+      ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
+  mvc:
+    static-path-pattern: /**
+  webflux:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+  data:
+    mongodb:
+      field-naming-strategy: com.lijiajia3515.cairo.mongo.data.mapping.model.UpperCamelCaseFieldNamingStrategy
+      auto-index-creation: true
+      database: ${lijiajia3515.mongo.database:cairo-auth}
+      authentication-database: ${lijiajia3515.mongo.authentication-database:cairo}
+      host: ${lijiajia3515.mongo.host:mongo}
+      port: ${lijiajia3515.mongo.port:27017}
+      username: ${lijiajia3515.mongo.username:root}
+      password: ${lijiajia3515.mongo.password:root}
+  redis:
+    database: ${lijiajia3515.redis.database:0}
+    host: ${lijiajia3515.redis.host:192.168.30.22}
+    port: ${lijiajia3515.redis.port:6379}
+    # username: ${lijiajia3515.redis.username:root}
+    password: ${lijiajia3515.redis.password:root}
+    timeout: 10S
+    lettuce:
+      shutdown-timeout: 5000ms
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+  security:
+    oauth2:
+      client:
+        registration:
+          wechat-web:
+            provider: WECHAT-WEB
+            client-name: 微信
+            client-id: wxc8e16be9316211a1
+            client-secret: b5a161ff99e3088576f0cb37ab34175e
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_login
+          wechat-open:
+            provider: WECHAT-OPEN
+            client-name: 微信
+            client-id: wx22abd8cc8e58faff
+            client-secret: 8b7462a4373e48b00a84ce51ac13534c
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - snsapi_userinfo
+          github:
+            provider: GITHUB
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Github
+          google:
+            provider: GOOGLE
+            client-id: 7e06c0a50323ab314627
+            client-secret: 7eb496e52309dfbcfab3862af52610a9377d05bb
+            client-name: Google
+        provider:
+          WECHAT-WEB:
+            authorization-uri: https://open.weixin.qq.com/connect/qrconnect?appid=wxc8e16be9316211a1
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-info-authentication-method: form
+            user-name-attribute: unionid
+          WECHAT-OPEN:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx22abd8cc8e58faff
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-info-authentication-method: form
+            user-name-attribute: unionid
+
+
+server:
+  port: 80
+  http2:
+    enabled: true
+  servlet:
+    encoding:
+      force: true
+  max-http-header-size: 16KB
+
+logging:
+  level:
+    root: info
+    com.lijiajia3515: debug
+    org.springframework: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: info
+  file:
+    name: /lijiajia3515/auth/server/logs/app.log
+
+lijiajia3515:
+  oauth2:
+    jwks:
+      2021:
+        public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkoXza/JrhlvFE/R8i7E96YOTTBtrUigrCP//dtu4Cs6ztXrNjRpF69/iJG3FvLMdvOkPGdFjeBGCEoiG4AwfywZ7LBd/hzUB7LHUyRausKa4lLioL7Xgks9KgSycUvz4T7IFwZQHXYDQDrwmpTlo9HMyltwdq7PQxw2jxveLzxlSxl41934MsNJPOfrG6/MoYD45ngDBTeAHphnd1As3mPRZ2DHJWsPSGA3phd5n0TDYCGmvCP4jRqg4oC9SitmkqMaQ0sc7CI61456TlFN61kkEG2/wnW1RW2K+W0q7ntNn+3jAtyRKYsaHH6um/Z2hULux1f9vd9kZa+Dw3go4hQIDAQAB
+        private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCShfNr8muGW8UT9HyLsT3pg5NMG2tSKCsI//9227gKzrO1es2NGkXr3+IkbcW8sx286Q8Z0WN4EYISiIbgDB/LBnssF3+HNQHssdTJFq6wpriUuKgvteCSz0qBLJxS/PhPsgXBlAddgNAOvCalOWj0czKW3B2rs9DHDaPG94vPGVLGXjX3fgyw0k85+sbr8yhgPjmeAMFN4AemGd3UCzeY9FnYMclaw9IYDemF3mfRMNgIaa8I/iNGqDigL1KK2aSoxpDSxzsIjrXjnpOUU3rWSQQbb/CdbVFbYr5bSrue02f7eMC3JEpixocfq6b9naFQu7HV/2932Rlr4PDeCjiFAgMBAAECggEAV5txxTxIICikuF65TQjnvMRoANxwGcpcmN//zgBnlUar2rmXR2PLJNJTM3bTARWTlU1AMy6oK7VEMXKiOjnllI3GfcF7Bcui3/QgBy/huUumF34lSYmUwhLhOEUFHvWUPopxuKGamcSYIgdLkAS4hViPifYIY457KVk1cJS4alWRLgSFNTSBKUvjt3ZToKK6W7awBwZwNkJwzfDgF8L+Gin8UUnbvrM4dXJWL0PGxvZQ+FMCJD/z+c4PxmMfsPKKu8XEHWMfLUV93P5R5qSid1Em3JAXdLSX4jiZPtDkWqhCQiNkHpzQyVuCiQSTjkMY8xOWMeC0QNYtTSXNTA647QKBgQDFH8s14uHk9jUeQnWWtUfBZBqH2TRj5kyml1d6ZG/41lvT+ohyShP6TQT2KhkuXwesiajzD5Fo/Mvkk3j/j3hcGIdLfoqlTQsuJi2jELsowQ58efNBXWrEEZHJCLxnMQuKBwhKUPs5xxDwPSXGgyJ5ggKPtiheamJSmpM8Ra7C4wKBgQC+SS9ygNOKX6w6/ILjWgtE6xt4jbpHl65n/J50wfL/seqLAXEzarhNYn/+LGLQ2+sRC37vrqVmpYvNzej5kBJ2qmOv5xfLEqDjoAPMS3Io9r24Vkc1/y57tX3psNqg//YuSIyDlTZZwiRGKjDCfhVFLeM0a6usPj5w0fMbneCrdwKBgB+Zqy/mQSQ9O+Kv8L3KLciYzY/9h+KD5sHF/SYHt9OCOZJP1VPNAErd0e/Ma+D9JvPH1aexVTQpYl4wLfN6AmdxHy9BB+Tb5vDs+d/sLLSpzjKyMgbGfPkVf/NkTR+Vwy3LVs7jEIMAoHyCsO2T1BD6gIKdRvdrwntPgE7nNM7VAoGBAKJBb5b4qOkmGYuWw9kvb8qNm7gZSg1AFrSO4WL3+sfzouZzDV7lklBSPIe0u3ITBIddQRkJ1/oGEYclHJKpOkU7l5Nnv48mzFAsovByKN8rPq1PzJsLhExyfvJlHpgIipf+vup4soapGBtIYJmHv4Vk0odhhFp0HPRA4kbbQbeTAoGBAJ03GdC2zwn1pnS1GdadCY7Am+jwMkwdPrvvg/xkaQ7aHKz57v169q8gy7aLu2QLm/wNdk1Y8esfGRCoCqaTf8AiKcUvz8g1hXxXCjO9ck93GKwOUXdmL4Wf3ACn+is0wH238J5ri4dRMm/joaSCOuId/XD9Uf9ir0aefYa8LdWo
+      2020:
+        public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA06X7SybjepxGsri+9KHk7YS2SInRDmN2O7sTYiyDTlvG0H5eySLzqaCiG+ql/PFlVoo5MITTJKMgT0vdFtj/RJatcVxFIZ2rxXyNFKBpMIdy8+RM1rTm42CwycHwCjrHPPh9xvVHVeIdj3AUckB8w2p5J7LtKRXNYbsmja7/Slgkc9MJOt4MARYEsaxiIOkEQ1sjpGsRC/s4ZfFSwGRM/HtxsbEC2KZzqKB6BYBOiyVRzha+PQS4qyW8c/F/wciE0MSozB9UJKGYS5c8ZmnwK9O89hXU1jRvpDw/GQ3LwIq1tDkk3o1oApkR+Rg9p8Sge/MW+8IDCR0UhhDJ1hG9nQIDAQAB
+        private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDTpftLJuN6nEayuL70oeTthLZIidEOY3Y7uxNiLINOW8bQfl7JIvOpoKIb6qX88WVWijkwhNMkoyBPS90W2P9Elq1xXEUhnavFfI0UoGkwh3Lz5EzWtObjYLDJwfAKOsc8+H3G9UdV4h2PcBRyQHzDanknsu0pFc1huyaNrv9KWCRz0wk63gwBFgSxrGIg6QRDWyOkaxEL+zhl8VLAZEz8e3GxsQLYpnOooHoFgE6LJVHOFr49BLirJbxz8X/ByITQxKjMH1QkoZhLlzxmafAr07z2FdTWNG+kPD8ZDcvAirW0OSTejWgCmRH5GD2nxKB78xb7wgMJHRSGEMnWEb2dAgMBAAECggEBAIpjaWDGWM9/B6ssqY+DnBDCSf48PvnNhy2fMRlsSZ8e22zQdGHH/NLZOaZPU6GEpeJkFujmsLiwARxYWoPp9199toL89ib41awXuJfYG2+j4UIf8S4isyXRv0btDGtj64quYG+LSc2aQAHeI0BhcjLEl9uhXvkSTGyu1pKl7j9JGoUxWltc4gs1CjzHR6na6Y09MyXd+UVC0eZztkAwJk2y+/1lxoK4nKKam248FrG1O5XNtPnKOgOTiT6OmRWA3p0eilre1aqWlFmbjHuDZfVcCX+Z0sFGv43EkHCooaazZGk1yQxhMRIMMI/gs1NKZnRi7tEHpWCEeUIXOR/zBYECgYEA6YIaW9E2bwKrjdjouP0VFslaGcrnSYCQUuwZ5+nWqLrd/yTI6JRBhOIqU21C5LAnjtFFTB0L7Z0JId6mvGyidYIx7ygf5WtC+SjbeD+t3nl9A6xJN23/+CAJDQx/gNq77Vvx8vqWZndCtdYRYLfkU0u+Bd7ntM6m2nVyOAshfdkCgYEA6Ajain7/o3H7vpieKjhvVAOnVG9uzcMeeznQXR9NiYFi5EUo4sDZ1jbyClgnNVhBbZB9K9NFEi7vlBhEn7Poygs6DKvme08T7a5uZtedcwV2M6/Q8y0HauVotbW17C1Yw7qxhP0Q/xZn3DhVrW5xrPKYN4m7qAFi+tH8Dl5ab2UCgYAbyMVGI5CsiM7M5ABc8pAt0+uKoh//GPMTStCSTbqi/QkpMMFPG0TogNi0cI3DFErArZnnQpWGwmaxxwJj7TEvdjxmzoltDOQ9LWVf24PesunzI+7aT5ZjebxZ9yC8vkoaJhSV6sc2jf48EKqkrXzXhG2p2SoM04H7AHqEvJ5RkQKBgQDCObcFOy0tWVoKvqGWYcr+nlhQmz46ylsXdtttN6ils0JeJW4F8LvnTfLoqcWYJ5oM5meAacZlZBhy9KVssSHpDeC3fqTdDuJ1kA8l0tIe17GLrl3PUB/nYMR3ZfU0DvlATWQPF+5EODMT6av+Enbg9+hmhMop5Y8+uMquFFjK6QKBgHqtFXMJNCjoxkDc+tTzOuoZmI14qABwUUy/N+JCD/ZB7l4H4T0D+LbpeomPtc/CcAmWMdk7hXbCkecZVGfhKFE3HVMJFHm47+n3G/QvzVZce6IzgioA1NmeukHcRqncRkrGmLE5zgKjLR3+7+VaXPE0nEu8bshLspIe/yC6EMnw

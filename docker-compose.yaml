@@ -1,0 +1,41 @@
+version: '3.7'
+
+networks:
+  cairo:
+    internal: true
+
+services:
+  redis:
+    image: redis:6.2.1-alpine
+    entrypoint: redis-server /etc/redis/redis.conf
+    tty: true
+    volumes:
+      - /lijiajia3515/base/redis/conf:/etc/redis
+      - /lijiajia3515/base/redis/data:/data
+    stdin_open: true
+    networks:
+      cairo: { }
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+        reservations:
+          cpus: '4'
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 10
+        delay: 3s
+        order: stop-first
+      rollback_config:
+        parallelism: 1
+        delay: 3s
+        order: stop-first
+    ports:
+      - 16379:6379
+

@@ -1,0 +1,14 @@
+lijiajia3515:
+  mongo:
+    database: admin
+    authentication-database: admin
+    host: 192.168.30.22
+    port: 27017
+    username: root
+    password: 1320.
+  redis:
+    database: 0
+    host: 192.168.30.22
+    port: 6379
+    username: default
+    password: 1230.
