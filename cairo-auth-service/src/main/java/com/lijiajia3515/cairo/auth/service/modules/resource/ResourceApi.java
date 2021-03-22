@@ -1,9 +1,8 @@
 package com.lijiajia3515.cairo.auth.service.modules.resource;
 
-import com.lijiajia3515.cairo.auth.service.client.Auth2Client;
+import com.lijiajia3515.cairo.auth.modules.resource.*;
 import com.lijiajia3515.cairo.core.exception.UnknownBusinessException;
 import com.lijiajia3515.cairo.security.oauth2.user.AuthPrincipal;
-import com.lijiajia3515.cairo.auth.modules.resource.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +17,9 @@ import java.util.List;
 public class ResourceApi {
 
 	private final ResourceService resourceService;
-	private final Auth2Client authenticationClient;
 
-	public ResourceApi(ResourceService resourceService, Auth2Client authenticationClient) {
+	public ResourceApi(ResourceService resourceService) {
 		this.resourceService = resourceService;
-		this.authenticationClient = authenticationClient;
 	}
 
 	@GetMapping("/Current")

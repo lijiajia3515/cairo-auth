@@ -2,6 +2,8 @@ package com.lijiajia3515.cairo.auth.server.modules.controller;
 
 import com.lijiajia3515.cairo.auth.server.modules.auth.AuthUser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.WebAttributes;
@@ -27,7 +29,8 @@ public class IndexController {
 	}
 
 	@GetMapping("/login")
-	public String login(HttpSession session, Model model) {
+	public String login(Authentication authentication, HttpSession session, Model model) {
+		if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) return "index";
 		model.addAttribute("authenticationException", (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
 		return "login";
 	}

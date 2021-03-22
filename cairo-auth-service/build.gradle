@@ -15,6 +15,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
   implementation "org.springframework.boot:spring-boot-starter-data-redis"
   implementation "org.apache.commons:commons-pool2"
+  implementation "com.github.ben-manes.caffeine:caffeine"
 
   // boot
   implementation "org.springframework.boot:spring-boot-starter-hateoas"

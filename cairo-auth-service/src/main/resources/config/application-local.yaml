@@ -1,6 +1,6 @@
 lijiajia3515:
   auth:
-    server: http://auth.hfhksoft.com
+    server: localhost
     client:
       id: lijiajia3515_auth
       secret: lijiajia3515_auth

@@ -8,8 +8,6 @@ include 'cairo-auth-server'
 
 include 'cairo-auth-service'
 
-include 'cairo-authentication'
-
 include 'cairo-auth-client'
 
 include 'demo'

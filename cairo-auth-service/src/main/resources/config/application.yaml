@@ -89,7 +89,7 @@ security:
       client-id: ${lijiajia3515.auth.client.id:lijiajia3515_auth}
       client-secret: ${lijiajia3515.auth.client.id:lijiajia3515_auth}
       grant-type: client_credentials
-      access-token-uri: http://${lijiajia3515.auth.server:auth-server}/oauth2/token
+      access-token-uri: ${lijiajia3515.auth.server:auth-server}/oauth2/token
 
 feign:
   hystrix:
