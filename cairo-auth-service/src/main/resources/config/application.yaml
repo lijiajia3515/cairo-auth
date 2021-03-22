@@ -48,10 +48,11 @@ spring:
       password: ${lijiajia3515.mongo.password:lijiajia3515.1320.}
       authentication-database: ${lijiajia3515.mongo.authentication-database:lijiajia3515}
   redis:
-    database: ${lijiajia3515.redis.database:10}
-    host: ${lijiajia3515.redis.host:192.168.30.21}
+    database: ${lijiajia3515.redis.database:0}
+    host: ${lijiajia3515.redis.host:redis}
     port: ${lijiajia3515.redis.port:6379}
-    password: ${lijiajia3515.redis.password:lijiajia3515-!@#-1230.}
+    username: ${lijiajia3515.redis.username:default}
+    password: ${lijiajia3515.redis.password:1320.1320.}
     timeout: 10s
     lettuce:
       shutdown-timeout: 5000ms
@@ -60,6 +61,7 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
+
   cloud:
     consul:
       host: ${lijiajia3515.consul.host:localhost}
@@ -107,8 +109,7 @@ feign:
         config:
           default:
             logger-level: FULL
-
-          serviceAuthV1-auth-basic-client:
+          authenticationClient:
             logger-level: FULL
             request-interceptors:
               - com.lijiajia3515.cairo.feign.interceptor.BasicRequestInterceptor
@@ -116,7 +117,6 @@ feign:
             logger-level: FULL
             request-interceptors:
               - com.lijiajia3515.cairo.feign.interceptor.ClientOAuth2RequestInterceptor
-              -
           serviceSystemV1-file-request-client:
             logger-level: FULL
             request-interceptors:
@@ -144,4 +144,8 @@ logging:
     root: info
     com.lijiajia3515: debug
   file:
-    name: /lijiajia3515/auth/service/logs/lijiajia3515.log
+    name: /lijiajia3515/auth/service/logs/app.log
+
+lijiajia3515:
+  auth:
+    server: http://auth.hfhksoft.com

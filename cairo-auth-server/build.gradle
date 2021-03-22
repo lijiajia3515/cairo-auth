@@ -5,10 +5,10 @@ plugins {
 apply from: "${rootDir}/gradle/devtools.gradle"
 
 dependencies {
-  compile project(":cairo-auth-common")
-  compile project(":cairo-auth-domain")
-
   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+  implementation "org.springframework.boot:spring-boot-starter"
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
 
   implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
   implementation "org.apache.commons:commons-pool2"
@@ -23,9 +23,14 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
   implementation "com.lijiajia3515.cairo.starter:cairo-starter-mongo:${cairoVersion}"
-  implementation("com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}") {
-    exclude group: "com.lijiajia3515.cairo.auth", module: "cairo-auth-client"
-  }
+  implementation "com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}"
+
+  implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+  implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+  implementation 'io.github.openfeign:feign-okhttp'
+
+  compile project(":cairo-auth-common")
+  compile project(":cairo-auth-domain")
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.security:spring-security-test'

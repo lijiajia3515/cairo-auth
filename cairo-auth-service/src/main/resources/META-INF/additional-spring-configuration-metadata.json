@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "lijiajia3515.auth.server",
+      "type": "java.lang.String",
+      "description": "Description for lijiajia3515.auth.server."
+    }
+  ]
+}

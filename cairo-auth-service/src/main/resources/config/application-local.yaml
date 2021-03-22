@@ -1,6 +1,6 @@
 lijiajia3515:
   auth:
-    server: localhost
+    server: http://auth.hfhksoft.com
     client:
       id: lijiajia3515_auth
       secret: lijiajia3515_auth
@@ -9,16 +9,17 @@ lijiajia3515:
     gridfs:
       database: lijiajia3515-auth
       bucket: lijiajia3515
-    authentication-database: admin
-    host: 192.168.30.21
+    authentication-database: lijiajia3515
+    host: 192.168.30.22
     port: 27017
     username: lijiajia3515
-    password: 1320.
+    password: lijiajia3515
   redis:
-    database: 10
-    host: 192.168.30.21
+    database: 1
+    host: 192.168.30.22
     port: 6379
-    password: lijiajia3515-!@#-1230.
+    username: lijiajia3515
+    password: lijiajia3515
   consul:
     host: 192.168.30.22
     port: 8500

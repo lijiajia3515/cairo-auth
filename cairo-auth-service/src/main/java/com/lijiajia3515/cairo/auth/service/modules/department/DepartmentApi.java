@@ -1,5 +1,6 @@
 package com.lijiajia3515.cairo.auth.service.modules.department;
 
+import com.lijiajia3515.cairo.auth.modules.auth.client.AuthenticationClient;
 import com.lijiajia3515.cairo.core.page.Page;
 import com.lijiajia3515.cairo.security.oauth2.user.AuthPrincipal;
 import com.lijiajia3515.cairo.auth.modules.department.*;

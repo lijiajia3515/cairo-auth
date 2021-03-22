@@ -1,17 +1,11 @@
 package com.lijiajia3515.cairo.auth.service.config;
 
 
-import com.lijiajia3515.cairo.auth.service.security.oauth2.server.resource.authentication.HfhkJwtAuthenticationConverter;
-import com.lijiajia3515.cairo.security.authentication.RemoteUser;
 import com.lijiajia3515.cairo.security.oauth2.server.resource.web.CairoBearerTokenAccessDeniedHandler;
 import com.lijiajia3515.cairo.security.oauth2.server.resource.web.CairoBearerTokenAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.lijiajia3515.cairo.starter.service.security.oauth2.server.resource.authentication.CairoJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -28,18 +22,19 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
 											CairoBearerTokenAuthenticationEntryPoint entryPoint,
 											CairoBearerTokenAccessDeniedHandler accessDeniedHandler,
-											HfhkJwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
+											CairoJwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
 		http
 			.csrf().disable()
-			.authorizeRequests(authorizeRequests -> authorizeRequests
-				// root
-				.mvcMatchers("/").permitAll()
-				// health
-				.mvcMatchers("/actuator/**").permitAll()
-				// test
-				.mvcMatchers("/test/**").permitAll()
-				// default
-				.mvcMatchers("/**").authenticated()
+			.authorizeRequests(authorizeRequests ->
+				authorizeRequests
+					// root
+					.mvcMatchers("/").permitAll()
+					// health
+					.mvcMatchers("/actuator/**").permitAll()
+					// test
+					.mvcMatchers("/test/**").permitAll()
+					// default
+					.mvcMatchers("/**").authenticated()
 			)
 			.oauth2ResourceServer()
 			.authenticationEntryPoint(entryPoint)
@@ -70,14 +65,12 @@ public class SecurityConfig {
 
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> {
-			web.ignoring().antMatchers("/webjars/**");
-		};
+		return (web) -> web.ignoring().antMatchers("/webjars/**");
 	}
 
 
 	@Bean
-	public PasswordEncoder hfhkPasswordEncoder() {
+	public PasswordEncoder cairoPasswordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 

@@ -20,6 +20,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "lijiajia3515.oauth2")
 @Configuration
 public class OAuth2JwkProperties {
+	private String issuer;
 	private Map<String, Item> jwks;
 
 	@Data
