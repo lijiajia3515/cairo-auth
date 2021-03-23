@@ -19,8 +19,8 @@ ENV LC_ALL C.UTF-8
 ENV SPRING_PROFILES_ACTIVE docker
 
 
-WORKDIR /${WORKDIR:hfhk}/auth/server
-VOLUME /${WORKDIR:hfhk}/auth/server/logs
+WORKDIR /hfhk/auth/server
+VOLUME /hfhk/auth/server/logs
 
 ENTRYPOINT java -jar app.jar
 
