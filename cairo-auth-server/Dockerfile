@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM registry.cn-beijing.aliyuncs.com/lijiajia/java:11-jre-slim
 
 MAINTAINER lijiajia
 
