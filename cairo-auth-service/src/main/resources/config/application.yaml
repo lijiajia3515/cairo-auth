@@ -1,6 +1,6 @@
 spring:
   application:
-    name: service-auth-v1
+    name: service-auth-v2
   profiles:
     active:
       - local
@@ -108,6 +108,10 @@ feign:
             logger-level: FULL
             request-interceptors:
               - com.lijiajia3515.cairo.feign.interceptor.BasicRequestInterceptor
+          userV1Client:
+            logger-level: FULL
+            request-interceptors:
+              - org.springframework.cloud.openfeign.security.OAuth2FeignRequestInterceptor
           serviceAuthV1-user-clientCredentials-client:
             logger-level: FULL
             request-interceptors:

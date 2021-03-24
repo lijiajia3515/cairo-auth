@@ -3,7 +3,10 @@ hfhk:
     server: auth.hfhksoft.com
     client:
       id: hfhk_auth
-      secret: hfhk_auth
+      client-id:
+      client-secret: hfhk_auth
+      scopes:
+        - default
   nacos:
     server-addr: 192.168.30.21:8848
     discovery:

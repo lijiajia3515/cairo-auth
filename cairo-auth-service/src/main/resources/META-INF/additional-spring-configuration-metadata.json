@@ -4,6 +4,16 @@
       "name": "lijiajia3515.auth.server",
       "type": "java.lang.String",
       "description": "Description for lijiajia3515.auth.server."
+    },
+    {
+      "name": "lijiajia3515.auth.client.id",
+      "type": "java.lang.String",
+      "description": "Description for lijiajia3515.auth.client.id."
+    },
+    {
+      "name": "lijiajia3515.auth.client.secret",
+      "type": "java.lang.String",
+      "description": "Description for lijiajia3515.auth.client.secret."
     }
   ]
 }

@@ -2,8 +2,11 @@ lijiajia3515:
   auth:
     server: auth2.hfhksoft.com
     client:
-      id: lijiajia3515_auth
-      secret: lijiajia3515_auth
+      id: hfhk_auth
+      client-id: hfhk_auth
+      client-secret: hfhk_auth
+      scopes:
+        - default
   mongo:
     database: lijiajia3515-auth
     gridfs:
