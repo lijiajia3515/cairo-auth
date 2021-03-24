@@ -1,4 +1,4 @@
-package com.lijiajia3515.cairo.auth.server.security.oauth2.server.resource.authentication;
+package com.lijiajia3515.cairo.auth.server.framework.oauth2.resourceserver.jwt.authentication;
 
 import com.lijiajia3515.auth.domain.mongo.Mongo;
 import com.lijiajia3515.auth.domain.mongo.ResourceMongo;
@@ -30,9 +30,9 @@ import java.util.stream.Stream;
 
 public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 	private final MongoTemplate mongoTemplate;
-	private final RedisTemplate<String, RemoteUser> redisTemplate;
+	private final RedisTemplate<String, Object> redisTemplate;
 
-	public CairoJwtAuthenticationConverter(MongoTemplate mongoTemplate, RedisTemplate<String, RemoteUser> redisTemplate) {
+	public CairoJwtAuthenticationConverter(MongoTemplate mongoTemplate, RedisTemplate<String, Object> redisTemplate) {
 		this.mongoTemplate = mongoTemplate;
 		this.redisTemplate = redisTemplate;
 	}
@@ -42,7 +42,7 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 		String client = source.getAudience().stream().findFirst().orElse("default");
 		String uid = Optional.ofNullable(source.getSubject()).orElse("default");
 		String key = Redis.UserInfo.key(client, uid);
-		RemoteUser remoteUser = Optional.ofNullable(redisTemplate.opsForValue().get(key))
+		RemoteUser remoteUser = Optional.ofNullable((RemoteUser) redisTemplate.opsForValue().get(key))
 			.orElseGet(() -> {
 				Collection<String> authorities = findDbUserAuthority(uid, client);
 				User user = findDbUser(uid, client).orElse(null);

@@ -1,6 +1,5 @@
 package com.lijiajia3515.cairo.auth.service.config;
 
-import com.lijiajia3515.cairo.security.authentication.RemoteUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +38,7 @@ public class RedisConfig {
 
 		template.setValueSerializer(valueRedisSerializer);
 		template.setHashValueSerializer(valueRedisSerializer);
-
+		template.afterPropertiesSet();
 		return template;
 	}
 }

@@ -46,6 +46,13 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
+  session:
+    store-type: redis
+    timeout: 30D
+    redis:
+      namespace: ${spring.application.name}:session
+
+
   security:
     oauth2:
       client:
@@ -94,15 +101,21 @@ spring:
             user-info-authentication-method: form
             user-name-attribute: unionid
 
-
 server:
   port: 80
-  http2:
-    enabled: true
+  max-http-header-size: 8KB
   servlet:
+    application-display-name: ${spring.application.name}
     encoding:
       force: true
-  max-http-header-size: 16KB
+    session:
+      cookie:
+        name: cairo
+        max-age: 30D
+        path: /
+        comment: token
+  http2:
+    enabled: true
 
 logging:
   level:

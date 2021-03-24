@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 @Configuration
-public class HfhkExceptionHandler {
+public class CairoExceptionHandler {
 
 
 }

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.time.Duration;
 
 @Configuration
-public class CairoWebMvcConfigurer implements WebMvcConfigurer {
+public class WebConfigurer implements WebMvcConfigurer {
 
 	/**
 	 * 设置系统资源允许跨域访问

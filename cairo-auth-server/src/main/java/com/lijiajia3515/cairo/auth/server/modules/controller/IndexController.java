@@ -19,12 +19,14 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping
 public class IndexController {
+
 	@GetMapping
 	public String index(@AuthenticationPrincipal AuthUser user,
 						HttpServletRequest request,
+						HttpSession session,
 						Model model) {
-
 		model.addAttribute("user", user);
+		session.setAttribute("A", "user");
 		return "index";
 	}
 

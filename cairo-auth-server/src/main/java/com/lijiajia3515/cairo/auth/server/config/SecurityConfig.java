@@ -4,53 +4,47 @@ import com.lijiajia3515.cairo.auth.server.modules.auth.CairoAuthSuccessHandler;
 import com.lijiajia3515.cairo.auth.server.modules.auth.CairoOAuth2UserService;
 import com.lijiajia3515.cairo.auth.server.modules.auth.CairoUserService;
 import com.lijiajia3515.cairo.auth.server.modules.auth.oauth2.client.endpoint.CommonAuthorizationCodeTokenResponseClient;
-import com.lijiajia3515.cairo.auth.server.security.oauth2.server.resource.authentication.CairoJwtAuthenticationConverter;
+import com.lijiajia3515.cairo.auth.server.framework.oauth2.resourceserver.jwt.authentication.CairoJwtAuthenticationConverter;
 import com.lijiajia3515.cairo.security.authentication.RemoteUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
-public class CairoSecurityConfig {
+public class SecurityConfig {
 
-	@Configuration
-	public static class SecurityOAuth2Config {
-		@Bean
-		RedisTemplate<String, RemoteUser> stringRemoteUserRedisTemplate(
-			RedisConnectionFactory factory,
-			@Qualifier("keyRedisSerializer") RedisSerializer<?> keyRedisSerializer,
-			@Qualifier("objectValueRedisSerializer") RedisSerializer<?> valueRedisSerializer) {
-			final RedisTemplate<String, RemoteUser> template = new RedisTemplate<>();
-			template.setConnectionFactory(factory);
+//	@Bean
+//	RedisTemplate<String, Object> stringRemoteUserRedisTemplate(
+//		RedisConnectionFactory factory,
+//		@Qualifier("keyRedisSerializer") RedisSerializer<?> keyRedisSerializer,
+//		@Qualifier("objectValueRedisSerializer") RedisSerializer<?> valueRedisSerializer) {
+//		final RedisTemplate<String, Object> template = new RedisTemplate<>();
+//		template.setConnectionFactory(factory);
+//
+//		template.setKeySerializer(keyRedisSerializer);
+//		template.setHashKeySerializer(keyRedisSerializer);
+//
+//		template.setValueSerializer(valueRedisSerializer);
+//		template.setHashValueSerializer(valueRedisSerializer);
+//
+//		template.afterPropertiesSet();
+//		return template;
+//	}
 
-			template.setKeySerializer(keyRedisSerializer);
-			template.setHashKeySerializer(keyRedisSerializer);
-
-			template.setValueSerializer(valueRedisSerializer);
-			template.setHashValueSerializer(valueRedisSerializer);
-
-			return template;
-		}
-
-		@Bean
-		@Primary
-		public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter(MongoTemplate mongoTemplate, RedisTemplate<String, RemoteUser> redisTemplate) {
-			return new CairoJwtAuthenticationConverter(mongoTemplate, redisTemplate);
-		}
+	@Bean
+	@Primary
+	public CairoJwtAuthenticationConverter jwtAuthenticationConverter(MongoTemplate mongoTemplate, RedisTemplate<String, Object> redisTemplate) {
+		return new CairoJwtAuthenticationConverter(mongoTemplate, redisTemplate);
 	}
 
 	@Bean
@@ -71,12 +65,12 @@ public class CairoSecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
-											CairoUserService hfhkUserService,
+											CairoUserService cairoUserService,
 											CairoOAuth2UserService oAuth2UserService,
 											CairoJwtAuthenticationConverter jwtAuthenticationConverter,
 											CairoAuthSuccessHandler successHandler) throws Exception {
 		http
-			//.csrf().disable()
+			.csrf().disable()
 			.authorizeRequests(requests -> requests
 				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.mvcMatchers("/actuator/**").permitAll()
@@ -104,7 +98,7 @@ public class CairoSecurityConfig {
 				config.logoutSuccessUrl("/")
 					.permitAll())
 			.rememberMe(config ->
-				config.userDetailsService(hfhkUserService))
+				config.userDetailsService(cairoUserService))
 			.exceptionHandling(config -> {
 
 			});

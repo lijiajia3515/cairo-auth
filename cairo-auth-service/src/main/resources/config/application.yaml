@@ -13,11 +13,6 @@ spring:
     multipart:
       max-file-size: 1GB
       max-request-size: 1GB
-  session:
-    timeout: 7D
-    store-type: none
-    mongodb:
-      collection-name: sessions
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -30,6 +25,11 @@ spring:
       WRITE_DATES_WITH_ZONE_ID: false
     deserialization:
       ADJUST_DATES_TO_CONTEXT_TIME_ZONE: false
+  session:
+    timeout: 30D
+    store-type: redis
+    redis:
+      namespace: ${spring.application.name}:session
   security:
     oauth2:
       resourceserver:
@@ -61,7 +61,6 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
-
   cloud:
     consul:
       host: ${lijiajia3515.consul.host:localhost}
@@ -75,25 +74,21 @@ spring:
           - v1
 server:
   port: 80
+  max-http-header-size: 8KB
   http2:
     enabled: true
   servlet:
+    application-display-name: ${spring.application.name}
     encoding:
       force: true
+    session:
+      cookie:
+        name: cairo
+        path: /
+        comment: token
 
-
-security:
-  oauth2:
-    client:
-      id: ${random.value}
-      client-id: ${lijiajia3515.auth.client.id:lijiajia3515_auth}
-      client-secret: ${lijiajia3515.auth.client.id:lijiajia3515_auth}
-      grant-type: client_credentials
-      access-token-uri: ${lijiajia3515.auth.server:auth-server}/oauth2/token
 
 feign:
-  hystrix:
-    enabled: true
   okhttp:
     enabled: true
   httpclient:
