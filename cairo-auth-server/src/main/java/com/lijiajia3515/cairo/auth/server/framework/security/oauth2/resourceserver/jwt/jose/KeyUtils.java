@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lijiajia3515.cairo.auth.server.jose;
+package com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.jose;
 
 import cn.hutool.core.util.IdUtil;
 import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
 import org.springframework.util.Base64Utils;
 
 import java.security.*;
@@ -29,7 +27,6 @@ import java.security.spec.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

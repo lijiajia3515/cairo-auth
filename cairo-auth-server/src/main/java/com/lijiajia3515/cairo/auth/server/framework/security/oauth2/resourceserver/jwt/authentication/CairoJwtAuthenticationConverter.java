@@ -1,4 +1,4 @@
-package com.lijiajia3515.cairo.auth.server.framework.oauth2.resourceserver.jwt.authentication;
+package com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.authentication;
 
 import com.lijiajia3515.auth.domain.mongo.Mongo;
 import com.lijiajia3515.auth.domain.mongo.ResourceMongo;

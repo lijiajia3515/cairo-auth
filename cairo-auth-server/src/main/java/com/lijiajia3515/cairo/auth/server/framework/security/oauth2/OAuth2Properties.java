@@ -1,4 +1,4 @@
-package com.lijiajia3515.cairo.auth.server.framework.oauth2;
+package com.lijiajia3515.cairo.auth.server.framework.security.oauth2;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +19,9 @@ import java.util.Map;
 
 @ConfigurationProperties(prefix = "lijiajia3515.oauth2")
 @Configuration
-public class OAuth2JwkProperties {
+public class OAuth2Properties {
 	private String issuer;
-	private Map<String, Item> jwks;
+	private Jwk jwk;
 
 	@Data
 
@@ -29,7 +29,8 @@ public class OAuth2JwkProperties {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Builder
-	public static class Item {
+	public static class Jwk {
+		private String id;
 		private String publicKey;
 		private String privateKey;
 	}

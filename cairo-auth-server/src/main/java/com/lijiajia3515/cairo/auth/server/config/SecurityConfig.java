@@ -4,15 +4,11 @@ import com.lijiajia3515.cairo.auth.server.modules.auth.CairoAuthSuccessHandler;
 import com.lijiajia3515.cairo.auth.server.modules.auth.CairoOAuth2UserService;
 import com.lijiajia3515.cairo.auth.server.modules.auth.CairoUserService;
 import com.lijiajia3515.cairo.auth.server.modules.auth.oauth2.client.endpoint.CommonAuthorizationCodeTokenResponseClient;
-import com.lijiajia3515.cairo.auth.server.framework.oauth2.resourceserver.jwt.authentication.CairoJwtAuthenticationConverter;
-import com.lijiajia3515.cairo.security.authentication.RemoteUser;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.authentication.CairoJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -74,6 +70,7 @@ public class SecurityConfig {
 			.authorizeRequests(requests -> requests
 				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.mvcMatchers("/actuator/**").permitAll()
+				.mvcMatchers("/oauth2/**").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/authentication").permitAll()
 				.mvcMatchers("/**").authenticated()
