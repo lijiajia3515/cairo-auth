@@ -1,9 +1,9 @@
 package com.lijiajia3515.cairo.auth.server.config;
 
-import com.lijiajia3515.cairo.auth.server.modules.auth.CairoAuthSuccessHandler;
-import com.lijiajia3515.cairo.auth.server.modules.auth.CairoOAuth2UserService;
-import com.lijiajia3515.cairo.auth.server.modules.auth.CairoUserService;
-import com.lijiajia3515.cairo.auth.server.modules.auth.oauth2.client.endpoint.CommonAuthorizationCodeTokenResponseClient;
+import com.lijiajia3515.cairo.auth.server.framework.security.web.authentication.CairoAuthSuccessHandler;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.client.userinfo.CairoOAuth2UserService;
+import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.CairoUserService;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.core.http.converter.CommonAuthorizationCodeTokenResponseClient;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.authentication.CairoJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;

@@ -1,6 +1,6 @@
 package com.lijiajia3515.cairo.auth.server.modules.controller;
 
-import com.lijiajia3515.cairo.auth.server.modules.auth.AuthUser;
+import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

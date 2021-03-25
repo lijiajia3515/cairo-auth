@@ -1,9 +1,12 @@
 package com.lijiajia3515.cairo.auth.server.config;
 
 import cn.hutool.core.codec.Base64Decoder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.OAuth2Properties;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.jose.Jwks;
-import com.lijiajia3515.cairo.auth.server.modules.auth.CairoRegisteredClientRepository;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.server.authorization.RedisOAuth2AuthorizationService;
+import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.server.authorization.client.CairoRegisteredClientRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -15,10 +18,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
@@ -44,8 +49,16 @@ public class AuthorizationServerConfig {
 	}
 
 	@Bean
-	public OAuth2AuthorizationService oAuth2AuthorizationService() {
-		return new InMemoryOAuth2AuthorizationService();
+	public OAuth2AuthorizationService oAuth2AuthorizationService(RedisConnectionFactory factory) {
+		RedisOAuth2AuthorizationService oAuth2AuthorizationService = new RedisOAuth2AuthorizationService(factory);
+		oAuth2AuthorizationService.setNamespace("auth-server:authorization");
+		return oAuth2AuthorizationService;
+	}
+
+
+	@Bean
+	public HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenResponseHttpMessageConverter(ObjectMapper objectMapper) {
+		return new OAuth2AccessTokenResponseHttpMessageConverter(objectMapper);
 	}
 
 	@Bean

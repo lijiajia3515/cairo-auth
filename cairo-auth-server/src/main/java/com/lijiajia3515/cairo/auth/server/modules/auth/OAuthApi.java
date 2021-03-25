@@ -1,8 +1,9 @@
-package com.lijiajia3515.cairo.auth.server.modules;
+package com.lijiajia3515.cairo.auth.server.modules.auth;
 
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.AuthUser;
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.CairoUserService;
-import com.lijiajia3515.cairo.auth.server.modules.auth.PasswordParam;
+import com.lijiajia3515.cairo.core.exception.BusinessException;
+import com.lijiajia3515.cairo.security.status.AuthBusiness;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
@@ -25,15 +26,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
-@RequestMapping("/oauth2")
 @RestController
-public class PasswordApi {
+@RequestMapping("/oauth2")
+public class OAuthApi {
 	private final RegisteredClientRepository registeredClientRepository;
 	private final CairoUserService cairoUserService;
 	private final OAuth2AuthorizationService authorizationService;
 	private final StringKeyGenerator codeGenerator = new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 96);
 
-	public PasswordApi(RegisteredClientRepository registeredClientRepository, CairoUserService cairoUserService, OAuth2AuthorizationService authorizationService) {
+	public OAuthApi(RegisteredClientRepository registeredClientRepository, CairoUserService cairoUserService, OAuth2AuthorizationService authorizationService) {
 		this.registeredClientRepository = registeredClientRepository;
 		this.cairoUserService = cairoUserService;
 		this.authorizationService = authorizationService;
@@ -43,6 +44,9 @@ public class PasswordApi {
 	@PermitAll
 	public Object passwordToken(@RequestBody PasswordParam param) {
 		AuthUser authUser = cairoUserService.loadUserByUsername(param.getUsername());
+		if (authUser == null) {
+			throw new BusinessException(AuthBusiness.AccessBad);
+		}
 		UsernamePasswordAuthenticationToken principal = new UsernamePasswordAuthenticationToken(authUser, "N/A", authUser.getAuthorities());
 
 		Instant issuedAt = Instant.now();
@@ -71,4 +75,5 @@ public class PasswordApi {
 		authorizationService.save(authorization);
 		return authorizationCode;
 	}
+
 }
