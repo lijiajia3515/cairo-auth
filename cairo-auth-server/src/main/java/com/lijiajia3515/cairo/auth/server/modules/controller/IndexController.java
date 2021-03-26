@@ -42,5 +42,4 @@ public class IndexController {
 		return "logout";
 	}
 
-
 }
