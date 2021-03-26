@@ -1,6 +1,6 @@
 package com.lijiajia3515.cairo.auth.server.modules.client;
 
-import com.lijiajia3515.auth.domain.mongo.ClientMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ClientMongo;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;

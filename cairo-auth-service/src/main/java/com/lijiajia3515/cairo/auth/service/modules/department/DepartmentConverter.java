@@ -2,7 +2,7 @@ package com.lijiajia3515.cairo.auth.service.modules.department;
 
 import com.lijiajia3515.cairo.auth.modules.department.Department;
 import com.lijiajia3515.cairo.auth.modules.department.DepartmentTreeNode;
-import com.lijiajia3515.auth.domain.mongo.DepartmentMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.DepartmentMongo;
 
 import java.util.Optional;
 

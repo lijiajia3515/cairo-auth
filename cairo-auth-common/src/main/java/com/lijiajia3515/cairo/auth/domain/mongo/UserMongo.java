@@ -1,4 +1,4 @@
-package com.lijiajia3515.auth.domain.mongo;
+package com.lijiajia3515.cairo.auth.domain.mongo;
 
 import com.lijiajia3515.cairo.mongo.data.Metadata;
 import com.lijiajia3515.cairo.mongo.data.mapping.model.AbstractMongoField;

@@ -1,11 +1,10 @@
 package com.lijiajia3515.cairo.auth.service.modules.department;
 
-import com.lijiajia3515.auth.domain.mongo.DepartmentMongo;
-import com.lijiajia3515.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.DepartmentMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
 import com.lijiajia3515.cairo.core.CoreConstants;
 import com.lijiajia3515.cairo.core.page.Page;
 import com.lijiajia3515.cairo.core.tree.TreeConverter;
-import com.lijiajia3515.cairo.auth.modules.department.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

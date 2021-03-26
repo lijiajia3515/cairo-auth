@@ -1,12 +1,11 @@
 package com.lijiajia3515.cairo.auth.service.modules.user;
 
-import com.lijiajia3515.auth.domain.mongo.DepartmentMongo;
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.RoleMongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.DepartmentMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.core.CoreConstants;
 import com.lijiajia3515.cairo.core.page.Page;
-import com.lijiajia3515.cairo.auth.modules.user.*;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;

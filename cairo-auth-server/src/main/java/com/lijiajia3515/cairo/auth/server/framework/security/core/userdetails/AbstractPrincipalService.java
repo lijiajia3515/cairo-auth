@@ -1,9 +1,9 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails;
 
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.ResourceMongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
-import com.lijiajia3515.cairo.auth.server.AuthServerConstant;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ResourceMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.server.AuthServerConstants;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -28,13 +28,13 @@ public abstract class AbstractPrincipalService {
 	}
 
 	public AuthUser principal(UserMongo user) {
-		Set<String> roleCodes = Optional.ofNullable(user.getClientRoles()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstant.CLIENT, Collections.emptySet());
-		Set<String> resourceCodes = Optional.ofNullable(user.getClientResources()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstant.CLIENT, Collections.emptySet());
-		Set<String> departmentCodes = Optional.ofNullable(user.getClientDepartments()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstant.CLIENT, Collections.emptySet());
+		Set<String> roleCodes = Optional.ofNullable(user.getClientRoles()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstants.CLIENT, Collections.emptySet());
+		Set<String> resourceCodes = Optional.ofNullable(user.getClientResources()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstants.CLIENT, Collections.emptySet());
+		Set<String> departmentCodes = Optional.ofNullable(user.getClientDepartments()).orElse(Collections.emptyMap()).getOrDefault(AuthServerConstants.CLIENT, Collections.emptySet());
 
 		Criteria resourceCriteria = Criteria.where(ResourceMongo.FIELD.METADATA.DELETED).is(0L);
-		if (roleCodes.contains(AuthServerConstant.ROLE_ADMIN)) {
-			resourceCriteria.and(ResourceMongo.FIELD.CLIENT).is(AuthServerConstant.CLIENT);
+		if (roleCodes.contains(AuthServerConstants.ROLE_ADMIN)) {
+			resourceCriteria.and(ResourceMongo.FIELD.CLIENT).is(AuthServerConstants.CLIENT);
 		} else {
 			resourceCriteria.and(ResourceMongo.FIELD._ID).is(resourceCodes);
 		}

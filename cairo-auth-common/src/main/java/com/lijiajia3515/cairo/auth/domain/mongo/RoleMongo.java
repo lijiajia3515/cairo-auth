@@ -1,4 +1,4 @@
-package com.lijiajia3515.auth.domain.mongo;
+package com.lijiajia3515.cairo.auth.domain.mongo;
 
 import com.lijiajia3515.cairo.mongo.data.Metadata;
 import com.lijiajia3515.cairo.mongo.data.mapping.model.AbstractUpperCamelCaseField;
@@ -9,17 +9,18 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
- * 部门
+ * 角色
  */
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DepartmentMongo implements Serializable {
+public class RoleMongo implements Serializable {
 
 	/**
 	 * 标识
@@ -27,33 +28,43 @@ public class DepartmentMongo implements Serializable {
 	private String id;
 
 	/**
-	 * client
+	 * 客户端id
 	 */
 	private String client;
 
+
 	/**
-	 * 部门
+	 * code编码
 	 */
-	private String parent;
+	private String code;
 
 	/**
 	 * 名称
 	 */
 	private String name;
 
+
 	/**
-	 * 元信息
+	 * 资源id
+	 */
+	private List<String> resources;
+
+	/**
+	 * Metadata
 	 */
 	@Builder.Default
 	private Metadata metadata = new Metadata();
+
 	public static final Field FIELD = new Field();
 
-	public static final class Field extends AbstractUpperCamelCaseField {
+	public static class Field extends AbstractUpperCamelCaseField {
 		private Field() {
+
 		}
 
 		public final String CLIENT = field("Client");
-		public final String PARENT = field("Parent");
+		public final String CODE = field("Code");
 		public final String NAME = field("Name");
+		public final String RESOURCES = field("Resources");
 	}
 }

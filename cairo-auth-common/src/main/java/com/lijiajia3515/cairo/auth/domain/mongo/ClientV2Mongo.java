@@ -1,4 +1,4 @@
-package com.lijiajia3515.auth.domain.mongo;
+package com.lijiajia3515.cairo.auth.domain.mongo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

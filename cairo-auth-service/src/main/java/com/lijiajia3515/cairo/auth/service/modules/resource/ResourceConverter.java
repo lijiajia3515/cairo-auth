@@ -1,6 +1,6 @@
 package com.lijiajia3515.cairo.auth.service.modules.resource;
 
-import com.lijiajia3515.auth.domain.mongo.ResourceMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ResourceMongo;
 import com.lijiajia3515.cairo.auth.modules.resource.ResourceTreeNode;
 import com.lijiajia3515.cairo.auth.modules.resource.ResourceType;
 import com.lijiajia3515.cairo.auth.modules.resource.ResourceV1;

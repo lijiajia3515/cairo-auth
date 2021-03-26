@@ -1,7 +1,7 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.web.authentication;
 
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;

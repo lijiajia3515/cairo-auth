@@ -1,6 +1,6 @@
 package com.lijiajia3515.cairo.auth.service.modules.role;
 
-import com.lijiajia3515.auth.domain.mongo.RoleMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
 import com.lijiajia3515.cairo.auth.modules.resource.ResourceTreeNode;
 import com.lijiajia3515.cairo.auth.modules.role.Role;
 import com.lijiajia3515.cairo.auth.modules.role.RoleV2;

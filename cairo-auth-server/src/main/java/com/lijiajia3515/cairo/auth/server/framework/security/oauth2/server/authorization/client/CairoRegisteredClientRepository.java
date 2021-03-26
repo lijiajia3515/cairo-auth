@@ -1,7 +1,7 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.oauth2.server.authorization.client;
 
-import com.lijiajia3515.auth.domain.mongo.ClientMongo;
-import com.lijiajia3515.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ClientMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
 import com.lijiajia3515.cairo.auth.server.modules.client.Converter;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

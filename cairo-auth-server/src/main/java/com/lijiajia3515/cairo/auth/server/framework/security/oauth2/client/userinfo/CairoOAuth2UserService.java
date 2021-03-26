@@ -1,7 +1,7 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.oauth2.client.userinfo;
 
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.auth.modules.auth.AuthType;
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.AbstractPrincipalService;
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.AuthUser;

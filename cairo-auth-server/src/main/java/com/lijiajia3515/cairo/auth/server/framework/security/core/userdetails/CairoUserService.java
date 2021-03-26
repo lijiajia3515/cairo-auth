@@ -1,6 +1,6 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails;
 
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.auth.modules.auth.AuthType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;

@@ -1,8 +1,8 @@
 package com.lijiajia3515.cairo.auth.service.modules.user;
 
-import com.lijiajia3515.auth.domain.mongo.DepartmentMongo;
-import com.lijiajia3515.auth.domain.mongo.RoleMongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.DepartmentMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.auth.modules.user.User;
 import com.lijiajia3515.cairo.auth.service.modules.department.DepartmentConverter;
 import com.lijiajia3515.cairo.auth.service.modules.role.RoleConverter;

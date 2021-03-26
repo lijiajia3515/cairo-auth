@@ -1,8 +1,8 @@
 package com.lijiajia3515.cairo.auth.server.test;
 
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
-import com.lijiajia3515.cairo.auth.server.AuthServerConstant;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.server.AuthServerConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,18 +32,18 @@ class UserMockDataTest {
 			.email("root@haofangsoft.com")
 			.phoneNumber("root")
 			.clientRoles(new HashMap<>() {{
-				put(AuthServerConstant.CLIENT, new HashSet<>() {{
+				put(AuthServerConstants.CLIENT, new HashSet<>() {{
 					add("ADMIN");
 				}});
 			}})
 			.clientDepartments(new HashMap<>() {{
-				put(AuthServerConstant.CLIENT, Collections.emptySet());
+				put(AuthServerConstants.CLIENT, Collections.emptySet());
 			}})
 			.clientResources(new HashMap<>() {{
-				put(AuthServerConstant.CLIENT, Collections.emptySet());
+				put(AuthServerConstants.CLIENT, Collections.emptySet());
 			}})
 			.clientAuthorities(new HashMap<>() {{
-				put(AuthServerConstant.CLIENT, Collections.emptySet());
+				put(AuthServerConstants.CLIENT, Collections.emptySet());
 			}})
 			//.roleCodes(Collections.singletonList("admin"))
 			//.departmentCodes(Collections.singletonList("admin"))

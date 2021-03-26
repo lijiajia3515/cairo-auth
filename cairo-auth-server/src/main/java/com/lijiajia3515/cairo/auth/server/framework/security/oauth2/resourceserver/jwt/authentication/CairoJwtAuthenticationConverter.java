@@ -1,9 +1,9 @@
 package com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.authentication;
 
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.ResourceMongo;
-import com.lijiajia3515.auth.domain.mongo.RoleMongo;
-import com.lijiajia3515.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ResourceMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
 import com.lijiajia3515.cairo.auth.server.constants.Redis;
 import com.lijiajia3515.cairo.domain.auth.Department;
 import com.lijiajia3515.cairo.domain.auth.Role;

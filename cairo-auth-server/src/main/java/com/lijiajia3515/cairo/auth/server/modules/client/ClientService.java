@@ -1,7 +1,7 @@
 package com.lijiajia3515.cairo.auth.server.modules.client;
 
-import com.lijiajia3515.auth.domain.mongo.ClientMongo;
-import com.lijiajia3515.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ClientMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
 import com.lijiajia3515.cairo.core.CoreConstants;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;

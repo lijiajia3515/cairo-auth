@@ -1,11 +1,10 @@
 package com.lijiajia3515.cairo.auth.service.modules.role;
 
 import cn.hutool.core.util.IdUtil;
-import com.lijiajia3515.auth.domain.mongo.Mongo;
-import com.lijiajia3515.auth.domain.mongo.ResourceMongo;
-import com.lijiajia3515.auth.domain.mongo.RoleMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.ResourceMongo;
+import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
 import com.lijiajia3515.cairo.auth.modules.resource.ResourceTreeNode;
-import com.lijiajia3515.cairo.auth.modules.role.*;
 import com.lijiajia3515.cairo.auth.service.modules.resource.ResourceConverter;
 import com.lijiajia3515.cairo.core.exception.UnknownBusinessException;
 import com.lijiajia3515.cairo.core.page.Page;
