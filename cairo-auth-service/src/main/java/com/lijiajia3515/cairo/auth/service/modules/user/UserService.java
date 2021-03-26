@@ -4,6 +4,7 @@ import com.lijiajia3515.cairo.auth.domain.mongo.DepartmentMongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.modules.user.*;
 import com.lijiajia3515.cairo.core.CoreConstants;
 import com.lijiajia3515.cairo.core.page.Page;
 import com.mongodb.client.result.UpdateResult;

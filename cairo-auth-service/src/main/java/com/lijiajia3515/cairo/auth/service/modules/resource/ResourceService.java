@@ -4,6 +4,7 @@ import com.lijiajia3515.cairo.auth.domain.mongo.Mongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.ResourceMongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.RoleMongo;
 import com.lijiajia3515.cairo.auth.domain.mongo.UserMongo;
+import com.lijiajia3515.cairo.auth.modules.resource.*;
 import com.lijiajia3515.cairo.auth.service.constants.Constant;
 import com.lijiajia3515.cairo.core.tree.TreeConverter;
 import com.lijiajia3515.cairo.security.SecurityConstants;
