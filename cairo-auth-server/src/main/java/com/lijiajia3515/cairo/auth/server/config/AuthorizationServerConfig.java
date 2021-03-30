@@ -55,7 +55,6 @@ public class AuthorizationServerConfig {
 		return oAuth2AuthorizationService;
 	}
 
-
 	@Bean
 	public HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenResponseHttpMessageConverter(ObjectMapper objectMapper) {
 		return new OAuth2AccessTokenResponseHttpMessageConverter(objectMapper);

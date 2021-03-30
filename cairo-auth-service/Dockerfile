@@ -25,5 +25,5 @@ VOLUME /hfhk/auth/service/logs
 ENTRYPOINT java -jar app.jar
 
 EXPOSE 80
-HEALTHCHECK --start-period=10s --interval=30s --timeout=30s --retries=10 \
+HEALTHCHECK --start-period=3s --interval=30s --timeout=10s --retries=10 \
             CMD curl --silent --fail --request GET http://localhost/actuator/health | jq --exit-status '.status == "UP"' || exit 1

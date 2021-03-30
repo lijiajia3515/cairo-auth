@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
 //	@Bean
@@ -71,6 +73,7 @@ public class SecurityConfig {
 				.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 				.mvcMatchers("/actuator/**").permitAll()
 				.mvcMatchers("/oauth2/**").permitAll()
+				.mvcMatchers("/oauth2/password_code").permitAll()
 				.mvcMatchers("/test/**").permitAll()
 				.mvcMatchers("/authentication").permitAll()
 				.mvcMatchers("/**").authenticated()
