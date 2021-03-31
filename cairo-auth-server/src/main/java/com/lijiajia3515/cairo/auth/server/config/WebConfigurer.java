@@ -17,7 +17,7 @@ public class WebConfigurer implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		//设置允许跨域的路径
 		registry.addMapping("/**")
-			.allowedOrigins("http://localhost", "http://auth.hfhksoft.com", "http://cb.dev.hfhksoft.com")
+			.allowedOriginPatterns("*")
 			.allowCredentials(true)
 			.allowedHeaders("*")
 			.allowedMethods(HttpMethod.OPTIONS.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name())
