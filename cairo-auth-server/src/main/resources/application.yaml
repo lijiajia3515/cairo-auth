@@ -129,7 +129,7 @@ logging:
 
 lijiajia3515:
   oauth2:
-    issuer: http://auth2.hfhksoft.com
+    issuer: http://auth.hfhksoft.com
     jwk:
       id: default
       public-key: MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqtA/f9FDbcqciRavsDPRlVuyTs7nLeqUQiM7bi2rOCWsAXR/BhKGo2KIdRDMY1b0OUNMQj79eGAN6F5Hl2xK7GjzN9W0P1XF7DO5zWqyZ471ENSof41eHYVn0YbyvOy9GuW07zaXcGRC5Di2O+1rIvvSg+OFgtPotVkTIfEOmtYiFSNbxCPOgR9JHoQiSLMJ103MkHvcuHRQ5GEPRplOXNgW5F6UtMEd0kz0PiukqSxqG+28PvJNPFr8wM7WEZoR4l8tNH1zj1qw9fXKlFmlKu3oz8fvj4V7HfuQTM8ZG+WfuJiKJ6wcqMieSkz7rrV3k8hwEoPdN4niMcN0Q0ks4t6ITV7UnBThkYFF4u2LmuS97RoymvscILpqOknwqx2C8Ntt8Okyc07YDoXI1oseeRBNuYp3c+kABF5tl2g1J9uLqLWfdSeUficU1YhDuwcesqH0P+N3N9biZNvKrfAnzw069dqNLGGXKSPRaESKmgWC/nh8NAvf1GfP+j+2XAWzGY8D9Uck/3/L6nvh1QBpvdRh7jcUhLdjGW1rks3++E9RDJm4L6FEk5W8S7OAABKI/3FMpHl9xqOkpWzoR5vmcOqg+bvKwN2ffe/ugXVCWI5CzQmZi79OCrYxqcF4Z+KToe1Q+dJzNy0MGPsIS5czDX9Fwo1+CyA3FgoskK3JJv8CAwEAAQ==
