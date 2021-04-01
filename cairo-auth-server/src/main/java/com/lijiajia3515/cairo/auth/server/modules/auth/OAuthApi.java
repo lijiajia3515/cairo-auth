@@ -4,7 +4,9 @@ import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.Au
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.CairoUserService;
 import com.lijiajia3515.cairo.core.exception.BusinessException;
 import com.lijiajia3515.cairo.security.AuthBusiness;
+import com.lijiajia3515.cairo.security.exception.ClientRequiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,47 +49,50 @@ public class OAuthApi {
 	@PostMapping("/oauth2/password_code")
 	@PermitAll
 	public Object passwordToken(@RequestBody PasswordParam param) {
-		AuthUser authUser = cairoUserService.loadUserByUsername(param.getUsername());
-		if (authUser == null) {
-			throw new BusinessException(AuthBusiness.AccessBad);
+		try {
+			AuthUser authUser = cairoUserService.loadUserByUsername(param.getUsername());
+
+			if (!passwordEncoder.matches(param.getPassword(), authUser.getPassword())) {
+				throw new BusinessException(AuthBusiness.AccessBad);
+			}
+			UsernamePasswordAuthenticationToken principal = new UsernamePasswordAuthenticationToken(authUser, "N/A", authUser.getAuthorities());
+
+			Instant issuedAt = Instant.now();
+			Instant expiresAt = issuedAt.plus(60, ChronoUnit.MINUTES);
+			OAuth2AuthorizationCode authorizationCode = new OAuth2AuthorizationCode(
+				this.codeGenerator.generateKey(), issuedAt, expiresAt);
+
+			RegisteredClient client = registeredClientRepository.findByClientId(param.getClientId());
+
+			if (client == null) {
+				throw new ClientRequiredException(param.getClientId());
+			}
+
+			OAuth2AuthorizationRequest request = OAuth2AuthorizationRequest.authorizationCode()
+				.clientId(param.getClientId())
+				.authorizationUri("http://127.0.0.1/oauth2/authorize")
+				.authorizationRequestUri("http://localhost:9000")
+				.scopes(param.getScopes())
+				.state(param.getState())
+				.build();
+
+			OAuth2Authorization.Builder builder = OAuth2Authorization.withRegisteredClient(client);
+			OAuth2Authorization authorization = builder.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+				.principalName(principal.getName())
+				.token(authorizationCode)
+				.attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, param.getScopes())
+				.attribute(Principal.class.getName(), principal)
+				.attribute(OAuth2AuthorizationRequest.class.getName(), request)
+				.attribute(OAuth2ParameterNames.STATE, request.getState())
+				.build();
+
+			authorizationService.save(authorization);
+			return authorizationCode;
+		} catch (UsernameNotFoundException e) {
+			throw new BusinessException(AuthBusiness.Bad);
 		}
-		if (!passwordEncoder.matches(param.getPassword(), authUser.getPassword())) {
-			throw new BusinessException(AuthBusiness.AccessBad);
-		}
 
-		UsernamePasswordAuthenticationToken principal = new UsernamePasswordAuthenticationToken(authUser, "N/A", authUser.getAuthorities());
 
-		Instant issuedAt = Instant.now();
-		Instant expiresAt = issuedAt.plus(60, ChronoUnit.MINUTES);
-		OAuth2AuthorizationCode authorizationCode = new OAuth2AuthorizationCode(
-			this.codeGenerator.generateKey(), issuedAt, expiresAt);
-
-		RegisteredClient client = registeredClientRepository.findByClientId(param.getClientId());
-
-		if (client == null) {
-			throw new com.lijiajia3515.cairo.security.exception.ClientRequiredException(param.getClientId());
-		}
-
-		OAuth2AuthorizationRequest request = OAuth2AuthorizationRequest.authorizationCode()
-			.clientId(param.getClientId())
-			.authorizationUri("http://127.0.0.1/oauth2/authorize")
-			.authorizationRequestUri("http://localhost:9000")
-			.scopes(param.getScopes())
-			.state(param.getState())
-			.build();
-
-		OAuth2Authorization.Builder builder = OAuth2Authorization.withRegisteredClient(client);
-		OAuth2Authorization authorization = builder.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-			.principalName(principal.getName())
-			.token(authorizationCode)
-			.attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, param.getScopes())
-			.attribute(Principal.class.getName(), principal)
-			.attribute(OAuth2AuthorizationRequest.class.getName(), request)
-			.attribute(OAuth2ParameterNames.STATE, request.getState())
-			.build();
-
-		authorizationService.save(authorization);
-		return authorizationCode;
 	}
 
 }
