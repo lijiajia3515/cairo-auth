@@ -92,7 +92,6 @@ public class OAuthApi {
 			throw new BusinessException(AuthBusiness.Bad);
 		}
 
-
 	}
 
 }
