@@ -7,7 +7,7 @@ lijiajia3515:
     username: hfhk
     password: Hfhk.1320.
   redis:
-    database: 0
+    database: 1
     host: 192.168.30.22
     port: 6379
     username: hfhk
