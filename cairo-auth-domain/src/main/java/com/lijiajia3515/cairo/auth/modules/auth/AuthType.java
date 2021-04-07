@@ -1,6 +1,8 @@
 package com.lijiajia3515.cairo.auth.modules.auth;
 
-public enum AuthType {
+import java.io.Serializable;
+
+public enum AuthType implements Serializable {
 	Password,
 	PhoneNumber,
 	OAuth2,

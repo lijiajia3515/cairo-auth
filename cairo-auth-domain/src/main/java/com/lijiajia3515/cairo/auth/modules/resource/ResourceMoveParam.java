@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Data
@@ -15,7 +16,7 @@ import java.util.Collection;
 @AllArgsConstructor
 
 @Builder
-public class ResourceMoveParam {
+public class ResourceMoveParam implements Serializable {
 	/**
 	 * 要移动的 id
 	 */

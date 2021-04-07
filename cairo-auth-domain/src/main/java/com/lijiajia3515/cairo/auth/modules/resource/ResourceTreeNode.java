@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResourceTreeNode implements TreeNode<String, ResourceTreeNode> {
+public class ResourceTreeNode implements TreeNode<String, ResourceTreeNode>, Serializable {
 	/**
 	 * id
 	 */

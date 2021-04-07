@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Metadata {
+public class Metadata implements Serializable {
 	private Action created;
 	private Action lastModified;
 
@@ -25,7 +26,7 @@ public class Metadata {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Builder
-	public static class Action {
+	public static class Action implements Serializable {
 		private User user;
 		private LocalDateTime at;
 	}
