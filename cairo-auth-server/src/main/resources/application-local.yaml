@@ -1,4 +1,5 @@
 lijiajia3515:
+  workdir: /hfhk/auth/server
   mongo:
     database: hfhk-auth
     authentication-database: hfhk

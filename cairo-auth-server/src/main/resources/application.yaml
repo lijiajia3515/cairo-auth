@@ -103,6 +103,9 @@ spring:
 
 server:
   port: 80
+
+  http2:
+    enabled: true
   max-http-header-size: 8KB
   servlet:
     application-display-name: ${spring.application.name}
@@ -111,11 +114,10 @@ server:
     session:
       cookie:
         name: cairo
-        max-age: 30D
         path: /
+        max-age: 30D
         comment: token
-  http2:
-    enabled: true
+
 
 logging:
   level:
@@ -125,7 +127,7 @@ logging:
     org.springframework.security: info
     org.springframework.security.oauth2: info
   file:
-    name: /lijiajia3515/auth/server/logs/app.log
+    name: ${lijiajia3515.workdir:/lijiajia3515/auth/server}/logs/app.log
 
 lijiajia3515:
   oauth2:

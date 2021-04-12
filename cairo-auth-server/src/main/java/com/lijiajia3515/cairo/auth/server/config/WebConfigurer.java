@@ -20,7 +20,7 @@ public class WebConfigurer implements WebMvcConfigurer {
 			.allowedOriginPatterns("*")
 			.allowCredentials(true)
 			.allowedHeaders("*")
-			.allowedMethods(HttpMethod.OPTIONS.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name())
+			.allowedMethods(HttpMethod.OPTIONS.name(), HttpMethod.TRACE.name(), HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name())
 			//跨域允许时间
 			.maxAge(Duration.ofDays(30).toSeconds());
 	}
