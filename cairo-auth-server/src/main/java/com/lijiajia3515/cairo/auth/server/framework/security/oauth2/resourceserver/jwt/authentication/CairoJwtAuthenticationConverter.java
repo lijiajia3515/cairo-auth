@@ -147,6 +147,7 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 
 				return Stream.concat(roleStream, resourceStream);
 			})
+			.filter(x -> x != null && !x.isBlank())
 			.collect(Collectors.toSet());
 	}
 }
