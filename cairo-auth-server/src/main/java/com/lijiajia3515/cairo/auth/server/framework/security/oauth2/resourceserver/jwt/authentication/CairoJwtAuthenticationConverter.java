@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+	private static final Set<String> DEFAULT_AUTHORITIES = Collections.singleton("DEFAULT");
+	private static final String ROLE_PREFIX = "ROLE_";
 	private final MongoTemplate mongoTemplate;
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -70,6 +72,7 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 	private Optional<User> findDbUser(String uid, String client) {
 		return Optional.ofNullable(mongoTemplate.findOne(Query.query(Criteria.where(UserMongo.FIELD.UID).is(uid)), UserMongo.class, Mongo.Collection.USER))
 			.map(x -> {
+				// 角色code
 				Set<String> roleCodes = Optional.ofNullable(x.getClientRoles())
 					.map(y -> y.getOrDefault(client, Collections.emptySet()))
 					.orElse(Collections.emptySet());
@@ -80,6 +83,7 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 				List<Role> roles = roleCodes.stream()
 					.map(y -> Role.builder().id(y).name(y).build())
 					.collect(Collectors.toList());
+
 				List<Department> departments = departmentCodes.stream()
 					.map(y -> Department.builder().id(y).name(y).build())
 					.collect(Collectors.toList());
@@ -112,16 +116,13 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 					.orElse(Collections.emptyMap())
 					.getOrDefault(client, Collections.emptySet());
 
-
 				Set<String> userResourceIds = Optional.ofNullable(user.getClientResources())
 					.orElse(Collections.emptyMap())
 					.getOrDefault(client, Collections.emptySet());
 
-
 				boolean isAdmin = roleCodes.contains(SecurityConstants.Role.ADMIN);
 				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(roleCodes)), RoleMongo.class);
-				Stream<String> roleStream = Stream.concat(Stream.of("USER"), roles.parallelStream().map(RoleMongo::getCode))
-					.map("ROLE_"::concat);
+				Set<String> roleAuthorities = roles.parallelStream().map(RoleMongo::getCode).map(ROLE_PREFIX::concat).collect(Collectors.toSet());
 				Criteria resourceCriteria = new Criteria();
 				if (isAdmin) {
 					resourceCriteria.and(ResourceMongo.FIELD.CLIENT).is(client);
@@ -140,14 +141,16 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 
 				Query resourceQuery = Query.query(resourceCriteria);
 
-				Stream<String> resourceStream = mongoTemplate.find(resourceQuery, ResourceMongo.class, Mongo.Collection.RESOURCE)
+				Set<String> resourceAuthorities = mongoTemplate.find(resourceQuery, ResourceMongo.class, Mongo.Collection.RESOURCE)
 					.stream()
-					.flatMap(x -> Optional.ofNullable(x.getPermissions()).stream())
-					.flatMap(Collection::parallelStream);
+					.flatMap(x -> Optional.ofNullable(x.getPermissions())
+						.stream()
+						.flatMap(Collection::parallelStream)
+						.filter(permission -> permission != null && permission.isBlank()))
+					.collect(Collectors.toSet());
 
-				return Stream.concat(roleStream, resourceStream);
+				return Stream.of(DEFAULT_AUTHORITIES, roleAuthorities, resourceAuthorities).flatMap(Collection::parallelStream);
 			})
-			.filter(x -> x != null && !x.isBlank())
 			.collect(Collectors.toSet());
 	}
 }
