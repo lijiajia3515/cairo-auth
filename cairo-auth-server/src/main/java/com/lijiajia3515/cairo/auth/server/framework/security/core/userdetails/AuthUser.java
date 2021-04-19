@@ -92,7 +92,11 @@ public class AuthUser implements OAuth2User, UserDetails {
 
 	@Override
 	public String getUsername() {
-		return username;
+		return getUid();
+	}
+
+	public String getLoginName(){
+		return getUsername();
 	}
 
 	@Override
