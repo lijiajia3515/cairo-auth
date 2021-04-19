@@ -117,8 +117,8 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 					.getOrDefault(client, Collections.emptySet());
 
 				Set<String> userResourceIds = Optional.ofNullable(user.getClientResources())
-					.orElse(Collections.emptyMap())
-					.getOrDefault(client, Collections.emptySet());
+					.map(x-> x.getOrDefault(client, Collections.emptySet()))
+					.orElse(Collections.emptySet());
 
 				boolean isAdmin = roleCodes.contains(SecurityConstants.Role.ADMIN);
 				List<RoleMongo> roles = mongoTemplate.find(Query.query(Criteria.where(RoleMongo.FIELD.CODE).in(roleCodes)), RoleMongo.class);
@@ -145,11 +145,12 @@ public class CairoJwtAuthenticationConverter implements Converter<Jwt, AbstractA
 					.stream()
 					.flatMap(x -> Optional.ofNullable(x.getPermissions())
 						.stream()
-						.flatMap(Collection::parallelStream)
-						.filter(permission -> permission != null && permission.isBlank()))
+						.flatMap(Collection::parallelStream))
 					.collect(Collectors.toSet());
 
-				return Stream.of(DEFAULT_AUTHORITIES, roleAuthorities, resourceAuthorities).flatMap(Collection::parallelStream);
+				return Stream.of(DEFAULT_AUTHORITIES, roleAuthorities, resourceAuthorities)
+					.flatMap(Collection::parallelStream)
+					.filter(permission -> permission != null && !permission.isBlank());
 			})
 			.collect(Collectors.toSet());
 	}
