@@ -1,10 +1,12 @@
 package com.lijiajia3515.cairo.auth.server.config;
 
-import com.lijiajia3515.cairo.auth.server.framework.security.web.authentication.CairoAuthSuccessHandler;
+import com.lijiajia3515.cairo.auth.server.framework.security.web.authentication.CairoAuthenticationFailureHandler;
+import com.lijiajia3515.cairo.auth.server.framework.security.web.authentication.CairoAuthenticationSuccessHandler;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.client.userinfo.CairoOAuth2UserService;
 import com.lijiajia3515.cairo.auth.server.framework.security.core.userdetails.CairoUserService;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.core.http.converter.CommonAuthorizationCodeTokenResponseClient;
 import com.lijiajia3515.cairo.auth.server.framework.security.oauth2.resourceserver.jwt.authentication.CairoJwtAuthenticationConverter;
+import com.lijiajia3515.cairo.auth.server.framework.security.web.authentication.CairoSimpleUrlAuthenticationFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -61,12 +63,13 @@ public class SecurityConfig {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
+
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
 											CairoUserService cairoUserService,
 											CairoOAuth2UserService oAuth2UserService,
 											CairoJwtAuthenticationConverter jwtAuthenticationConverter,
-											CairoAuthSuccessHandler successHandler) throws Exception {
+											CairoAuthenticationSuccessHandler successHandler) throws Exception {
 		http
 			.csrf().disable()
 			.authorizeRequests(requests -> requests
@@ -80,7 +83,9 @@ public class SecurityConfig {
 			)
 			.formLogin(config -> config.loginPage("/login")
 				.permitAll()
-				.successHandler(successHandler))
+				.successHandler(successHandler)
+				.failureHandler(new CairoSimpleUrlAuthenticationFailureHandler("/login?error"))
+			)
 			.oauth2Login(x ->
 				x.loginPage("/login")
 					.permitAll()

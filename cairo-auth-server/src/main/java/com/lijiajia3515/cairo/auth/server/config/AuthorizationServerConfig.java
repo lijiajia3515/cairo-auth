@@ -66,21 +66,21 @@ public class AuthorizationServerConfig {
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 	}
 
-	@Bean
-	public JwtDecoder cairoJwtDecoder(List<JWK> JWKs) {
-		return JWKs.stream()
-			.findFirst()
-			.flatMap(jwk -> {
-				try {
-					return Optional.of((RSAPublicKey) jwk.toPublicJWK().toRSAKey().toPublicKey());
-				} catch (JOSEException e) {
-					e.printStackTrace();
-					return Optional.empty();
-				}
-			})
-			.map(publicKey -> NimbusJwtDecoder.withPublicKey(publicKey).build())
-			.orElseThrow();
-	}
+//	@Bean
+//	public JwtDecoder cairoJwtDecoder(List<JWK> JWKs) {
+//		return JWKs.stream()
+//			.findFirst()
+//			.flatMap(jwk -> {
+//				try {
+//					return Optional.of((RSAPublicKey) jwk.toPublicJWK().toRSAKey().toPublicKey());
+//				} catch (JOSEException e) {
+//					e.printStackTrace();
+//					return Optional.empty();
+//				}
+//			})
+//			.map(publicKey -> NimbusJwtDecoder.withPublicKey(publicKey).build())
+//			.orElseThrow();
+//	}
 
 	@Bean
 	List<JWK> oauth2JWKs(OAuth2Properties properties) throws NoSuchAlgorithmException, InvalidKeySpecException {

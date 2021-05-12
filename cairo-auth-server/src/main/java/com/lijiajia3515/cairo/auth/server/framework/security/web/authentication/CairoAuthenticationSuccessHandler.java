@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-public class CairoAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class CairoAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 	private final MongoTemplate mongoTemplate;
 
-	public CairoAuthSuccessHandler(MongoTemplate mongoTemplate) {
+	public CairoAuthenticationSuccessHandler(MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
 	}
 

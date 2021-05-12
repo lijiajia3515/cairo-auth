@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
@@ -29,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 @RestController
+@RequestMapping("/oauth2")
 public class OAuthApi {
 	private final RegisteredClientRepository registeredClientRepository;
 	private final CairoUserService cairoUserService;
@@ -46,7 +48,7 @@ public class OAuthApi {
 		this.authorizationService = authorizationService;
 	}
 
-	@PostMapping("/oauth2/password_code")
+	@PostMapping("/password_code")
 	@PermitAll
 	public Object passwordToken(@RequestBody PasswordParam param) {
 		try {

@@ -19,6 +19,11 @@ public class CairoRegisteredClientRepository implements RegisteredClientReposito
 	}
 
 	@Override
+	public void save(RegisteredClient registeredClient) {
+
+	}
+
+	@Override
 	public RegisteredClient findById(String id) {
 		Query query = Query.query(Criteria
 			.where(ClientMongo.FIELD.ENABLED).is(true)
