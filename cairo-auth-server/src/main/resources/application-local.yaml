@@ -13,3 +13,9 @@ lijiajia3515:
     port: 6379
     username: hfhk
     password: Hfhk.1320.
+  consul:
+    host: 192.168.30.22
+    port: 8600
+    discovery:
+      instance-zone: hfhk
+      instance-group: hfhk

@@ -30,6 +30,9 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
   implementation 'org.springframework.security.experimental:spring-security-oauth2-authorization-server:0.1.1'
 
+  // discovery
+  implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
   implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
   implementation 'io.github.openfeign:feign-okhttp'
