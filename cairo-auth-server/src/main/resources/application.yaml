@@ -100,13 +100,13 @@ spring:
             user-name-attribute: unionid
   cloud:
     consul:
-      host: ${hfhk.consul.host:consul}
-      port: ${hfhk.consul.port:8500}
+      host: ${lijiajia3515.consul.host:consul}
+      port: ${lijiajia3515.consul.port:8500}
       discovery:
         prefer-ip-address: true
         health-check-interval: 5s
-        instance-zone: ${hfhk.consul.instance-zone:hfhk}
-        instance-group: ${hfhk.consul.instance-group:hfhk}
+        instance-zone: ${lijiajia3515.consul.instance-zone:hfhk}
+        instance-group: ${lijiajia3515.consul.instance-group:hfhk}
         tags:
           - v1
 server:
