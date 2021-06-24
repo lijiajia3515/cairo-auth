@@ -104,11 +104,8 @@ spring:
       port: ${lijiajia3515.consul.port:8500}
       discovery:
         prefer-ip-address: true
-        health-check-interval: 5s
         instance-zone: ${lijiajia3515.consul.instance-zone:hfhk}
         instance-group: ${lijiajia3515.consul.instance-group:hfhk}
-        tags:
-          - v1
 server:
   port: 80
 
