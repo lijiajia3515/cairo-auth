@@ -1,9 +1,5 @@
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
-  compile 'org.springframework.data:spring-data-commons'
-
-  compile "com.lijiajia3515.cairo:cairo-domain:${cairoVersion}"
-
-
+  api group: 'com.lijiajia3515.cairo', name: 'cairo-domain', version: "${cairoVersion}"
 }

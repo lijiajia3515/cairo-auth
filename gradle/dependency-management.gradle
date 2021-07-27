@@ -2,6 +2,10 @@
 apply plugin: 'io.spring.dependency-management'
 
 dependencyManagement {
+  resolutionStrategy {
+    cacheDynamicVersionsFor 0, 'seconds'
+  }
+
   imports {
     mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"

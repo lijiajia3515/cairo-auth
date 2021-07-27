@@ -15,6 +15,15 @@ allprojects {
   tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
   }
+
+  configurations {
+    all {
+      // 动态版本更新时间
+      resolutionStrategy.cacheChangingModulesFor 0, 'hours'
+      // gradle module 更新时间
+      resolutionStrategy.cacheChangingModulesFor 0, 'hours'
+    }
+  }
 }
 
 subprojects {

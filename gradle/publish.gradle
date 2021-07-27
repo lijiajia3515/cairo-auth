@@ -1,7 +1,7 @@
 // maven publish config
 apply plugin: "maven-publish"
 ext {
-  versionRelease = !version.endsWith('SNAPSHOT')
+  versionRelease = !(version.endsWith('snapshot') || version.endsWith('SNAPSHOT'))
 }
 publishing {
   repositories {
@@ -69,12 +69,12 @@ publishing {
           developer {
             id = "lijiajia"
             name = "李佳佳"
-            email = "lijiajia3515@gmail.com"
+            email = "lijiajia@haofangsoft.com"
           }
         }
       }
       versionMapping {
-        usage('java-api') {
+        usage('java-implementation') {
           fromResolutionOf('runtimeClasspath')
         }
         usage('java-runtime') {

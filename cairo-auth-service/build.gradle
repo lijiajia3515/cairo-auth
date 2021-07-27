@@ -44,8 +44,8 @@ dependencies {
   // cairo
   implementation project(':cairo-auth-common')
   implementation project(':cairo-auth-domain')
-  implementation "com.lijiajia3515.cairo.starter:cairo-starter-mongo:${cairoVersion}"
-  implementation("com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoVersion}")
+  implementation "com.lijiajia3515.cairo.starter:cairo-starter-mongodb:${cairoStarterVersion}"
+  implementation "com.lijiajia3515.cairo.starter:cairo-starter-service:${cairoStarterVersion}"
 
   // test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'

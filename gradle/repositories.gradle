@@ -6,10 +6,6 @@ repositories {
 
   maven {
     url 'https://maven.aliyun.com/repository/spring'
-   
-  }
-  maven {
-    url 'https://repo.spring.io/libs-milestone'
   }
 
   if (project.hasProperty('repository.release.url')) {
