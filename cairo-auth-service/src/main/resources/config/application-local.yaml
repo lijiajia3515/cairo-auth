@@ -1,6 +1,6 @@
 lijiajia3515:
   auth:
-    server: 127.0.0.1
+    server: auth2.hfhksoft.com
     client:
       id: hfhk_auth
       client-id: hfhk_auth
@@ -8,15 +8,15 @@ lijiajia3515:
       scopes:
         - default
   mongo:
-    database: hfhk-auth
+    database: lijiajia3515-auth
     gridfs:
-      database: hfhk-auth
-      bucket: hfhk-auth
-    authentication-database: hfhk
+      database: lijiajia3515-auth
+      bucket: lijiajia3515
+    authentication-database: lijiajia3515
     host: 192.168.30.22
     port: 27017
-    username: hfhk
-    password: Hfhk.1320.
+    username: lijiajia3515
+    password: lijiajia3515
   redis:
     database: 1
     host: 192.168.30.22
@@ -32,4 +32,3 @@ lijiajia3515:
 
 server:
   port: 10000
-
